@@ -18,6 +18,7 @@ const LandingPage = lazy(() => import("./components/LandingPage.js"));
 const ProjectList = lazy(() => import("./components/ProjectList.js"));
 const Category = lazy(() => import("./components/Category.js"));
 const Home = lazy(() => import("./components/Home.js"));
+const ThreeDScene = lazy(() => import("./components/threeDscene"));
 
 function App() {
   const [siteSettings, setSiteSettings] = useState();
@@ -36,7 +37,7 @@ function App() {
   useEffect(() => {
     sanityClient
       .fetch(
-        '*[_type == "siteSettings"]{title, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt},  logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}'
+        '*[_type == "siteSettings"]{title, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt}, backgroundImage{asset->{_id,url}, hotspot, alt}, logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}'
       )
       .then((data) => {
         setSiteSettings(data[0]);
@@ -119,7 +120,7 @@ function App() {
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
           <BrowserRouter>
-            {siteSettings && <Header basket={basket} />}
+            {siteSettings && <Header />}
             <AnimatePresence>
               <div className="mainContainer" ref={mainRef}>
                 <ScrollToTop>
@@ -140,6 +141,9 @@ function App() {
                     </Route>
                     <Route path="/about">
                       <Home info={siteSettings} projectList={projectList} />
+                    </Route>
+                    <Route path="/chaos">
+                      <ThreeDScene projects={projectList} />
                     </Route>
                     <Route path="/:slug">
                       <Category />

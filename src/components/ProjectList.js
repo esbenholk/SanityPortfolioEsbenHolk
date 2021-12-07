@@ -32,28 +32,34 @@ export default function Projects({ projectList }) {
       exit={{ opacity: 0 }}
     >
       <div className="projectList-item">
-        <h2 className="categories">Category</h2>
+        {width > 900 ? (
+          <div className="categories">
+            <h2>Category</h2>
+          </div>
+        ) : null}
         <div>
           <h2>Project</h2>
         </div>
-        {width > 900 ? <h2>Year</h2> : null}
+        <h2>Year</h2>
       </div>
       {projectList &&
         projectList.map((project, index) => (
           <div key={index} className="projectList-item">
-            <div className="categories">
-              {project.categories &&
-                project.categories.map((category, index) => (
-                  <a
-                    key={index}
-                    id={"category_" + category.title + ""}
-                    href={category.slug.current}
-                  >
-                    {category.title}
-                    {index + 1 !== project.categories.length ? ", " : null}
-                  </a>
-                ))}
-            </div>
+            {width > 900 ? (
+              <div className="categories">
+                {project.categories &&
+                  project.categories.map((category, index) => (
+                    <a
+                      key={index}
+                      id={"category_" + category.title + ""}
+                      href={category.slug.current}
+                    >
+                      {category.title}
+                      {index + 1 !== project.categories.length ? ", " : null}
+                    </a>
+                  ))}
+              </div>
+            ) : null}
             <div onMouseEnter={hover} onMouseLeave={hover}>
               {" "}
               <a href={"/projects/" + project.slug.current}>
@@ -78,12 +84,10 @@ export default function Projects({ projectList }) {
                 />
               )}
             </div>
-            {width > 900 ? (
-              <p className="flex-row align-left">
-                {project.year ? project.year : "undefined"}{" "}
-                {project.yearString ? <u>{project.yearString}</u> : null}
-              </p>
-            ) : null}
+            <p className="flex-row align-left">
+              {project.year ? project.year : "undefined"}{" "}
+              {project.yearString ? <u>{project.yearString}</u> : null}
+            </p>
           </div>
         ))}
     </motion.div>

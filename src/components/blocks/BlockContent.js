@@ -18,16 +18,17 @@ const serializers = {
   },
   marks: {
     inlineicon(props) {
-      switch (props.mark._type) {
-        case "inlineicon":
-          if (props.mark.asset) {
-            return (
-              <Image src={props.mark.asset.url || ""} alt={props.children[0]} />
-            );
-          } else {
-            return null;
-          }
-      }
+      // switch (props.mark._type) {
+      //   case "inlineicon":
+      //     if (props.mark.asset) {
+      //       return (
+      //         <Image src={props.mark.asset.url || ""} alt={props.children[0]} />
+      //       );
+      //     } else {
+      //       return null;
+      //     }
+      // }
+      return <Image src={props.mark.asset.url || ""} alt={props.children[0]} />;
     },
   },
 };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import sanityClient from "../../client";
 
 import { Link } from "react-router-dom";
+import BlockContent from "../blocks/BlockContent";
 
 import imageUrlBuilder from "@sanity/image-url";
 import useWindowDimensions from "../functions/useWindowDimensions";
@@ -22,7 +23,7 @@ export default function PostCard({ post }) {
   if (post.color) {
     color = post.color;
   } else {
-    color = "#FFFFFF";
+    color = "#2eff00";
   }
 
   return (
@@ -55,6 +56,8 @@ export default function PostCard({ post }) {
                 ))}
             </div>
           </div>
+          <BlockContent blocks={post.recap} />
+
           <div className="flex-row">
             {post.categories &&
               post.categories.map((category, index) => (

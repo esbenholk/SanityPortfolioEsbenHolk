@@ -392,6 +392,9 @@ nav {
   /* margin-bottom: 15px; */
 }
 
+.singleProjectMasonry img {
+  width: 100%;
+}
 /* footer */
 
 footer {
@@ -419,6 +422,16 @@ footer {
 .blockContent figure {
   margin-top: var(--normalPadding);
   margin-bottom: var(--normalPadding);
+}
+
+.content {
+  margin-top: 100px;
+  padding-top: 15px;
+  border-top: 2px solid black;
+  margin-bottom: 500px;
+}
+.contentBlock {
+  max-width: 90%;
 }
 
 @media only screen and (max-width: 700px) {

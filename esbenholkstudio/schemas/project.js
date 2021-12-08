@@ -94,6 +94,19 @@ export default {
       type: "blockContent",
     },
     {
+      name: "miniImagesGallery",
+      title: "Mini Images gallery",
+      type: "array",
+      of: [
+        {
+          type: "image",
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+    },
+    {
       name: "categories",
       title: "Categories",
       type: "array",

@@ -3,7 +3,6 @@ import sanityClient from "../client";
 import { useParams } from "react-router-dom";
 // import BlockContent from "@sanity/block-content-to-react";
 import ProductCard from "./blocks/productCard";
-import AddToCartButton from "./blocks/addToCart";
 import { motion } from "framer-motion";
 import Image from "./blocks/image";
 import CustomCarousel from "./blocks/Carousel";
@@ -18,6 +17,9 @@ import useWindowDimensions from "./functions/useWindowDimensions";
 const breakpointColumnsObj = {
   default: 2,
 };
+const minibreakpointColumnsObj = {
+  default: 4,
+};
 
 export default function SinglePost({ updatebasket, basket }) {
   const [singlePost, setSinglePost] = useState();
@@ -25,13 +27,11 @@ export default function SinglePost({ updatebasket, basket }) {
   const { slug } = useParams();
   const { width } = useWindowDimensions();
 
-  const [hasScrolledinPosition, sethasScrolledinPosition] = useState(false);
-
   useEffect(() => {
     sanityClient
       .fetch(
         `*[slug.current == "${slug}"]{
-          title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client
+          title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, miniImagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client
         }`
       )
       .then((data) => {
@@ -62,13 +62,7 @@ export default function SinglePost({ updatebasket, basket }) {
       .catch(console.error);
   }, [slug]);
 
-  function listenScrollEvent() {
-    if (window.scrollY > 240) {
-      sethasScrolledinPosition(true);
-    } else {
-      sethasScrolledinPosition(false);
-    }
-  }
+  function listenScrollEvent() {}
 
   window.addEventListener("scroll", listenScrollEvent);
 
@@ -87,25 +81,26 @@ export default function SinglePost({ updatebasket, basket }) {
           <div className="flex-row align-top project_directory_line">
             <a href="/projects">{"Project >"}</a>
             <div className="flex-row align-left">
-              {singlePost.categories.map((category, index) => (
-                <Link
-                  to={"../" + category.slug.current}
-                  className="tag project_tag"
-                  key={index}
-                >
-                  {category.title}
-                  {index + 1 !== singlePost.categories.length ? "," : null}
-                </Link>
-              ))}
+              {singlePost.categories &&
+                singlePost.categories.map((category, index) => (
+                  <Link
+                    to={"../" + category.slug.current}
+                    className="tag project_tag"
+                    key={index}
+                  >
+                    {category.title}
+                    {index + 1 !== singlePost.categories.length ? "," : null}
+                  </Link>
+                ))}
               <p>{" > "}</p>
             </div>
             <p>{singlePost.title}</p>
           </div>
-          <div className="flex-row align-top justifyBetween">
+          <div className="flex-column align-top justifyBetween">
             <div className="flex-column contentColumn">
               {width < 600 ? (
                 <>
-                  {singlePost.imagesGallery ? (
+                  {singlePost.imagesGallery.length > 1 ? (
                     <CustomCarousel arrows={false} swipe={true} classsss={""}>
                       {singlePost.imagesGallery.map((image, index) => (
                         <div className="squareImage" key={index}>
@@ -114,100 +109,48 @@ export default function SinglePost({ updatebasket, basket }) {
                       ))}
                     </CustomCarousel>
                   ) : (
-                    <>
-                      <Image
-                        image={singlePost.mainImage}
-                        class={"mainImage fullwidth"}
-                      />
-                    </>
+                    <Image
+                      image={singlePost.productImage}
+                      class={"mainImage fullwidth"}
+                    />
                   )}
                 </>
               ) : (
                 <>
-                  {singlePost.imagesGallery ? (
+                  {singlePost.imagesGallery &&
+                  singlePost.imagesGallery.length > 1 ? (
                     <Masonry
                       breakpointCols={breakpointColumnsObj}
                       className="my-masonry-grid "
                       columnClassName="my-masonry-grid_column singleProjectMasonry"
                     >
                       {singlePost.imagesGallery.map((image, index) => (
-                        <div className="squareImage" key={index}>
+                        <div key={index}>
                           <Image image={image} />
                         </div>
                       ))}
                     </Masonry>
                   ) : (
                     <>
-                      <Image
-                        image={singlePost.mainImage}
-                        class={"mainImage fullwidth"}
-                      />
+                      {singlePost.productImage && (
+                        <Image
+                          image={singlePost.productImage}
+                          class={"mainImage fullwidth"}
+                        />
+                      )}
                     </>
                   )}
                 </>
               )}
             </div>
-            <div
-              className={
-                hasScrolledinPosition & (width > 1200)
-                  ? "flex-column detailColumnfixed"
-                  : "flex-column detailColumn"
-              }
-            >
+            <div>
               <header className="flex-row align-top justifyBetween">
                 <h2 className="projectTitle">{singlePost.title}</h2>
-                {singlePost.abbreviated_year ? (
-                  <>
-                    <div className="project_year_price year_price flex-row align-top">
-                      <p>Y'</p>
-                      <p>{singlePost.abbreviated_year}</p>
-                    </div>
-                  </>
-                ) : null}
               </header>
 
               <div className="flex-row align-left project_tags">
-                {singlePost.tags &&
-                  singlePost.tags.map((tag, index) => (
-                    <p className="tag project_tag" key={index}>
-                      {tag}
-                      {index + 1 !== singlePost.tags.length ? "," : null}
-                    </p>
-                  ))}
-              </div>
-
-              {singlePost.star_rating ? (
-                <p className="stars">{singlePost.star_rating}</p>
-              ) : null}
-
-              <AddToCartButton
-                project={singlePost}
-                updatebasket={updatebasket}
-                basket={basket}
-              />
-
-              <div className="flex-column project_details">
-                {singlePost.client && (
-                  <>
-                    <h3>Client</h3>
-                    <p className="project_tag">{singlePost.client}</p>
-                  </>
-                )}
-                {singlePost.year && (
-                  <>
-                    <h3>Year</h3>
-                    <p className="flex-row align-left project_tag">
-                      {singlePost.year ? singlePost.year : "undefined"}{" "}
-                      {singlePost.yearString ? (
-                        <u>{singlePost.yearString}</u>
-                      ) : null}
-                    </p>
-                  </>
-                )}
-
                 {singlePost.categories && (
                   <>
-                    <h3>Category</h3>
                     <div className="flex-row align-left">
                       {singlePost.categories.map((category, index) => (
                         <Link
@@ -224,6 +167,39 @@ export default function SinglePost({ updatebasket, basket }) {
                     </div>
                   </>
                 )}
+                {singlePost.year && (
+                  <>
+                    <p className="flex-row align-left project_tag">
+                      {singlePost.year ? singlePost.year : "undefined"}{" "}
+                      {singlePost.yearString ? (
+                        <u>{singlePost.yearString}</u>
+                      ) : null}
+                    </p>
+                  </>
+                )}
+              </div>
+
+              <div className="flex-row align-left project_tags">
+                {singlePost.tags &&
+                  singlePost.tags.map((tag, index) => (
+                    <p className="tag project_tag" key={index}>
+                      {tag}
+                      {index + 1 !== singlePost.tags.length ? "," : null}
+                    </p>
+                  ))}
+              </div>
+
+              {singlePost.star_rating ? (
+                <p className="stars">{singlePost.star_rating}</p>
+              ) : null}
+
+              <div className="flex-row project_details">
+                {singlePost.client && (
+                  <>
+                    <p>Collaborator: </p>
+                    <p className="project_tag">{singlePost.client}</p>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -237,7 +213,8 @@ export default function SinglePost({ updatebasket, basket }) {
             {singlePost.body && (
               <div className="content">
                 <div className="flex-row justifyBetween header">
-                  <h2>Project details</h2>
+                  <h2 className="projectTitle">{singlePost.title}</h2>
+
                   <img
                     src="../assets/Arrowright.svg"
                     className="arrow"
@@ -247,10 +224,26 @@ export default function SinglePost({ updatebasket, basket }) {
                     }}
                   />
                 </div>
-
-                <BlockContent blocks={singlePost.body} />
+                <div className="contentBlock">
+                  <BlockContent blocks={singlePost.body} />
+                </div>
               </div>
             )}
+
+            {singlePost.miniImagesGallery &&
+            singlePost.miniImagesGallery.length > 0 ? (
+              <Masonry
+                breakpointCols={minibreakpointColumnsObj}
+                className="my-masonry-grid "
+                columnClassName="my-masonry-grid_column singleProjectMasonry"
+              >
+                {singlePost.miniImagesGallery.map((image, index) => (
+                  <div key={index}>
+                    <Image image={image} />
+                  </div>
+                ))}
+              </Masonry>
+            ) : null}
           </div>
         </article>
       </motion.div>

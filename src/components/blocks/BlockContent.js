@@ -37,7 +37,7 @@ const BlockContent = ({ blocks }) => (
   <BaseBlockContent
     blocks={blocks}
     serializers={serializers}
-    projectId="2748ynqv"
+    projectId="swdt1dj3"
     dataset="production"
   />
 );

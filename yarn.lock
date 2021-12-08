@@ -12179,7 +12179,7 @@
     "potpack" "^1.0.1"
     "zstddec" "^0.0.2"
 
-"three@>= 0.102.0 < 0.135.0", "three@>= 0.123.0", "three@>=0.103.0", "three@>=0.126", "three@>=0.128.0", "three@0.x.x":
+"three@^0.134.0", "three@>= 0.102.0 < 0.135.0", "three@>= 0.123.0", "three@>=0.103.0", "three@>=0.126", "three@>=0.128.0", "three@0.x.x":
   "integrity" "sha512-LbBerg7GaSPjYtTOnu41AMp7tV6efUNR3p4Wk5NzkSsNTBuA5mDGOfwwZL1jhhVMLx9V20HolIUo0+U3AXehbg=="
   "resolved" "https://registry.npmjs.org/three/-/three-0.134.0.tgz"
   "version" "0.134.0"

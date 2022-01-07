@@ -33,21 +33,6 @@ function App() {
 
   const mainRef = createRef();
 
-  const changeColors = () => {
-    document.documentElement.style.setProperty(
-      "--normalColor",
-      `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padEnd(6, "0")}`
-    );
-    document.documentElement.style.setProperty(
-      "--detailColor",
-      `#${Math.floor(Math.random() * 0xffffff)
-        .toString(16)
-        .padEnd(6, "0")}`
-    );
-  };
-
   useEffect(() => {
     sanityClient
       .fetch(
@@ -122,11 +107,6 @@ function App() {
     setCategories,
     setHasFeaturedPosts,
   };
-  function listenScrollEvent() {
-    changeColors();
-  }
-
-  window.addEventListener("scroll", listenScrollEvent);
 
   return (
     <main>
@@ -165,7 +145,7 @@ function App() {
                 </ScrollToTop>
               </div>
             </AnimatePresence>
-            {siteSettings && <Footer />}
+            {siteSettings && <Footer info={siteSettings} />}
           </BrowserRouter>
         </AppContext.Provider>
       </Suspense>

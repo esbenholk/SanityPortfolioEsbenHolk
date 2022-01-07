@@ -116,11 +116,15 @@ a.visited {
   height: auto;
   color: var(--detailColor);
   padding: 5px 20px 5px 20px;
-  border: 2px solid var(--detailColor);
+  border: 2px solid var(--detailColor) !important;
   white-space: nowrap;
   border-radius: 25px;
   font-family: "Pathway Gothic One", sans-serif;
-  mix-blend-mode: exclusion;
+  /* mix-blend-mode: exclusion; */
+}
+.inverse {
+  border: 2px solid var(--normalColor) !important;
+  color: var(--normalColor) !important;
 }
 
 .projectTitle {
@@ -139,7 +143,10 @@ a.visited {
 }
 .tag.active,
 .tag_button.active {
-  border: 2px solid white;
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor);
 }
 
 .mainImage {

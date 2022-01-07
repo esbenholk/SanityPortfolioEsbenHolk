@@ -123,8 +123,6 @@ export default function Projects({ show_categories, show_tags }) {
   }
 
   function setCategory(category) {
-    console.log(category);
-    console.log("sorting from category", category, currentCategories);
     if (!currentCategories.includes(category.category.title)) {
       const tempCategories = [...currentCategories];
       tempCategories.push(category.category.title);

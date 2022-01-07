@@ -41,31 +41,31 @@ export default function LandingPage() {
       exit={{ opacity: 0 }}
       // style={{ backgroundImage: `url(${info.backgroundImage.asset.url})` }}
     >
-      <motion.div className="headline flex-column fullWidthPadded">
+      <motion.div className="headline flex-column fullWidthPadded ">
         <BlockContent blocks={info.greeting} />
       </motion.div>
 
-      <>
-        {info.mainImages ? (
-          <div className="fullWidthPadded">
-            <CustomCarousel arrows={true} swipe={true} classsss={""}>
-              {info.mainImages.map((image, index) => (
-                <div key={index}>
-                  <Image image={image} class={"mainImage fullwidth"} />
-                </div>
-              ))}
-            </CustomCarousel>{" "}
-          </div>
-        ) : (
+      <div className="flex-column contentColumn borderTop">
+        <div className="flex-row align-center">
           <>
-            {info.mainImage ? (
-              <div className="fullWidthPadded">
-                <Image image={info.mainImage} class={"mainImage fullwidth"} />
-              </div>
-            ) : null}{" "}
+            {info.mainImages ? (
+              <CustomCarousel arrows={true} swipe={true} classsss={""}>
+                {info.mainImages.map((image, index) => (
+                  <div key={index}>
+                    <Image image={image} class={"mainImage fullwidth"} />
+                  </div>
+                ))}
+              </CustomCarousel>
+            ) : (
+              <>
+                {info.mainImage ? (
+                  <Image image={info.mainImage} class={"mainImage fullwidth"} />
+                ) : null}
+              </>
+            )}
           </>
-        )}
-      </>
+        </div>
+      </div>
 
       {projectList ? (
         <Projects

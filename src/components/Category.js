@@ -22,10 +22,19 @@ export default function Category() {
       .catch(console.error);
     sanityClient
       .fetch(
-        `*[_type == "post"&& (*[_type == "category"&&title=="${slug}"][0]._id in categories[]._ref)]{slug, categories[]->{title}, title, mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating, tags, color, recap, yearString}`
+        `*[_type == "category" && slug.current=="${slug}"]{
+          _id,
+          _type,
+          title, 
+          slug, 
+          description,
+          "posts": *[_type == "project" && references(^._id)]
+          {title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString}
+        }`
       )
       .then((data) => {
-        setProjectList(data);
+        console.log(data);
+        setProjectList(data[0].posts);
       })
       .catch(console.error);
   }, [slug]);
@@ -46,7 +55,7 @@ export default function Category() {
       </div>
 
       <Suspense fallback={null}>
-        {projectList ? (
+        {projectList && projectList.length > 0 ? (
           <Projects projectList={projectList} show_tags={true} />
         ) : null}
       </Suspense>

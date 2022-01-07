@@ -152,7 +152,7 @@ export default function Projects({ show_categories, show_tags }) {
     <div className="projects">
       <div className="regContainer">
         {show_categories && (
-          <div className="tag_grid horizontalScroll overscrollPadded">
+          <div className="regContainer">
             {categories &&
               categories.map((category, index) => (
                 <button

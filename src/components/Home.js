@@ -20,12 +20,22 @@ export default function Home() {
               Esben Holk @ HOUSE OF KILLING
             </motion.h1>
 
+            <div className="flex-column contentColumn regContainer">
+              <div className="flex-row align-center">
+                {info.authorImage ? (
+                  <div className="project_main_image">
+                    <Image
+                      image={info.authorImage}
+                      // mainImageHeight={mainImageHeight}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
             <div className="flex-row justifyBetween">
-              {info.authorImage ? (
-                <Image image={info.authorImage} class={"authorImage"} />
-              ) : null}
               {info.about ? (
-                <div class="authorInfo">
+                <div className="authorInfo">
                   <BlockContent blocks={info.about} />
                 </div>
               ) : null}

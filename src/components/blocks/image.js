@@ -17,6 +17,7 @@ class Image extends React.Component {
     this.state = {
       image: props.image,
       class: props.class,
+      height: props.mainImageHeight,
     };
   }
 
@@ -33,6 +34,7 @@ class Image extends React.Component {
                   objectPosition: `${this.state.image.hotspot.x * 100}% ${
                     this.state.image.hotspot.y * 100
                   }%`,
+                  maxHeight: this.state.height,
                 }}
                 className={this.state.class}
               />
@@ -41,6 +43,9 @@ class Image extends React.Component {
                 src={urlFor(this.state.image.asset)}
                 alt={this.state.image.alt}
                 className={this.state.class}
+                style={{
+                  maxHeight: this.state.height,
+                }}
               />
             )}
           </>

@@ -28,11 +28,25 @@ function App() {
   const [categories, setCategories] = useState([]);
 
   const [basket, setBasket] = useState([]);
-  const [rerender, setRerender] = useState(true);
 
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
 
   const mainRef = createRef();
+
+  const changeColors = () => {
+    document.documentElement.style.setProperty(
+      "--normalColor",
+      `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padEnd(6, "0")}`
+    );
+    document.documentElement.style.setProperty(
+      "--detailColor",
+      `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padEnd(6, "0")}`
+    );
+  };
 
   useEffect(() => {
     sanityClient
@@ -49,11 +63,10 @@ function App() {
 
     sanityClient
       .fetch(
-        '*[_type == "project"]{title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString}'
+        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString}'
       )
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
-        console.log(data);
         setProjectList(data);
       })
       .catch(console.error);
@@ -109,11 +122,11 @@ function App() {
     setCategories,
     setHasFeaturedPosts,
   };
-
-  function updatebasket() {
-    //cheat rendering header component again from addToCart
-    setRerender(!rerender);
+  function listenScrollEvent() {
+    changeColors();
   }
+
+  window.addEventListener("scroll", listenScrollEvent);
 
   return (
     <main>
@@ -134,7 +147,7 @@ function App() {
                       )}
                     </Route>
                     <Route path="/projects/:slug">
-                      <SinglePost updatebasket={updatebasket} />
+                      {projectList && <SinglePost projectList={projectList} />}
                     </Route>
                     <Route path="/projects">
                       <ProjectList projectList={projectList} />

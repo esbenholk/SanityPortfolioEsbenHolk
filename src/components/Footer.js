@@ -1,8 +1,6 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import BlockContent from "./blocks/BlockContent";
-
-import AppContext from "../globalState";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -15,54 +13,53 @@ class Footer extends React.Component {
   }
 
   render() {
-    const colors = [
-      "#00ff2e",
-      "#0061ff",
-      "white",
-      "grey",
-      "black",
-      "#00ffe9",
-      "33bff00",
-      "#8cfffb",
-      "#00ff55",
-      "#8cfffb",
-      "#ff9100",
-      "#ff4d00",
-      "#f6ff00",
-      "#ff00f7",
-      "#0800ff",
-      "#908cff",
-      "#8cffc8",
-      "#1cbd6f",
-      "#ff006a",
-      "#a14d70",
-      "#FFFFFF",
-      "#000000",
-      "#00e397",
-    ];
+    // const colors = [
+    //   "#00ff2e",
+    //   "#0061ff",
+    //   "white",
+    //   "grey",
+    //   "black",
+    //   "#00ffe9",
+    //   "33bff00",
+    //   "#8cfffb",
+    //   "#00ff55",
+    //   "#8cfffb",
+    //   "#ff9100",
+    //   "#ff4d00",
+    //   "#f6ff00",
+    //   "#ff00f7",
+    //   "#0800ff",
+    //   "#908cff",
+    //   "#8cffc8",
+    //   "#1cbd6f",
+    //   "#ff006a",
+    //   "#a14d70",
+    //   "#FFFFFF",
+    //   "#000000",
+    //   "#00e397",
+    // ];
 
     const changeColors = () => {
-      // document.documentElement.style.setProperty(
-      //   "--normalColor",
-      //   `#${Math.floor(Math.random() * 0xffffff)
-      //     .toString(16)
-      //     .padEnd(6, "0")}`
-      // );
-      // document.documentElement.style.setProperty(
-      //   "--detailColor",
-      //   `#${Math.floor(Math.random() * 0xffffff)
-      //     .toString(16)
-      //     .padEnd(6, "0")}`
-      // );
-
       if (this.state.buttonText === "untoggle chaos") {
+        // document.documentElement.style.setProperty(
+        //   "--normalColor",
+        //   colors[Math.floor(Math.random() * colors.length)]
+        // );
+        // document.documentElement.style.setProperty(
+        //   "--detailColor",
+        //   colors[Math.floor(Math.random() * colors.length)]
+        // );
         document.documentElement.style.setProperty(
           "--normalColor",
-          colors[Math.floor(Math.random() * colors.length)]
+          `#${Math.floor(Math.random() * 0xffffff)
+            .toString(16)
+            .padEnd(6, "0")}`
         );
         document.documentElement.style.setProperty(
           "--detailColor",
-          colors[Math.floor(Math.random() * colors.length)]
+          `#${Math.floor(Math.random() * 0xffffff)
+            .toString(16)
+            .padEnd(6, "0")}`
         );
       }
     };

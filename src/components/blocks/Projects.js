@@ -6,10 +6,12 @@ import PostCard from "./postCard.js";
 
 import AppContext from "../../globalState";
 
+import useWindowDimensions from "../functions/useWindowDimensions";
+
 const breakpointColumnsObj = {
   default: 3,
   1300: 2,
-  600: 2,
+  600: 1,
 };
 
 export default function Projects({ show_categories, show_tags }) {
@@ -25,6 +27,8 @@ export default function Projects({ show_categories, show_tags }) {
 
   const [categories] = useState(myContext.categories);
   const [currentCategories, setCurrentCategories] = useState([]);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     setAllPosts(projectList);
@@ -166,7 +170,7 @@ export default function Projects({ show_categories, show_tags }) {
               ))}
           </div>
         )}
-        {show_tags && (
+        {show_tags & (width > 700) ? (
           <div className="tag_grid horizontalScroll overscrollPadded">
             {tags.map((tag, index) => (
               <button
@@ -181,7 +185,7 @@ export default function Projects({ show_categories, show_tags }) {
               </button>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
       <Masonry
         breakpointCols={breakpointColumnsObj}
@@ -193,6 +197,22 @@ export default function Projects({ show_categories, show_tags }) {
             <PostCard post={post} key={index} />
           ))}
       </Masonry>
+      {show_tags & (width < 700) ? (
+        <div className="tag_grid horizontalScroll overscrollPadded">
+          {tags.map((tag, index) => (
+            <button
+              className="tag_button standard-button"
+              key={index}
+              id={"tag_" + tag + ""}
+              onClick={() => {
+                setTag({ tag });
+              }}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -4,7 +4,9 @@
   /* Set neon color */
   --normalPadding: 3%;
   --normalColor: rgb(21, 255, 0);
-  --detailColor: rgb(238, 0, 255);
+  --detailColor: rgb(17, 0, 255);
+  /* --normalColor: white;
+  --detailColor: black; */
 }
 
 * {
@@ -19,6 +21,11 @@ body,
   margin: 0;
   padding: 0;
   -ms-overflow-style: none;
+  /* border: 2px solid white;
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor); */
 }
 
 html,
@@ -38,11 +45,25 @@ body {
   display: none;
 }
 
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  border: 50px solid var(--detailColor);
+  background-color: var(--detailColor);
+  transition: 80ms ease-out;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
 img {
   max-width: 100%;
   transform: translateZ(0);
   max-height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .fullwidth {
@@ -52,6 +73,7 @@ img {
 p {
   font-size: 20px;
   text-align: left;
+  color: var(--detailColor);
 }
 h3 {
   font-size: 25px;
@@ -156,6 +178,7 @@ a.visited {
 .slide div .mainImage {
   height: 100%;
   object-fit: cover;
+  width: auto !important;
 }
 
 .mainContainer {
@@ -180,6 +203,10 @@ a.visited {
 
 .project_main_image {
   position: relative;
+  width: auto !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 /* posts */
@@ -211,6 +238,14 @@ a.visited {
   justify-content: space-between;
   align-items: space-between;
   justify-items: space-between;
+  background-color: var(--detailColor);
+  mix-blend-mode: exclusion;
+}
+.post_card_overlay h1,
+.post_card_overlay h2,
+.post_card_overlay h3,
+.post_card_overlay p {
+  color: var(--normalColor);
 }
 
 .tag {

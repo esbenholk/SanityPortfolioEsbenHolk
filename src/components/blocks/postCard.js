@@ -19,86 +19,64 @@ export default function PostCard({ post }) {
 
   const { width } = useWindowDimensions();
 
-  var color;
-  if (post.color) {
-    color = post.color;
-  } else {
-    color = "#2eff00";
-  }
-
   return (
     <div
       className="post_card"
       onMouseEnter={() => setIsShown(true)}
       onMouseLeave={() => setIsShown(false)}
     >
-      {width > 700 && isShown ? (
-        <div
-          className="post_card_overlay seeOnHover"
-          style={{ backgroundColor: color }}
-        >
-          <div className="details">
-            <Link
-              to={"/projects/" + post.slug.current}
-              key={post.slug.current}
-              className="w-full teaser-link"
-            >
+      <Link
+        to={"/projects/" + post.slug.current}
+        key={post.slug.current}
+        className="w-full teaser-link"
+      >
+        {width > 700 && isShown ? (
+          <div className="post_card_overlay seeOnHover">
+            <div className="details">
               <h3>{post.title}</h3>
-            </Link>
+              <div className="flex-row">
+                {post.tags &&
+                  post.tags.map((tag, index) => (
+                    <p className="tag" key={index}>
+                      {tag}
+                      {index + 1 !== post.tags.length ? "," : null}
+                    </p>
+                  ))}
+              </div>
+            </div>
+            <BlockContent blocks={post.recap} />
 
             <div className="flex-row">
-              {post.tags &&
-                post.tags.map((tag, index) => (
-                  <p className="tag" key={index}>
-                    {tag}
-                    {index + 1 !== post.tags.length ? "," : null}
+              {post.categories &&
+                post.categories.map((category, index) => (
+                  <p className="standard-button inverse" key={index}>
+                    {" "}
+                    {category.title}{" "}
                   </p>
                 ))}
             </div>
           </div>
-          <BlockContent blocks={post.recap} />
+        ) : null}
 
-          <div className="flex-row">
-            {post.categories &&
-              post.categories.map((category, index) => (
-                <p className="standardTransparent-button" key={index}>
-                  {" "}
-                  {category.title}{" "}
-                </p>
-              ))}
-          </div>
-          <Link
-            to={"/projects/" + post.slug.current}
-            key={post.slug.current}
-            className="w-full teaser-link"
-          >
-            <img
-              src="assets/Arrowright.svg"
-              className="arrow"
-              alt="right arrow button"
-            />
-          </Link>
-        </div>
-      ) : null}
-
-      {post.mainImage.hotspot ? (
-        <img
-          src={urlFor(post.mainImage.asset.url)}
-          alt={post.mainImage.alt}
-          style={{
-            objectPosition: `${post.mainImage.hotspot.x * 100}% ${
-              post.mainImage.hotspot.y * 100
-            }%`,
-          }}
-          className="post_card_image"
-        />
-      ) : (
-        <img
-          src={urlFor(post.mainImage.asset.url)}
-          alt={post.mainImage.alt}
-          className="post_card_image"
-        />
-      )}
+        {post.mainImage.hotspot ? (
+          <img
+            src={urlFor(post.mainImage.asset.url)}
+            alt={post.mainImage.alt}
+            style={{
+              objectPosition: `${post.mainImage.hotspot.x * 100}% ${
+                post.mainImage.hotspot.y * 100
+              }%`,
+            }}
+            className="post_card_image"
+          />
+        ) : (
+          <img
+            src={urlFor(post.mainImage.asset.url)}
+            alt={post.mainImage.alt}
+            className="post_card_image"
+          />
+        )}
+      </Link>
     </div>
   );
 }

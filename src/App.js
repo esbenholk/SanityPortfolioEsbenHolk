@@ -1,6 +1,13 @@
 /* eslint-disable no-lone-blocks */
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import React, { Suspense, lazy, useEffect, useState, createRef } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useState,
+  createRef,
+  useRef,
+} from "react";
 // import NavBar from "./components/NavBar.js";
 import "./App.css";
 import sanityClient from "./client";
@@ -23,6 +30,7 @@ const ThreeDScene = lazy(() => import("./components/threeDscene"));
 function App() {
   const [siteSettings, setSiteSettings] = useState();
   const [projectList, setProjectList] = useState();
+  const cursorRef = useRef(null);
 
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -108,6 +116,23 @@ function App() {
     setHasFeaturedPosts,
   };
 
+  const followMouse = (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    cursorRef.current.style.transform = `translate3d(${x - 250}px, ${
+      y - 250
+    }px, 0)`;
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", followMouse);
+
+    return () => {
+      window.removeEventListener("mousemove", followMouse);
+    };
+  }, []);
+
   return (
     <main>
       <Suspense fallback={null}>
@@ -145,6 +170,7 @@ function App() {
                 </ScrollToTop>
               </div>
             </AnimatePresence>
+            <div className="cursor" ref={cursorRef}></div>
             {siteSettings && <Footer info={siteSettings} />}
           </BrowserRouter>
         </AppContext.Provider>

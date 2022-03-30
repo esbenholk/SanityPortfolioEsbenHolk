@@ -30,7 +30,7 @@ export default function PostCard({ post }) {
         key={post.slug.current}
         className="w-full teaser-link"
       >
-        {width > 700 && isShown ? (
+        {/* {width > 700 && isShown ? (
           <div className="post_card_overlay seeOnHover">
             <div className="details">
               <h3>{post.title}</h3>
@@ -56,7 +56,7 @@ export default function PostCard({ post }) {
                 ))}
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
         {post.mainImage.hotspot ? (
           <img

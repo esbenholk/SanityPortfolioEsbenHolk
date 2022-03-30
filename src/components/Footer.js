@@ -114,7 +114,7 @@ class Footer extends React.Component {
               <BlockContent blocks={this.state.info.contact} />
             </div>
           ) : null}
-          <button
+          {/* <button
             onClick={toggleChaos}
             className={
               this.state.buttonText === "toggle chaos"
@@ -123,7 +123,7 @@ class Footer extends React.Component {
             }
           >
             {this.state.buttonText}
-          </button>
+          </button> */}
         </footer>
       </div>
     );

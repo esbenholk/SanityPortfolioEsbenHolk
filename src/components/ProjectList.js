@@ -44,9 +44,9 @@ export default function Projects({ projectList }) {
       </div>
       {projectList &&
         projectList.map((project, index) => (
-          <div key={index} className="projectList-item">
+          <div key={index} className="projectList-item noshade">
             {width > 900 ? (
-              <div className="categories">
+              <div className="categories noshade">
                 {project.categories &&
                   project.categories.map((category, index) => (
                     <a
@@ -60,7 +60,7 @@ export default function Projects({ projectList }) {
                   ))}
               </div>
             ) : null}
-            <div onMouseEnter={hover} onMouseLeave={hover}>
+            <div onMouseEnter={hover} onMouseLeave={hover} class="noshade">
               {" "}
               <a href={"/projects/" + project.slug.current}>
                 {project.title ? project.title : "undefined"}

@@ -3,10 +3,11 @@
 :root {
   /* Set neon color */
   --normalPadding: 3%;
-  --normalColor: rgb(21, 255, 0);
-  --detailColor: rgb(17, 0, 255);
-  /* --normalColor: white;
-  --detailColor: black; */
+  /* --normalColor: rgb(21, 255, 0);
+  --detailColor: rgb(17, 0, 255); */
+  --normalColor: grey;
+  --detailColor: rgb(246, 124, 255);
+  --textColor: black;
 }
 
 * {
@@ -21,11 +22,6 @@ body,
   margin: 0;
   padding: 0;
   -ms-overflow-style: none;
-  /* border: 2px solid white;
-  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
-    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
-    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
-    0 0 33px var(--detailColor); */
 }
 
 html,
@@ -34,8 +30,41 @@ body {
   overflow-x: hidden;
 }
 
+button,
+div {
+  border: 2px solid white;
+  border-radius: 300%;
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor);
+}
+.noshade div,
+.noshade {
+  /* border-radius: 300%; */
+  border: 0 solid white;
+  box-shadow: 0 0 0px #fff, 0 0 0px #fff, 0 0 0px #fff,
+    0 0 0px var(--detailColor), 0 0 0px var(--detailColor),
+    0 0 0px var(--detailColor), 0 0 0px var(--detailColor),
+    0 0 0px var(--detailColor);
+}
+.noshade p,
+.noshade a {
+  /* border-radius: 300%; */
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor);
+}
+
 body {
-  background: var(--normalColor);
+  /* background: var(--normalColor); */
+  background-image: linear-gradient(45deg, #b0b0b0 25%, transparent 25%),
+    linear-gradient(-45deg, #b0b0b0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b0b0b0 75%),
+    linear-gradient(-45deg, transparent 75%, #b0b0b0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
   min-height: 100vh;
   z-index: -2;
   overflow-x: hidden;
@@ -43,6 +72,10 @@ body {
 
 *::-webkit-scrollbar {
   display: none;
+}
+a,
+p {
+  mix-blend-mode: unset;
 }
 
 .cursor {
@@ -73,24 +106,24 @@ img {
 p {
   font-size: 20px;
   text-align: left;
-  color: var(--detailColor);
+  color: var(--textColor);
 }
 h3 {
   font-size: 25px;
-  color: var(--detailColor);
+  color: var(--textColor);
   text-decoration: underline;
   text-align: left;
 }
 h2 {
-  color: var(--detailColor);
+  color: var(--textColor);
 }
 h1 {
   margin-bottom: 50px;
-  color: var(--detailColor);
+  color: var(--textColor);
 }
 
 strong {
-  color: var(--detailColor);
+  color: var(--textColor);
 }
 
 .hidden {
@@ -136,9 +169,13 @@ a.visited {
   font-weight: 200;
   font-size: 23px;
   height: auto;
-  color: var(--detailColor);
+  color: var(--textColor);
   padding: 5px 20px 5px 20px;
   border: 2px solid var(--detailColor) !important;
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor);
   white-space: nowrap;
   border-radius: 25px;
   font-family: "Pathway Gothic One", sans-serif;
@@ -367,7 +404,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--detailColor);
+  color: var(--textColor);
 }
 
 .prevArrow {

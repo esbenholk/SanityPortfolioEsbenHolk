@@ -31,6 +31,8 @@ export default function LandingPage() {
       }
       setFeaturedProjects(featuredProjects);
     }
+
+    const script = document.createElement("script");
   }, [myContext.hasFeaturedPosts, projectList, info]);
 
   return (
@@ -41,15 +43,15 @@ export default function LandingPage() {
       exit={{ opacity: 0 }}
       // style={{ backgroundImage: `url(${info.backgroundImage.asset.url})` }}
     >
-      <motion.div className="headline flex-column fullWidthPadded ">
-        <BlockContent blocks={info.greeting} />
+      <motion.div className="headline flex-column fullWidthPadded noshade">
+        <BlockContent blocks={info.greeting} class="noshade" />
       </motion.div>
 
       <div className="flex-column contentColumn borderTop">
-        <div className="flex-row align-center">
+        <div className="flex-row align-center ">
           <>
             {info.mainImages ? (
-              <CustomCarousel arrows={true} swipe={true} classsss={""}>
+              <CustomCarousel arrows={true} swipe={true} classsss={"circle"}>
                 {info.mainImages.map((image, index) => (
                   <div key={index}>
                     <Image image={image} class={"mainImage fullwidth"} />
@@ -70,8 +72,8 @@ export default function LandingPage() {
       {projectList ? (
         <Projects
           projectList={projectList}
-          show_categories={true}
-          show_tags={true}
+          show_categories={false}
+          show_tags={false}
         />
       ) : null}
     </motion.div>

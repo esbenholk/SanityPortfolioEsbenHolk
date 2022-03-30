@@ -91,7 +91,9 @@ export default function SinglePost() {
       >
         <div
           className={
-            prevPost ? " fixedUnderHeader" : " fixedUnderHeader align-right"
+            prevPost
+              ? " fixedUnderHeader noshade"
+              : " fixedUnderHeader align-right noshade"
           }
         >
           {prevPost && (
@@ -107,9 +109,9 @@ export default function SinglePost() {
         </div>
 
         <article className="borderTop singlePost">
-          <div className="flex-row align-top project_directory_line">
+          <div className="flex-row align-top project_directory_line noshade">
             <a href="/projects">{"Project >"}</a>
-            <div className="flex-row align-left">
+            <div className="flex-row align-left noshade">
               {singlePost.categories &&
                 singlePost.categories.map((category, index) => (
                   <Link
@@ -149,11 +151,11 @@ export default function SinglePost() {
           </div>
 
           <div>
-            <header className="flex-row align-top justifyBetween">
+            <header className="flex-row align-top justifyBetween noshade">
               <h2 className="projectTitle">{singlePost.title}</h2>
             </header>
 
-            <div className="flex-row align-left project_tags">
+            <div className="flex-row align-left project_tags noshade">
               {singlePost.categories && (
                 <>
                   <div className="flex-row align-left">
@@ -184,7 +186,7 @@ export default function SinglePost() {
               )}
             </div>
 
-            <div className="flex-row align-left project_tags">
+            <div className="flex-row align-left project_tags noshade">
               {singlePost.tags &&
                 singlePost.tags.map((tag, index) => (
                   <p className="tag project_tag" key={index}>
@@ -194,7 +196,7 @@ export default function SinglePost() {
                 ))}
             </div>
 
-            <div className="flex-row project_details">
+            <div className="flex-row project_details noshade">
               {singlePost.client && (
                 <>
                   <p>Collaborator(s): </p>
@@ -204,16 +206,16 @@ export default function SinglePost() {
             </div>
           </div>
 
-          <div className="contentColumn">
+          <div className="contentColumn ">
             {singlePost.recap && (
-              <div className="recap">
+              <div className="recap noshade">
                 <BlockContent blocks={singlePost.recap} />
               </div>
             )}
 
             {singlePost.body && (
               <div className="content">
-                <div className="flex-row justifyBetween header">
+                <div className="flex-row justifyBetween header noshade">
                   <h2 className="projectTitle">{singlePost.title}</h2>
 
                   <button
@@ -224,8 +226,8 @@ export default function SinglePost() {
                     {">"}
                   </button>
                 </div>
-                <div className="contentBlock">
-                  <BlockContent blocks={singlePost.body} />
+                <div className="contentBlock noshade">
+                  <BlockContent blocks={singlePost.body} class="noshade" />
                 </div>
               </div>
             )}
@@ -234,7 +236,7 @@ export default function SinglePost() {
             singlePost.miniImagesGallery.length > 0 ? (
               <Masonry
                 breakpointCols={minibreakpointColumnsObj}
-                className="my-masonry-grid "
+                className="my-masonry-grid"
                 columnClassName="my-masonry-grid_column singleProjectMasonry"
               >
                 {singlePost.miniImagesGallery.map((image, index) => (

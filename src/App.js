@@ -20,6 +20,8 @@ import AppContext from "./globalState";
 
 import ScrollToTop from "./components/blocks/scrollToTop";
 
+import useWindowDimensions from "./components/functions/useWindowDimensions";
+
 const SinglePost = lazy(() => import("./components/SinglePost.js"));
 const LandingPage = lazy(() => import("./components/LandingPage.js"));
 const ProjectList = lazy(() => import("./components/ProjectList.js"));
@@ -30,7 +32,7 @@ const ThreeDScene = lazy(() => import("./components/threeDscene"));
 function App() {
   const [siteSettings, setSiteSettings] = useState();
   const [projectList, setProjectList] = useState();
-  const cursorRef = useRef(null);
+  // const cursorRef = useRef(null);
 
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -40,6 +42,8 @@ function App() {
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
 
   const mainRef = createRef();
+
+  // const { width } = useWindowDimensions();
 
   useEffect(() => {
     sanityClient
@@ -100,6 +104,49 @@ function App() {
     }
   }, [projectList]);
 
+  function generateNoise(opacity, h, w) {
+    function makeCanvas(h, w) {
+      var canvas = document.createElement("canvas");
+      canvas.height = h;
+      canvas.width = w;
+      return canvas;
+    }
+
+    function randomise(data, opacity) {
+      // see prev. revision for 8-bit
+      var i, x;
+      for (i = 0; i < data.length; ++i) {
+        x = Math.floor(Math.random() * 0xffffff); // random RGB
+        data[i] = x | opacity; // set all of RGBA for pixel in one go
+      }
+    }
+
+    function initialise(opacity, h, w) {
+      var canvas = makeCanvas(h, w),
+        context = canvas.getContext("2d"),
+        image = context.createImageData(h, w),
+        data = new Uint32Array(image.data.buffer);
+      opacity = Math.floor(opacity * 0x255) << 24; // make bitwise OR-able
+      return function () {
+        randomise(data, opacity); // could be in-place for less overhead
+        context.putImageData(image, 0, 0);
+        // you may want to consider other ways of setting the canvas
+        // as the background so you can take this out of the loop, too
+        document.body.style.backgroundImage =
+          "url(" + canvas.toDataURL("image/png") + ")";
+      };
+    }
+
+    return initialise(opacity || 0.2, h || 55, w || 55);
+  }
+
+  var noise = generateNoise(0.8, 200, 200);
+
+  (function loop() {
+    noise();
+    requestAnimationFrame(loop);
+  })();
+
   const globalContext = {
     siteSettings: siteSettings,
     projectList: projectList,
@@ -116,22 +163,24 @@ function App() {
     setHasFeaturedPosts,
   };
 
-  const followMouse = (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
+  // const followMouse = (e) => {
+  //   const x = e.clientX;
+  //   const y = e.clientY;
 
-    cursorRef.current.style.transform = `translate3d(${x - 250}px, ${
-      y - 250
-    }px, 0)`;
-  };
+  //   cursorRef.current.style.transform = `translate3d(${x - 250}px, ${
+  //     y - 250
+  //   }px, 0)`;
+  // };
 
-  useEffect(() => {
-    window.addEventListener("mousemove", followMouse);
+  // useEffect(() => {
+  //   if (cursorRef.current) {
+  //     window.addEventListener("mousemove", followMouse);
+  //   }
 
-    return () => {
-      window.removeEventListener("mousemove", followMouse);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("mousemove", followMouse);
+  //   };
+  // }, []);
 
   return (
     <main>
@@ -170,7 +219,7 @@ function App() {
                 </ScrollToTop>
               </div>
             </AnimatePresence>
-            <div className="cursor" ref={cursorRef}></div>
+            {/* {width > 900 && <div className="cursor" ref={cursorRef}></div>} */}
             {siteSettings && <Footer info={siteSettings} />}
           </BrowserRouter>
         </AppContext.Provider>

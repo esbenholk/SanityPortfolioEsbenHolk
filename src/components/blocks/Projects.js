@@ -9,7 +9,7 @@ import AppContext from "../../globalState";
 import useWindowDimensions from "../functions/useWindowDimensions";
 
 const breakpointColumnsObj = {
-  default: 3,
+  default: 2,
   1300: 2,
   600: 1,
 };
@@ -151,7 +151,7 @@ export default function Projects({ show_categories, show_tags }) {
   }
 
   return (
-    <div className="projects">
+    <div className="">
       <div className="regContainer">
         {show_categories && (
           <div className="regContainer">

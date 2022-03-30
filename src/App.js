@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
   createRef,
-  useRef,
+  // useRef,
 } from "react";
 // import NavBar from "./components/NavBar.js";
 import "./App.css";
@@ -20,7 +20,7 @@ import AppContext from "./globalState";
 
 import ScrollToTop from "./components/blocks/scrollToTop";
 
-import useWindowDimensions from "./components/functions/useWindowDimensions";
+// import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 const SinglePost = lazy(() => import("./components/SinglePost.js"));
 const LandingPage = lazy(() => import("./components/LandingPage.js"));

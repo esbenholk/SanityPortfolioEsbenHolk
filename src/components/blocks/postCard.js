@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import React from "react";
+
 import sanityClient from "../../client";
 
 import { Link } from "react-router-dom";
-import BlockContent from "../blocks/BlockContent";
+// import BlockContent from "../blocks/BlockContent";
 
 import imageUrlBuilder from "@sanity/image-url";
-import useWindowDimensions from "../functions/useWindowDimensions";
+// import useWindowDimensions from "../functions/useWindowDimensions";
 
 // Get a pre-configured url-builder from your sanity client
 const builder = imageUrlBuilder(sanityClient);
@@ -15,15 +17,15 @@ function urlFor(source) {
 }
 
 export default function PostCard({ post }) {
-  const [isShown, setIsShown] = useState(false);
+  // const [isShown, setIsShown] = useState(false);
 
-  const { width } = useWindowDimensions();
+  // const { width } = useWindowDimensions();
 
   return (
     <div
       className="post_card"
-      onMouseEnter={() => setIsShown(true)}
-      onMouseLeave={() => setIsShown(false)}
+      // onMouseEnter={() => setIsShown(true)}
+      // onMouseLeave={() => setIsShown(false)}
     >
       <Link
         to={"/projects/" + post.slug.current}

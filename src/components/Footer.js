@@ -64,13 +64,13 @@ class Footer extends React.Component {
       }
     };
 
-    const toggleChaos = () => {
-      if (this.state.buttonText === "toggle chaos") {
-        this.setState({ buttonText: "untoggle chaos" });
-      } else {
-        this.setState({ buttonText: "toggle chaos" });
-      }
-    };
+    // const toggleChaos = () => {
+    //   if (this.state.buttonText === "toggle chaos") {
+    //     this.setState({ buttonText: "untoggle chaos" });
+    //   } else {
+    //     this.setState({ buttonText: "toggle chaos" });
+    //   }
+    // };
 
     window.addEventListener("scroll", changeColors);
 

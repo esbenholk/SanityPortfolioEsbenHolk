@@ -31,8 +31,6 @@ export default function LandingPage() {
       }
       setFeaturedProjects(featuredProjects);
     }
-
-    const script = document.createElement("script");
   }, [myContext.hasFeaturedPosts, projectList, info]);
 
   return (

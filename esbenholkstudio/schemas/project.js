@@ -37,24 +37,6 @@ export default {
         "add comment here such as '-present' or 'forever'. It will be added in the list of projects",
     },
     {
-      name: "abbreviated_year",
-      title: "Year",
-      type: "number",
-      description:
-        "add the two last digits of the release year to appear as price on product card",
-    },
-    {
-      name: "client",
-      title: "Client",
-      type: "string",
-    },
-    {
-      name: "star_rating",
-      title: "Star Rating",
-      description: "input ASCII stars fx ★★★★★",
-      type: "string",
-    },
-    {
       name: "color",
       title: "Color",
       description: "input HEX Color Code",
@@ -70,6 +52,13 @@ export default {
       description:
         "image shown in 'Others have looked at' list and unveils main image on hover",
     },
+    {
+      name: "imageMap",
+      title: "image Map",
+      type: "string",
+      description: "export imagemap and attach for better link appearance",
+    },
+
     {
       name: "imagesGallery",
       title: "Images gallery",
@@ -93,19 +82,7 @@ export default {
       title: "Body",
       type: "blockContent",
     },
-    {
-      name: "miniImagesGallery",
-      title: "Mini Images gallery",
-      type: "array",
-      of: [
-        {
-          type: "image",
-          options: {
-            hotspot: true,
-          },
-        },
-      ],
-    },
+
     {
       name: "categories",
       title: "Categories",

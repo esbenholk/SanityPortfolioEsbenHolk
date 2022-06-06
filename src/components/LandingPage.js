@@ -11,6 +11,8 @@ import Image from "./blocks/image";
 
 import BlockContent from "./blocks/BlockContent";
 
+import {THREEd_comp} from "./THREEd_comp"
+
 export default function LandingPage() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
@@ -41,11 +43,11 @@ export default function LandingPage() {
       exit={{ opacity: 0 }}
       // style={{ backgroundImage: `url(${info.backgroundImage.asset.url})` }}
     >
-      <motion.div className="headline flex-column fullWidthPadded noshade">
+      {/* <motion.div className="headline flex-column fullWidthPadded noshade">
         <BlockContent blocks={info.greeting} class="noshade" />
-      </motion.div>
+      </motion.div> */}
 
-      <div className="flex-column contentColumn borderTop">
+      {/* <div className="flex-column contentColumn borderTop">
         <div className="flex-row align-center ">
           <>
             {info.mainImages ? (
@@ -73,7 +75,9 @@ export default function LandingPage() {
           show_categories={false}
           show_tags={false}
         />
-      ) : null}
+      ) : null} */}
+
+      <THREEd_comp />
     </motion.div>
   );
 }

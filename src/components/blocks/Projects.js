@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 
 import Masonry from "react-masonry-css";
 
-import PostCard from "./postCard.js";
+// import PostCard from "./postCard.js";
+
+import Mapper from "./imageMap";
 
 import AppContext from "../../globalState";
 
@@ -11,7 +13,7 @@ import useWindowDimensions from "../functions/useWindowDimensions";
 const breakpointColumnsObj = {
   default: 2,
   1300: 2,
-  600: 1,
+  600: 1
 };
 
 export default function Projects({ show_categories, show_tags }) {
@@ -194,7 +196,12 @@ export default function Projects({ show_categories, show_tags }) {
       >
         {sortedPosts &&
           sortedPosts.map((post, index) => (
-            <PostCard post={post} key={index} />
+            <Mapper
+              post={post}
+              key={index}
+              parentWidth={560}
+              responsive={true}
+            />
           ))}
       </Masonry>
       {show_tags & (width < 700) ? (

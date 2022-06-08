@@ -2,18 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 
 import Masonry from "react-masonry-css";
 
-// import PostCard from "./postCard.js";
-
-import Mapper from "./imageMap";
+import PostCard from "./postCard.js";
 
 import AppContext from "../../globalState";
 
 import useWindowDimensions from "../functions/useWindowDimensions";
 
 const breakpointColumnsObj = {
-  default: 2,
+  default: 3,
   1300: 2,
-  600: 1
+  600: 1,
 };
 
 export default function Projects({ show_categories, show_tags }) {
@@ -153,8 +151,22 @@ export default function Projects({ show_categories, show_tags }) {
   }
 
   return (
-    <div className="">
-      <div className="regContainer">
+    <div className="projects">
+
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="my-masonry-grid fullWidthPadded"
+        columnClassName="my-masonry-grid_column"
+      >
+        {sortedPosts &&
+          sortedPosts.map((post, index) => (
+            <PostCard post={post} key={index} />
+          ))}
+      </Masonry>
+
+
+
+    <div className="regContainer">
         {show_categories && (
           <div className="regContainer">
             {categories &&
@@ -189,37 +201,6 @@ export default function Projects({ show_categories, show_tags }) {
           </div>
         ) : null}
       </div>
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid fullWidthPadded"
-        columnClassName="my-masonry-grid_column"
-      >
-        {sortedPosts &&
-          sortedPosts.map((post, index) => (
-            <Mapper
-              post={post}
-              key={index}
-              parentWidth={560}
-              responsive={true}
-            />
-          ))}
-      </Masonry>
-      {show_tags & (width < 700) ? (
-        <div className="tag_grid horizontalScroll overscrollPadded">
-          {tags.map((tag, index) => (
-            <button
-              className="tag_button standard-button"
-              key={index}
-              id={"tag_" + tag + ""}
-              onClick={() => {
-                setTag({ tag });
-              }}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

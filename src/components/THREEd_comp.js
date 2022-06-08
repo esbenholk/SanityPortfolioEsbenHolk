@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { TextureLoader } from "three";
 import React, {Suspense} from 'react';
-import { Canvas, extend, useFrame, useThree,  useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useThree,  useLoader } from "@react-three/fiber";
 import { Physics, useSphere } from "@react-three/cannon";
-import {Environment, useTexture,  MeshDistortMaterial, useProgress, Html} from "@react-three/drei";
+import {Environment, useTexture,  MeshDistortMaterial,  Html} from "@react-three/drei";
 
 // import Image from "./blocks/image";
 
@@ -34,6 +34,7 @@ function Loader(props) {
   return <Html center><div className="loading_img">
            <img
                 src={ urlFor(props.mainImage.asset.url).url()}
+                alt="placeholder img - wait for animation"
               />
     
     
@@ -92,19 +93,21 @@ export function ThreeDComp(props){
 
 
 const ImageTextureMaterial = (imageUrl, material) => {
-  const AnimatedMaterial = a(MeshDistortMaterial);
+  const animatedMaterial = a(MeshDistortMaterial);
+
 
   const texture = useLoader(TextureLoader, imageUrl.imageUrl);
   return (
-    < MeshDistortMaterial
-      attach="material"
-      roughness={0}
-      color="white"
-      map={texture}
-      material={material}
-      envMapIntensity={1} 
-      emissive={"#370037"}
-    />
+    <MeshDistortMaterial
+    attach="material"
+    roughness={0}
+    color="white"
+    map={texture}
+    material={animatedMaterial}
+    envMapIntensity={1} 
+    emissive={"#370037"}
+  />
+ 
   );
 };
 

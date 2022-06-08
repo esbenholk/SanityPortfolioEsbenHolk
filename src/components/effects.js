@@ -1,15 +1,17 @@
 import {
   Bloom,
-  ChromaticAberration,
 
   EffectComposer,
-  Glitch,
 
   HueSaturation,
 
 } from "@react-three/postprocessing";
 
 import React from "react";
+
+// Glitch,
+
+// ChromaticAberration,
 
 
 export default function Effects() {

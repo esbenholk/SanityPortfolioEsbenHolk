@@ -82,6 +82,7 @@ export default function SinglePost() {
 
   return (
     <>
+    <div style={{height: "100px"}}></div>
       <motion.div
         layout
         initial={{ opacity: 0 }}

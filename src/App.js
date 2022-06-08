@@ -1,5 +1,5 @@
 /* eslint-disable no-lone-blocks */
-import { BrowserRouter, Route, Switch, useLocation} from "react-router-dom";
+import { BrowserRouter, Route, Switch} from "react-router-dom";
 
 import React, {
   Suspense,

@@ -1,17 +1,9 @@
-import React, { useContext, useEffect, useState, Suspense } from "react";
+import React, { useContext,  Suspense } from "react";
 
 import { motion } from "framer-motion";
 
-import Projects from "./blocks/Projects";
-
 import AppContext from "../globalState";
 
-import CustomCarousel from "./blocks/Carousel";
-import Image from "./blocks/image";
-
-import BlockContent from "./blocks/BlockContent";
-
-import Footer from "./Footer";
 
 import {ThreeDComp} from "./THREEd_comp"
 

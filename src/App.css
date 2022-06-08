@@ -222,7 +222,7 @@ a.visited {
 .mainContainer {
   /* border-top: 2px solid var(--detailColor); */
   /* padding: var(--normalPadding); */
-  padding-top: 100px;
+  /* padding-top: 100px; */
   min-height: 90vh;
 }
 
@@ -588,7 +588,7 @@ footer p {
     padding: var(--normalPadding);
   }
   .mainContainer {
-    padding-top: 130px;
+    /* padding-top: 130px; */
   }
 
   .singlePost {

@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import BlockContent from "./blocks/BlockContent";
 
+
 class Footer extends React.Component {
   constructor(props) {
     super(props);
@@ -13,70 +14,22 @@ class Footer extends React.Component {
   }
 
   render() {
-    // const colors = [
-    //   "#00ff2e",
-    //   "#0061ff",
-    //   "white",
-    //   "grey",
-    //   "black",
-    //   "#00ffe9",
-    //   "33bff00",
-    //   "#8cfffb",
-    //   "#00ff55",
-    //   "#8cfffb",
-    //   "#ff9100",
-    //   "#ff4d00",
-    //   "#f6ff00",
-    //   "#ff00f7",
-    //   "#0800ff",
-    //   "#908cff",
-    //   "#8cffc8",
-    //   "#1cbd6f",
-    //   "#ff006a",
-    //   "#a14d70",
-    //   "#FFFFFF",
-    //   "#000000",
-    //   "#00e397",
-    // ];
-
-    const changeColors = () => {
-      if (this.state.buttonText === "untoggle chaos") {
-        // document.documentElement.style.setProperty(
-        //   "--normalColor",
-        //   colors[Math.floor(Math.random() * colors.length)]
-        // );
-        // document.documentElement.style.setProperty(
-        //   "--detailColor",
-        //   colors[Math.floor(Math.random() * colors.length)]
-        // );
-        document.documentElement.style.setProperty(
-          "--normalColor",
-          `#${Math.floor(Math.random() * 0xffffff)
-            .toString(16)
-            .padEnd(6, "0")}`
-        );
-        document.documentElement.style.setProperty(
-          "--detailColor",
-          `#${Math.floor(Math.random() * 0xffffff)
-            .toString(16)
-            .padEnd(6, "0")}`
-        );
-      }
-    };
-
-    // const toggleChaos = () => {
-    //   if (this.state.buttonText === "toggle chaos") {
-    //     this.setState({ buttonText: "untoggle chaos" });
-    //   } else {
-    //     this.setState({ buttonText: "toggle chaos" });
-    //   }
-    // };
-
-    window.addEventListener("scroll", changeColors);
 
     return (
-      <div>
+      <>
         <footer className="flex-column">
+
+        <nav class="footer-nav">
+          <NavLink className="standard-button" to="/gallery">
+            Gallery
+          </NavLink>
+
+          <NavLink className="standard-button" to="/gallery">
+          Gallery
+          </NavLink>
+        </nav>
+     
+    
           <div className="flex-row justifyBetween fullwidth">
             <div className="flex-row ">
               <NavLink to="/">
@@ -114,18 +67,9 @@ class Footer extends React.Component {
               <BlockContent blocks={this.state.info.contact} />
             </div>
           ) : null}
-          {/* <button
-            onClick={toggleChaos}
-            className={
-              this.state.buttonText === "toggle chaos"
-                ? "tag_button standard-button inverse"
-                : "tag_button standard-button inverse active"
-            }
-          >
-            {this.state.buttonText}
-          </button> */}
+
         </footer>
-      </div>
+      </>
     );
   }
 }

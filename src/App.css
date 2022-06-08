@@ -6,7 +6,8 @@
   /* --normalColor: rgb(21, 255, 0);
   --detailColor: rgb(17, 0, 255); */
   --normalColor: grey;
-  --detailColor: rgb(246, 124, 255);
+  /* --detailColor: rgb(246, 124, 255); */
+  --detailColor: #39FF14;
   --textColor: black;
 }
 
@@ -32,12 +33,12 @@ body {
 
 button,
 div {
-  border: 2px solid white;
-  border-radius: 300%;
-  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+  /* border: 2px solid white;
+  border-radius: 300%; */
+  /* box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
     0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
     0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
-    0 0 33px var(--detailColor);
+    0 0 33px var(--detailColor); */
 }
 .noshade div,
 .noshade {
@@ -220,7 +221,7 @@ a.visited {
 
 .mainContainer {
   /* border-top: 2px solid var(--detailColor); */
-  padding: var(--normalPadding);
+  /* padding: var(--normalPadding); */
   padding-top: 100px;
   min-height: 90vh;
 }
@@ -304,6 +305,28 @@ nav {
   align-items: center;
   padding: var(--normalPadding);
   padding-bottom: 0;
+}
+
+.footer-nav{
+  position: absolute;
+  top: -160px;
+}
+
+
+.loading_img{
+  width: 600px;
+  height: 600px;
+  max-width: 100%;
+  background-color:var(--detailColor);
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+  0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+  0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  0 0 33px var(--detailColor);
+}
+.loading_img img{
+  width: 100%;
+  object-fit: contain;
+
 }
 .fixedUnderHeader {
   position: fixed;
@@ -457,6 +480,18 @@ footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  z-index: 999999999999999;
+  position: absolute;
+  top: 99%;
+  width: 100%;
+    box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+    0 0 33px var(--detailColor);
+}
+
+.absoluteplacement{
+  
 }
 footer p {
   color: var(--normalColor);
@@ -535,6 +570,9 @@ footer p {
     width: 100%;
     text-align: center;
   }
+  .logo_container{
+    margin-bottom: 50px;
+  }
 
   nav {
     /* position: relative; */
@@ -572,7 +610,7 @@ footer p {
 
 @media only screen and (min-width: 1000px) {
   .mainContainer {
-    padding-left: 10%;
-    padding-right: 10%;
+    /* padding-left: 10%;
+    padding-right: 10%; */
   }
 }

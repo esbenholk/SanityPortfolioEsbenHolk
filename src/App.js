@@ -1,5 +1,6 @@
 /* eslint-disable no-lone-blocks */
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useLocation} from "react-router-dom";
+
 import React, {
   Suspense,
   lazy,
@@ -20,6 +21,8 @@ import AppContext from "./globalState";
 
 import ScrollToTop from "./components/blocks/scrollToTop";
 
+
+
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 const SinglePost = lazy(() => import("./components/SinglePost.js"));
@@ -29,11 +32,14 @@ const Category = lazy(() => import("./components/Category.js"));
 const Home = lazy(() => import("./components/Home.js"));
 const ThreeDScene = lazy(() => import("./components/threeDscene"));
 
+const Gallery = lazy(()=> import("./components/Gallery"))
+
 function App() {
   const [siteSettings, setSiteSettings] = useState();
   const [projectList, setProjectList] = useState();
-  // const cursorRef = useRef(null);
 
+
+  // const cursorRef = useRef(null);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -42,6 +48,11 @@ function App() {
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
 
   const mainRef = createRef();
+
+
+
+
+// console.log(location);
 
   // const { width } = useWindowDimensions();
 
@@ -67,6 +78,9 @@ function App() {
         setProjectList(data);
       })
       .catch(console.error);
+
+
+      console.log("PATH", window.location.path);
   }, []);
 
   useEffect(() => {
@@ -132,10 +146,13 @@ function App() {
                   <Switch>
                     <Route exact path="/">
                       {siteSettings && (
+                        <>
                         <LandingPage
                           info={siteSettings}
                           projectList={projectList}
                         />
+                        <Footer info={siteSettings} />
+                        </>
                       )}
                     </Route>
                     <Route path="/projects/:slug">
@@ -147,6 +164,15 @@ function App() {
                     <Route path="/about">
                       <Home info={siteSettings} projectList={projectList} />
                     </Route>
+                    <Route path="/gallery">
+                    {siteSettings && (
+                        <>
+                       <Gallery     info={siteSettings}
+                          projectList={projectList}/>
+                        </>
+                      )}
+                  
+                    </Route>
                     <Route path="/chaos">
                       <ThreeDScene projects={projectList} />
                     </Route>
@@ -156,9 +182,7 @@ function App() {
                   </Switch>
                 </ScrollToTop>
               </div>
-            </AnimatePresence>
-            {/* {width > 900 && <div className="cursor" ref={cursorRef}></div>} */}
-            {siteSettings && <Footer info={siteSettings} />}
+            </AnimatePresence>        
           </BrowserRouter>
         </AppContext.Provider>
       </Suspense>

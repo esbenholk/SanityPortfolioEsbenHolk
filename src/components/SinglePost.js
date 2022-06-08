@@ -28,6 +28,8 @@ export default function SinglePost() {
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
+  console.log("oh its u bitch. figured you'd sneak a peak at the code");
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

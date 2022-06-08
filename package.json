@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^0.0.22",
-    "@react-three/cannon": "^4.2.0",
+    "@react-three/cannon": "^6.3.0",
     "@react-three/drei": "^7.26.1",
     "@react-three/fiber": "^7.0.21",
     "@react-three/postprocessing": "^2.3.2",

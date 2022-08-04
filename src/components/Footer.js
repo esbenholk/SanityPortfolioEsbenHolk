@@ -29,7 +29,7 @@ class Footer extends React.Component {
           </NavLink>
         </nav>
      
-    
+{/*     
           <div className="flex-row justifyBetween fullwidth">
             <div className="flex-row ">
               <NavLink to="/">
@@ -66,7 +66,7 @@ class Footer extends React.Component {
             <div className="blockContent">
               <BlockContent blocks={this.state.info.contact} />
             </div>
-          ) : null}
+          ) : null} */}
 
         </footer>
       </>

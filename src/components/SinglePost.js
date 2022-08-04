@@ -14,6 +14,9 @@ import Masonry from "react-masonry-css";
 
 import useWindowDimensions from "./functions/useWindowDimensions";
 
+import { NavLink } from "react-router-dom";
+
+
 const minibreakpointColumnsObj = {
   default: 4,
 };
@@ -53,15 +56,9 @@ export default function SinglePost() {
       )
       .then((data) => {
         setSinglePost(data[0]);
-        console.log("singlepost:", data[0], projectList);
-
+  
         for (let index = 0; index < projectList.length; index++) {
-          console.log(
-            "in the loop",
-            index,
-            projectList[index].title,
-            data[0].title
-          );
+    
           if (
             projectList[index].title === data[0].title &&
             index + 1 <= projectList.length
@@ -82,6 +79,8 @@ export default function SinglePost() {
 
   if (!singlePost) return <div>Loading...</div>;
 
+  console.log("LOCATION", window.location);
+
   return (
     <>
     <div style={{height: "100px"}}></div>
@@ -92,13 +91,14 @@ export default function SinglePost() {
         exit={{ opacity: 0 }}
         className="fullWidthPadded"
       >
-        <div
-          className={
-            prevPost
-              ? " fixedUnderHeader noshade"
-              : " fixedUnderHeader align-right noshade"
-          }
-        >
+
+     
+          {!window.location.pathname.includes("esben") ? 
+            <nav
+             className={
+               "footer-nav"
+             }
+           >
           {prevPost && (
             <a href={prevPost.slug.current} className="standard-button">
               Prev
@@ -109,7 +109,17 @@ export default function SinglePost() {
               Next
             </a>
           )}
-        </div>
+        </nav> : 
+             <nav className="footer-nav">
+             <NavLink className="standard-button" to="/gallery">
+               Gallery
+             </NavLink>
+
+             <NavLink className="standard-button" to="/gallery">
+               Gallery
+             </NavLink>
+           </nav>}
+      
 
         <article className="borderTop singlePost">
           <div className="flex-row align-top project_directory_line noshade">

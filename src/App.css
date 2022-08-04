@@ -16,6 +16,7 @@
   font-family: "Pathway Gothic One", sans-serif;
 }
 
+
 *,
 html,
 body,
@@ -31,14 +32,183 @@ body {
   overflow-x: hidden;
 }
 
-button,
-div {
-  /* border: 2px solid white;
-  border-radius: 300%; */
-  /* box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
-    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
-    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
-    0 0 33px var(--detailColor); */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overscroll-behavior: none;
+  font-family: 'Inter var', sans-serif;
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4='),
+    auto;
+}
+
+
+
+body, #root, .app {
+  width: 100%;
+
+}
+
+.scrollcontent {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  animation: animateBg 14s linear infinite;
+  /* background-image: linear-gradient(90deg,#ffff00,#00ff00,#00ffff,#ffb8fd,#a6f680,#ffff00,#00ff00); */
+  background-image: url("https://cdn.sanity.io/images/swdt1dj3/production/f4e61303a8644e4a3c21feb505bd19268f2d739a-2362x2362.jpg?w=1000&h=1000&fit=max");
+  background-size: 600% 600%;
+}
+@keyframes animateBg {
+  0% { background-position: 100% 0%; }
+  100% { background-position: 0% 0%; }
+}
+
+
+.card {
+  position: relative;
+  display: inline-block;
+  max-height: 100%;
+  height: 100%;
+  width: 100%;
+
+}
+.card .link{
+  position: absolute;
+  top:50%;
+  transform: translate(0, -50%);
+
+}
+
+.surroundingImg{
+  position: relative;
+  max-width:500px;
+
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  margin: -30px;
+  mix-blend-mode: difference;
+
+
+}
+.surroundingImg:hover{
+
+  mix-blend-mode: normal;
+
+
+}
+
+
+.card-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+
+.scroll {
+
+  height: auto;
+  position: absolute;
+  flex-basis: 0;
+  z-index: 5;
+  background-color: rgba(225,225,225,0.8);
+  color: darkgrey;
+  display: none;
+  transition: 2s;
+}
+
+.card-container:hover .scroll {
+  display: block;
+  transition: 2s;
+}
+
+
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  height: 100% !important;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mainCanvas{
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+  right: 0; 
+  left: 0;
+}
+
+h1 {
+  font-size: 30vw;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  margin: 0;
+  padding: 0;
+  color: var(--detailColor);
+  font-weight: 200;
+
+  height: auto;
+  color: var(--detailColor);
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+  0 0 10px white, 0 0 20px white,
+  0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  0 0 33px var(--detailColor);
+  padding: 5px 20px 5px 20px;
+
+  font-family: "Pathway Gothic One", sans-serif;
+
+  mix-blend-mode:difference;
 }
 .noshade div,
 .noshade {
@@ -60,12 +230,7 @@ div {
 
 body {
   /* background: var(--normalColor); */
-  background-image: linear-gradient(45deg, #b0b0b0 25%, transparent 25%),
-    linear-gradient(-45deg, #b0b0b0 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #b0b0b0 75%),
-    linear-gradient(-45deg, transparent 75%, #b0b0b0 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+
   min-height: 100vh;
   z-index: -2;
   overflow-x: hidden;
@@ -120,7 +285,6 @@ h2 {
 }
 h1 {
   margin-bottom: 50px;
-  color: var(--textColor);
 }
 
 strong {
@@ -165,21 +329,29 @@ a.visited {
   justify-content: space-between;
 }
 
+
 .standard-button {
   display: inline-block;
   font-weight: 200;
   font-size: 23px;
   height: auto;
-  color: var(--textColor);
+  color: var(--detailColor);
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
+  0 0 10px black, 0 0 20px black,
+  0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  0 0 33px var(--detailColor);
   padding: 5px 20px 5px 20px;
   border: 2px solid var(--detailColor) !important;
   box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
     0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
     0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
     0 0 33px var(--detailColor);
+
   white-space: nowrap;
   border-radius: 25px;
   font-family: "Pathway Gothic One", sans-serif;
+
+  mix-blend-mode: difference;
   /* mix-blend-mode: exclusion; */
 }
 .inverse {
@@ -220,10 +392,7 @@ a.visited {
 }
 
 .mainContainer {
-  /* border-top: 2px solid var(--detailColor); */
-  /* padding: var(--normalPadding); */
-  /* padding-top: 100px; */
-  min-height: 90vh;
+
 }
 
 .regContainer {
@@ -233,6 +402,8 @@ a.visited {
 
 .singlePost {
   margin-top: 50px;
+  padding-left: 20%;
+  padding-right: 20%;
 }
 
 /* frontpage grids */
@@ -295,7 +466,6 @@ a.visited {
 
 nav {
   position: fixed;
-  top: 0;
   left: 0;
   right: 0;
   z-index: 9999999999;
@@ -308,8 +478,8 @@ nav {
 }
 
 .footer-nav{
-  position: absolute;
-  top: -160px;
+  bottom: 0;
+  padding: 0 var(--normalPadding) var(--normalPadding) var(--normalPadding);
 }
 
 
@@ -357,14 +527,14 @@ nav {
   white-space: nowrap;
 }
 
-.projectList {
+.projectList2022 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: var(--normalPadding);
-  margin-top: 100px;
 }
 .projectList-item:first-of-type {
+  margin-top: 40px;
   margin-bottom: 20px;
 }
 .projectList-item {
@@ -576,7 +746,6 @@ footer p {
 
   nav {
     /* position: relative; */
-    top: 0;
     left: 0;
     right: 0;
     max-width: 100%;
@@ -587,12 +756,21 @@ footer p {
     align-items: center;
     padding: var(--normalPadding);
   }
+  .footer-nav{
+    padding-bottom: 30px;
+  }
+
   .mainContainer {
     /* padding-top: 130px; */
   }
 
   .singlePost {
-    margin-top: 15px;
+    margin-top: 75px;
+    padding: 10%;
+
+  }
+  .contentColumn{
+    padding-bottom: 75px;
   }
 
   .fixedUnderHeader {

@@ -26,7 +26,7 @@ export default function Header() {
               )}
             </div>
           </NavLink>
-          <NavLink className="standard-button" to="/about">
+          <NavLink className="standard-button" to="/projects/esben-holk-house-of-killing">
             About us
           </NavLink>
         </nav>
@@ -36,7 +36,7 @@ export default function Header() {
             Projects
           </NavLink>
 
-          <NavLink className="standard-button" to="/about">
+          <NavLink className="standard-button" to="/projects/esben-holk-house-of-killing">
             About us
           </NavLink>
 

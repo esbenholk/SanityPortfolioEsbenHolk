@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext ,  lazy} from "react";
 
 import AppContext from "../globalState";
 import { motion } from "framer-motion";
@@ -7,18 +7,29 @@ import BlockContent from "./blocks/BlockContent";
 
 import Image from "./blocks/image";
 
+
+const Projects = lazy(() => import("./projectList2022.js"));
+
+
 export default function Home() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
+  const projectList = myContext.projectList;
 
   return (
     <div>
       <div className="content-container fullWidthPadded">
         {info ? (
           <div className="align-top">
+
+
             <motion.h1 className="headline">
               Esben Holk @ HOUSE OF KILLING
             </motion.h1>
+
+            <Projects projectList={projectList}></Projects>
+
+
 
             <div className="flex-column contentColumn regContainer">
               <div className="flex-row align-center">
@@ -32,6 +43,7 @@ export default function Home() {
                 ) : null}
               </div>
             </div>
+
 
             <div className="flex-row justifyBetween">
               {info.about ? (

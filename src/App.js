@@ -13,24 +13,23 @@ import React, {
 import "./App.css";
 import sanityClient from "./client";
 import Header from "./components/Header_function";
-
 import { AnimatePresence } from "framer-motion";
-import Footer from "./components/Footer";
 
 import AppContext from "./globalState";
 
 import ScrollToTop from "./components/blocks/scrollToTop";
+
+import HorizontalScrollComp from "./components/horizontalScroll";
 
 
 
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 const SinglePost = lazy(() => import("./components/SinglePost.js"));
-const LandingPage = lazy(() => import("./components/LandingPage.js"));
-const ProjectList = lazy(() => import("./components/ProjectList.js"));
+// const LandingPage = lazy(() => import("./components/LandingPage.js"));
+const Projects = lazy(() => import("./components/projectList2022.js"));
 const Category = lazy(() => import("./components/Category.js"));
-const Home = lazy(() => import("./components/Home.js"));
-const ThreeDScene = lazy(() => import("./components/threeDscene"));
+// const ThreeDScene = lazy(() => import("./components/threeDscene"));
 
 const Gallery = lazy(()=> import("./components/Gallery"))
 
@@ -71,7 +70,7 @@ function App() {
 
     sanityClient
       .fetch(
-        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString}'
+        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, yearString}'
       )
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
@@ -140,30 +139,35 @@ function App() {
         <AppContext.Provider value={globalContext}>
           <BrowserRouter>
             {siteSettings && <Header />}
+
+         
             <AnimatePresence>
-              <div className="mainContainer" ref={mainRef}>
+
                 <ScrollToTop>
-                  <Switch>
+                   <Switch>
+
                     <Route exact path="/">
-                      {siteSettings && (
-                        <>
-                        <LandingPage
-                          info={siteSettings}
-                          projectList={projectList}
-                        />
-                        <Footer info={siteSettings} />
-                        </>
-                      )}
+                      {projectList && (
+                            <>
+                            <HorizontalScrollComp projects={projectList} info={siteSettings}/>
+                            </>
+                      )
+                      }
                     </Route>
                     <Route path="/projects/:slug">
                       {projectList && <SinglePost projectList={projectList} />}
                     </Route>
                     <Route path="/projects">
-                      <ProjectList projectList={projectList} />
+                    {siteSettings && (
+                        <>
+                          <Projects info={siteSettings} projectList={projectList} />
+                      </>
+                      )}
+                  
+
+
                     </Route>
-                    <Route path="/about">
-                      <Home info={siteSettings} projectList={projectList} />
-                    </Route>
+               
                     <Route path="/gallery">
                     {siteSettings && (
                         <>
@@ -173,18 +177,19 @@ function App() {
                       )}
                   
                     </Route>
-                    <Route path="/chaos">
-                      <ThreeDScene projects={projectList} />
-                    </Route>
+               
                     <Route path="/:slug">
                       <Category />
                     </Route>
                   </Switch>
                 </ScrollToTop>
-              </div>
+
+
+
             </AnimatePresence>        
           </BrowserRouter>
         </AppContext.Provider>
+
       </Suspense>
     </main>
   );

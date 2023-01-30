@@ -21,9 +21,9 @@ export default function Header() {
           <NavLink to="/">
             <div className="logo_container">
               {info.title && <p className="standard-button">{info.title}</p>}
-              {info.logo && (
+              {/* {info.logo && (
                 <img className="logo" src={info.logo.asset.url} alt="" />
-              )}
+              )} */}
             </div>
           </NavLink>
           <NavLink className="standard-button" to="/projects/esben-holk-house-of-killing">
@@ -43,9 +43,6 @@ export default function Header() {
           <NavLink className="fullwidth" to="/">
             <div className="logo_container">
               {info.title && <p className="standard-button">{info.title}</p>}
-              {info.logo && (
-                <img className="logo" src={info.logo.asset.url} alt="" />
-              )}
             </div>
           </NavLink>
         </nav>

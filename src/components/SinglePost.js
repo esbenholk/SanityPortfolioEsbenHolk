@@ -5,7 +5,7 @@ import sanityClient from "../client";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Image from "./blocks/image";
-import CustomCarousel from "./blocks/Carousel";
+// import CustomCarousel from "./blocks/Carousel";
 import { Link } from "react-router-dom";
 
 import BlockContent from "./blocks/BlockContent";
@@ -77,13 +77,16 @@ export default function SinglePost() {
     setMainImageHeight(height - 300);
   }, [height]);
 
-  if (!singlePost) return <div>Loading...</div>;
+  if (!singlePost) return <p className="fixedMiddle standard-button">
+  content incoming
+</p>;
 
   console.log("LOCATION", window.location);
 
   return (
     <>
-    <div style={{height: "100px"}}></div>
+
+    <div style={{height: "110px"}}></div>
       <motion.div
         layout
         initial={{ opacity: 0 }}
@@ -110,7 +113,7 @@ export default function SinglePost() {
             </a>
           )}
         </nav> : 
-             <nav className="footer-nav">
+        <nav className="footer-nav">
              <NavLink className="standard-button" to="/gallery">
                Gallery
              </NavLink>
@@ -118,18 +121,17 @@ export default function SinglePost() {
              <NavLink className="standard-button" to="/gallery">
                Gallery
              </NavLink>
-           </nav>}
+        </nav>}
       
-
-        <article className="borderTop singlePost">
-          <div className="flex-row align-top project_directory_line noshade">
+      
+        <div className="flex-row align-top project_directory_line noshade">
             <a href="/projects">{"Project >"}</a>
             <div className="flex-row align-left noshade">
               {singlePost.categories &&
                 singlePost.categories.map((category, index) => (
                   <Link
                     to={"../" + category.slug.current}
-                    className="tag project_tag"
+                    className=""
                     key={index}
                   >
                     {category.title}
@@ -138,20 +140,101 @@ export default function SinglePost() {
                 ))}
               <p>{" > "}</p>
             </div>
-            <p>{singlePost.title}</p>
-          </div>
+            
+  
+            </div>
+        
+          
+        <article className="borderTop singlePost">
+
+      
+
+            <div className="standard-container projectnamecontainer projectDetails">
+                  {singlePost.title && (
+                    <p className="projectTitle">{singlePost.title}</p>
+                  )}
+                  {singlePost.categories && (
+                    <>
+                      <div className="flex-row align-left">
+                        {singlePost.categories.map((category, index) => (
+                          <Link
+                            to={"../" + category.slug.current}
+                            className="tag project_tag"
+                            key={index}
+                          >
+                            {category.title}
+                            {index + 1 !== singlePost.categories.length
+                              ? ","
+                              : null}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                {singlePost.tags && (
+                  <>
+                    <div className="flex-row align-left project_tags noshade">
+                        {
+                          singlePost.tags.map((tag, index) => (
+                            <p className="tag project_tag" key={index}>
+                              {tag}
+                              {index + 1 !== singlePost.tags.length ? "," : null}
+                            </p>
+                          ))}
+                        
+                    </div>
+                  
+                  </>
+                )}
+
+                <div className="flex-row project_details noshade">
+                    {singlePost.client && (
+                      <>
+                        <p>Collaborator(s): </p>
+                        <p className="project_tag">{singlePost.client}</p>
+                      </>
+                    )}
+                </div>
+             
+                {singlePost.recap && ( 
+                    <div className="projectRecap">
+                      <BlockContent blocks={singlePost.recap} />
+                    </div>
+                  )}
+            </div>
+
+
+     
+            {singlePost.year && (
+                    <p className="standard-container projectYear">{singlePost.year}</p>
+              )}
+          
+        
+        
+      
+
+    
+   
 
           <div className="flex-column contentColumn">
             <div className="flex-row align-center">
               {singlePost.imagesGallery &&
-              singlePost.imagesGallery.length > 1 ? (
-                <CustomCarousel arrows={true} swipe={true} classsss={""}>
-                  {singlePost.imagesGallery.map((image, index) => (
+                singlePost.imagesGallery.length > 1 ? (
+                // <CustomCarousel arrows={true} swipe={true} classsss={""}>
+                //   {singlePost.imagesGallery.map((image, index) => (
+                //     <div className="project_main_image" key={index}>
+                //       <Image image={image} mainImageHeight={mainImageHeight} />
+                //     </div>
+                //   ))}
+                // </CustomCarousel>
+          
+                  singlePost.imagesGallery.map((image, index) => (
                     <div className="project_main_image" key={index}>
                       <Image image={image} mainImageHeight={mainImageHeight} />
                     </div>
-                  ))}
-                </CustomCarousel>
+                  ))
+
               ) : (
                 <div className="project_main_image">
                   <Image
@@ -163,72 +246,14 @@ export default function SinglePost() {
             </div>
           </div>
 
-          <div>
-            <header className="flex-row align-top justifyBetween noshade">
-              <h2 className="projectTitle">{singlePost.title}</h2>
-            </header>
 
-            <div className="flex-row align-left project_tags noshade">
-              {singlePost.categories && (
-                <>
-                  <div className="flex-row align-left">
-                    {singlePost.categories.map((category, index) => (
-                      <Link
-                        to={"../" + category.slug.current}
-                        className="tag project_tag"
-                        key={index}
-                      >
-                        {category.title}
-                        {index + 1 !== singlePost.categories.length
-                          ? ","
-                          : null}
-                      </Link>
-                    ))}
-                  </div>
-                </>
-              )}
-              {singlePost.year && (
-                <>
-                  <p className="flex-row align-left project_tag">
-                    {singlePost.year ? singlePost.year : "undefined"}{" "}
-                    {singlePost.yearString ? (
-                      <u>{singlePost.yearString}</u>
-                    ) : null}
-                  </p>
-                </>
-              )}
-            </div>
 
-            <div className="flex-row align-left project_tags noshade">
-              {singlePost.tags &&
-                singlePost.tags.map((tag, index) => (
-                  <p className="tag project_tag" key={index}>
-                    {tag}
-                    {index + 1 !== singlePost.tags.length ? "," : null}
-                  </p>
-                ))}
-            </div>
-
-            <div className="flex-row project_details noshade">
-              {singlePost.client && (
-                <>
-                  <p>Collaborator(s): </p>
-                  <p className="project_tag">{singlePost.client}</p>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className="contentColumn ">
-            {singlePost.recap && (
-              <div className="recap noshade">
-                <BlockContent blocks={singlePost.recap} />
-              </div>
-            )}
+          <div className="contentColumn">
+   
 
             {singlePost.body && (
-              <div className="content">
-                <div className="flex-row justifyBetween header noshade">
+              <div className="standard-container projectnamecontainer ">
+                <div className="flex-row justifyBetween header noshade projectRecap">
                   <h2 className="projectTitle">{singlePost.title}</h2>
 
                   <button
@@ -239,8 +264,17 @@ export default function SinglePost() {
                     {">"}
                   </button>
                 </div>
-                <div className="contentBlock noshade">
                   <BlockContent blocks={singlePost.body} class="noshade" />
+                  <div className="projectHeader"></div>
+
+                  <div className="flex-row align-right header projectRecap">
+                  <button
+                    onClick={scrollToTop}
+                    className="arrow"
+                    style={{ transform: "rotate(-90deg)" }}
+                  >
+                    {">"}
+                  </button>
                 </div>
               </div>
             )}
@@ -260,16 +294,9 @@ export default function SinglePost() {
               </Masonry>
             ) : null}
 
-            <div className="flex-row align-right header">
-              <button
-                onClick={scrollToTop}
-                className="arrow"
-                style={{ transform: "rotate(-90deg)" }}
-              >
-                {">"}
-              </button>
-            </div>
+        
             <div className="borderTop"></div>
+            <div className="projectHeader"></div>
           </div>
         </article>
       </motion.div>

@@ -14,7 +14,7 @@ const breakpointColumnsObj = {
   600: 1,
 };
 
-export default function Projects({ show_categories, show_tags }) {
+export default function Projects({ show_categories, show_tags, stateChanger }) {
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
@@ -152,23 +152,10 @@ export default function Projects({ show_categories, show_tags }) {
 
   return (
     <div className="projects">
-
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid fullWidthPadded"
-        columnClassName="my-masonry-grid_column"
-      >
-        {sortedPosts &&
-          sortedPosts.map((post, index) => (
-            <PostCard post={post} key={index} />
-          ))}
-      </Masonry>
-
-
-
+      <div className="projectHeader"></div>
     <div className="regContainer">
         {show_categories && (
-          <div className="regContainer">
+          <div className="">
             {categories &&
               categories.map((category, index) => (
                 <button
@@ -201,6 +188,17 @@ export default function Projects({ show_categories, show_tags }) {
           </div>
         ) : null}
       </div>
+
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="my-masonry-grid fullWidthPadded"
+        columnClassName="my-masonry-grid_column"
+      >
+        {sortedPosts &&
+          sortedPosts.map((post, index) => (
+            <PostCard post={post} key={index} stateChanger={stateChanger}/>
+          ))}
+      </Masonry>
     </div>
   );
 }

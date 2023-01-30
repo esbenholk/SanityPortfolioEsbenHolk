@@ -17,9 +17,12 @@ import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
 
+import { NavLink } from "react-router-dom";
+
 import ScrollToTop from "./components/blocks/scrollToTop";
 
-import HorizontalScrollComp from "./components/horizontalScroll";
+// import HorizontalScrollComp from "./components/horizontalScroll";
+import Boids from "./components/three/boids";
 
 
 
@@ -36,6 +39,8 @@ const Gallery = lazy(()=> import("./components/Gallery"))
 function App() {
   const [siteSettings, setSiteSettings] = useState();
   const [projectList, setProjectList] = useState();
+  const [sortedProjects, setSortedProjects] = useState();
+  const [settingsProject, setSettingsproject] = useState();
 
 
   // const cursorRef = useRef(null);
@@ -70,7 +75,7 @@ function App() {
 
     sanityClient
       .fetch(
-        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, yearString}'
+        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, body, yearString}'
       )
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
@@ -86,6 +91,18 @@ function App() {
     var tags = [];
     var categories = [];
     if (projectList) {
+
+      const sortedProjects1 = projectList.filter((element) => {
+        return element.slug.current !== "esben-holk-house-of-killing";
+      })
+      setSortedProjects(sortedProjects1);
+
+      const settingsProject1 = projectList.find((element) => {
+        return element.slug.current === "esben-holk-house-of-killing";
+      })
+
+      setSettingsproject(settingsProject1);
+
       for (let index = 0; index < projectList.length; index++) {
         const post = projectList[index];
 
@@ -133,6 +150,8 @@ function App() {
     setHasFeaturedPosts,
   };
 
+
+
   return (
     <main>
       <Suspense fallback={null}>
@@ -147,10 +166,25 @@ function App() {
                    <Switch>
 
                     <Route exact path="/">
-                      {projectList && (
+                      {sortedProjects && (
                             <>
-                            <HorizontalScrollComp projects={projectList} info={siteSettings}/>
+                            <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject}/>
+                            {/* <HorizontalScrollComp projects={projectList} info={siteSettings}/> */}
+
+                            <nav className="footer-nav">
+                                <NavLink className="standard-button" to="/gallery">
+                                  Gallery
+                                </NavLink>
+
+                                <NavLink className="standard-button" to="/gallery">
+                                  Gallery
+                                </NavLink>
+                            </nav>
+                            
+                           
                             </>
+
+                            
                       )
                       }
                     </Route>
@@ -171,7 +205,7 @@ function App() {
                     <Route path="/gallery">
                     {siteSettings && (
                         <>
-                       <Gallery     info={siteSettings}
+                       <Gallery info={siteSettings}
                           projectList={projectList}/>
                         </>
                       )}
@@ -182,6 +216,7 @@ function App() {
                       <Category />
                     </Route>
                   </Switch>
+
                 </ScrollToTop>
 
 

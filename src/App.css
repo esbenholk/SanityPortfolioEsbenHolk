@@ -96,9 +96,27 @@ body {
     auto;
 }
 
-body{
-  background-color: var(--normalColor);
+
+body {
+	background: radial-gradient(var(--normalColor), white, var(--normalColor),  #23d5ab, blue);
+	background-size: 100% 100%;
+  background-position: center;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
 }
+
+@keyframes gradient {
+	0% {
+		background-size: 100% 100%;
+	}
+	50% {
+		background-size: 500% 500%;
+	}
+	100% {
+		background-size: 100% 100%;
+	}
+}
+
 
 
 body, #root, .app {

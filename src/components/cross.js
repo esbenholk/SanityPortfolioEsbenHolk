@@ -1,5 +1,8 @@
 import React, {useRef, useEffect} from "react";
 import BlockContent from "./blocks/BlockContent";
+import useWindowDimensions from "./functions/useWindowDimensions";
+
+
 
 const Cross = (props) => {
 
@@ -7,6 +10,7 @@ const Cross = (props) => {
     const verCursor = useRef(null);
     const horCursor = useRef(null);
     const projectContainer = useRef(null);
+    const { width } = useWindowDimensions();
 
   const mainCursor = useRef(null);
   const positionRef = useRef({
@@ -87,7 +91,7 @@ const Cross = (props) => {
         <>
             <div className="main-cursor " ref={mainCursor}></div>
             <div className="cross hor" ref={horCursor}>
-              <div className="standard-container projectnamecontainer" ref={projectContainer}>
+              {width>500 ? <>       <div className="standard-container projectnamecontainer" ref={projectContainer}>
                   {props.selectedProject.title && (
                     <p className="projectTitle borderBottom">{props.selectedProject.title}</p>
                   )}
@@ -99,7 +103,8 @@ const Cross = (props) => {
               </div>
               {props.selectedProject.year && (
                     <p className="standard-container projectYear">{props.selectedProject.year}</p>
-              )}
+              )}</>: null}
+       
            
             </div>
             <div className="cross ver" ref={verCursor}></div>

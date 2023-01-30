@@ -1,5 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import { BrowserRouter, Route, Switch} from "react-router-dom";
+import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 import React, {
   Suspense,
@@ -54,6 +55,7 @@ function App() {
   const mainRef = createRef();
 
 
+  const { width } = useWindowDimensions();
 
 
 // console.log(location);
@@ -168,7 +170,10 @@ function App() {
                     <Route exact path="/">
                       {sortedProjects && (
                             <>
-                            <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject}/>
+                            {width>500 ? 
+                              <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject}  />
+                              : <Gallery info={siteSettings} projectList={sortedProjects}/> }
+
                             {/* <HorizontalScrollComp projects={projectList} info={siteSettings}/> */}
 
                             <nav className="footer-nav">

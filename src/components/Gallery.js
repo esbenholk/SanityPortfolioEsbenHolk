@@ -57,7 +57,15 @@ export default function Gallery() {
               />
             ) : null}
           </motion.div>
-          <Cross selectedProject={selectedProject}/>
+          <Cross selectedProject={selectedProject} shouldHaveBackground={true}/>
+
+          <div className="projectHeader"></div>
+
+
+      
+
+
+
 
           </>
         );

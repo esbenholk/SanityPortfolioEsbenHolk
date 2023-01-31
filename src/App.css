@@ -98,7 +98,7 @@ body {
 
 
 body {
-	background: radial-gradient(var(--normalColor), white, var(--normalColor),  #23d5ab, blue);
+	background: radial-gradient(var(--normalColor),  var(--normalColor),  #23d5ab, blue);
 	background-size: 100% 100%;
   background-position: center;
 	animation: gradient 15s ease infinite;
@@ -331,6 +331,9 @@ img {
   transform: translateZ(0);
   max-height: 100%;
   object-fit: contain;
+}
+.background{
+  background-color: var(--normalColor);
 }
 
 .fullwidth {

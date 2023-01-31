@@ -91,19 +91,21 @@ const Cross = (props) => {
         <>
             <div className="main-cursor " ref={mainCursor}></div>
             <div className="cross hor" ref={horCursor}>
-              {width>500 ? <>       <div className="standard-container projectnamecontainer" ref={projectContainer}>
+              {width>500 ? <> 
+                <div className="standard-container projectnamecontainer background" ref={projectContainer}>
                   {props.selectedProject.title && (
-                    <p className="projectTitle borderBottom">{props.selectedProject.title}</p>
+                    <p className="projectTitle borderBottom">hej {props.selectedProject.title}</p>
                   )}
                   {props.selectedProject.recap && ( 
                     <div className="projectRecap">
                       <BlockContent blocks={props.selectedProject.recap} />
                     </div>
                   )}
-              </div>
-              {props.selectedProject.year && (
-                    <p className="standard-container projectYear">{props.selectedProject.year}</p>
-              )}</>: null}
+                </div>
+                {props.selectedProject.year && (
+                      <p className="standard-container projectYear">{props.selectedProject.year}</p>
+                )}
+              </>: null}
        
            
             </div>

@@ -12,13 +12,13 @@ import BlockContent from "./blocks/BlockContent";
 
 import Masonry from "react-masonry-css";
 
-import useWindowDimensions from "./functions/useWindowDimensions";
+// import useWindowDimensions from "./functions/useWindowDimensions";
 
 import { NavLink } from "react-router-dom";
 
 
 const minibreakpointColumnsObj = {
-  default: 4,
+  default: 2,
 };
 
 export default function SinglePost() {
@@ -26,7 +26,6 @@ export default function SinglePost() {
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();
   const { slug } = useParams();
-  const { height } = useWindowDimensions();
   const [mainImageHeight, setMainImageHeight] = useState();
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
@@ -47,6 +46,13 @@ export default function SinglePost() {
   };
 
   useEffect(() => {
+    if(window.location.pathname.includes("esben")){
+      setMainImageHeight(500);
+
+    }else{
+      setMainImageHeight(1000000);
+
+    }
     sanityClient
       .fetch(
         `*[slug.current == "${slug}"]{
@@ -73,15 +79,10 @@ export default function SinglePost() {
       .catch(console.error);
   }, [slug, projectList]);
 
-  useEffect(() => {
-    setMainImageHeight(height - 300);
-  }, [height]);
 
-  if (!singlePost) return <p className="fixedMiddle standard-button">
-  content incoming
-</p>;
 
-  console.log("LOCATION", window.location);
+  if (!singlePost) return <p className="fixedMiddle standard-button"> content incoming... </p>;
+
 
   return (
     <>
@@ -101,27 +102,28 @@ export default function SinglePost() {
              className={
                "footer-nav"
              }
-           >
-          {prevPost && (
-            <a href={prevPost.slug.current} className="standard-button">
-              Prev
-            </a>
-          )}
-          {nextPost && (
-            <a href={nextPost.slug.current} className="standard-button">
-              Next
-            </a>
-          )}
-        </nav> : 
-        <nav className="footer-nav">
-             <NavLink className="standard-button" to="/gallery">
-               Gallery
-             </NavLink>
+            >
+            {prevPost && (
+              <a href={prevPost.slug.current} className="standard-button">
+                Prev
+              </a>
+            )}
+            {nextPost && (
+              <a href={nextPost.slug.current} className="standard-button">
+                Next
+              </a>
+            )}
+            </nav> : 
+              <nav className="footer-nav">
+                  <NavLink className="standard-button" to="/gallery">
+                    Gallery
+                  </NavLink>
 
-             <NavLink className="standard-button" to="/gallery">
-               Gallery
-             </NavLink>
-        </nav>}
+                  <NavLink className="standard-button" to="/gallery">
+                    Gallery
+                  </NavLink>
+            </nav>
+        }
       
       
         <div className="flex-row align-top project_directory_line noshade">
@@ -147,8 +149,7 @@ export default function SinglePost() {
           
         <article className="borderTop singlePost">
 
-      
-
+  
             <div className="standard-container projectnamecontainer projectDetails">
                   {singlePost.title && (
                     <p className="projectTitle">{singlePost.title}</p>
@@ -218,7 +219,7 @@ export default function SinglePost() {
    
 
           <div className="flex-column contentColumn">
-            <div className="flex-row align-center">
+            <div className="flex-row align-center" style={{maxHeight: window.location.pathname.includes("esben") ?  "600px" : null}} >
               {singlePost.imagesGallery &&
                 singlePost.imagesGallery.length > 1 ? (
                 // <CustomCarousel arrows={true} swipe={true} classsss={""}>

@@ -1,12 +1,12 @@
 import { useGLTF} from "@react-three/drei";
-import {ImageTextureMaterial } from "./cube";
 import React, {
   useRef,
   useState,
 
   useCallback
 } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
 
 import { useHistory } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export default function Model (props  ) {
   });
 
   const size = isHovered ? 0.7 : (isActive ? 0.5 : 0.5);
-  const yposition = isHovered ? -0.5 : (isActive ? 0 : 0);
+  const yposition = isHovered ? -0.5 : (isActive ? -0.2 : -0.2);
 
    // Events
    const onHover = useCallback(
@@ -40,6 +40,22 @@ export default function Model (props  ) {
     },
     [setIsHovered, props]
   );
+
+  
+ const ImageTextureMaterial = (imageUrl, material) => {
+    const texture = useLoader(TextureLoader, imageUrl.imageUrl);
+    return (
+      <meshStandardMaterial
+        attach="material"
+        roughness={0}
+        color="#39FF14"
+        emmision="white"
+        map={texture}
+        material={material}
+        thickness={4} metalness={1} clearcoat={1}
+      />
+    );
+  };
 
   const onClick = useCallback(
     e => {
@@ -57,6 +73,6 @@ export default function Model (props  ) {
   onPointerOver={e => onHover(e, true)}
   onPointerOut={e => onHover(e, false)}> 
         <ImageTextureMaterial    imageUrl={"https://cdn.sanity.io/images/swdt1dj3/production/50e0726142d16da248d3ebd90237f98fe76badce-3000x3000.png?w=1000&h=1000&fit=max"} material={material}/>
-        {/* <meshPhysicalMaterial ior={0}envMapIntensity={25} color={0xffffff} attenuationTint={0xffffff} attenuationDistance={0} transmission={1} thickness={0} roughness={0.6} clearcoat={0.4} clearcoatRoughness={0} /> */}
+        {/* <meshPhysicalMaterial envMapIntensity={100} color={0x04ff00} emmisive={0x4a9d39} flatShading={true} attenuationTint={0x4a9d39} attenuationDistance={0} transmission={1} thickness={2} roughness={0} metalness={1} clearcoat={1} clearcoatRoughness={1} /> */}
   </mesh>
 };

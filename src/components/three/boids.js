@@ -65,7 +65,7 @@ export default function Boids(projects) {
     <>
  
 
-      <Canvas className="mainCanvas" alpha={0} antialias={1}>
+      <Canvas className="mainCanvas" >
         <Suspense fallback={<Loader/>}>
             <Environment files="/environment.hdr" />
 
@@ -78,7 +78,6 @@ export default function Boids(projects) {
             <Lights></Lights>
             <EffectComposer multisampling={8}>
               <Bloom kernelSize={3} luminanceThreshold={0} luminanceSmoothing={0.4} intensity={0.6} color={0x1dff00}/>
-              {/* <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={0} intensity={0.5} color={0x1dff00}/> */}
             </EffectComposer>        
         
         </Suspense>

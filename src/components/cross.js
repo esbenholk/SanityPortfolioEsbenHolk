@@ -94,7 +94,7 @@ const Cross = (props) => {
               {width>500 ? <> 
                 <div className="standard-container projectnamecontainer background" ref={projectContainer}>
                   {props.selectedProject.title && (
-                    <p className="projectTitle borderBottom">hej {props.selectedProject.title}</p>
+                    <p className="projectTitle borderBottom">{props.selectedProject.title}</p>
                   )}
                   {props.selectedProject.recap && ( 
                     <div className="projectRecap">

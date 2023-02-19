@@ -43,8 +43,11 @@ const Cross = (props) => {
       horCursor.current.style.transform = `translate3d(0px, ${mouseY -
           horCursor.current.clientHeight / 2}px, 0)`;
 
-      projectContainer.current.style.width =  `${(mouseX -
+      if(projectContainer.current){
+        projectContainer.current.style.width =  `${(mouseX -
           verCursor.current.clientWidth / 2) + 10}px`;
+      }
+  
           
       });
 

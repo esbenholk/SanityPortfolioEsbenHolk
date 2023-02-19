@@ -12,7 +12,7 @@ import BlockContent from "./blocks/BlockContent";
 
 import Masonry from "react-masonry-css";
 
-// import useWindowDimensions from "./functions/useWindowDimensions";
+import useWindowDimensions from "./functions/useWindowDimensions";
 
 import { NavLink } from "react-router-dom";
 
@@ -29,6 +29,9 @@ export default function SinglePost() {
   const [mainImageHeight, setMainImageHeight] = useState();
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
+
+ 
+  const { width } = useWindowDimensions();
 
   console.log("oh its u bitch. figured you'd sneak a peak at the code");
 
@@ -150,7 +153,7 @@ export default function SinglePost() {
         <article className="borderTop singlePost">
 
   
-            <div className="standard-container projectnamecontainer projectDetails">
+            <div className="standard-container projectnamecontainer projectDetails background">
                   {singlePost.title && (
                     <p className="projectTitle">{singlePost.title}</p>
                   )}
@@ -208,7 +211,7 @@ export default function SinglePost() {
 
      
             {singlePost.year && (
-                    <p className="standard-container projectYear">{singlePost.year}</p>
+                    <p className="standard-container projectYear background">{singlePost.year}</p>
               )}
           
         
@@ -218,7 +221,7 @@ export default function SinglePost() {
     
    
 
-          <div className="flex-column contentColumn">
+          <div className="flex-column contentColumn" style={{position: width>600 ? "absolute" : "relative", top: width>600 ? "-170px" : "0", overflow: "scroll", zIndex: "-10"}}>
             <div className="flex-row align-center" style={{maxHeight: window.location.pathname.includes("esben") ?  "600px" : null}} >
               {singlePost.imagesGallery &&
                 singlePost.imagesGallery.length > 1 ? (
@@ -245,60 +248,64 @@ export default function SinglePost() {
                 </div>
               )}
             </div>
-          </div>
 
 
 
-          <div className="contentColumn">
+            <div className="contentColumn">
    
 
-            {singlePost.body && (
-              <div className="standard-container projectnamecontainer ">
-                <div className="flex-row justifyBetween header noshade projectRecap">
-                  <h2 className="projectTitle">{singlePost.title}</h2>
+   {singlePost.body && (
+     <div className="standard-container projectnamecontainer ">
+       <div className="flex-row justifyBetween header noshade projectRecap">
+         <h2 className="projectTitle">{singlePost.title}</h2>
 
-                  <button
-                    onClick={scrollToBottom}
-                    className="arrow"
-                    style={{ transform: "rotate(90deg)" }}
-                  >
-                    {">"}
-                  </button>
-                </div>
-                  <BlockContent blocks={singlePost.body} class="noshade" />
-                  <div className="projectHeader"></div>
+         <button
+           onClick={scrollToBottom}
+           className="arrow"
+           style={{ transform: "rotate(90deg)" }}
+         >
+           {">"}
+         </button>
+       </div>
+         <BlockContent blocks={singlePost.body} class="noshade" />
+         <div className="projectHeader"></div>
 
-                  <div className="flex-row align-right header projectRecap">
-                  <button
-                    onClick={scrollToTop}
-                    className="arrow"
-                    style={{ transform: "rotate(-90deg)" }}
-                  >
-                    {">"}
-                  </button>
-                </div>
+         <div className="flex-row align-right header projectRecap">
+         <button
+           onClick={scrollToTop}
+           className="arrow"
+           style={{ transform: "rotate(-90deg)" }}
+         >
+           {">"}
+         </button>
+       </div>
+     </div>
+   )}
+
+        {singlePost.miniImagesGallery &&
+        singlePost.miniImagesGallery.length > 0 ? (
+          <Masonry
+            breakpointCols={minibreakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column singleProjectMasonry"
+          >
+            {singlePost.miniImagesGallery.map((image, index) => (
+              <div key={index}>
+                <Image image={image} />
               </div>
-            )}
+            ))}
+          </Masonry>
+        ) : null}
 
-            {singlePost.miniImagesGallery &&
-            singlePost.miniImagesGallery.length > 0 ? (
-              <Masonry
-                breakpointCols={minibreakpointColumnsObj}
-                className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column singleProjectMasonry"
-              >
-                {singlePost.miniImagesGallery.map((image, index) => (
-                  <div key={index}>
-                    <Image image={image} />
-                  </div>
-                ))}
-              </Masonry>
-            ) : null}
 
-        
-            <div className="borderTop"></div>
-            <div className="projectHeader"></div>
+        <div className="borderTop"></div>
+        <div className="projectHeader"></div>
+      </div>
           </div>
+
+
+
+      
         </article>
       </motion.div>
     </>

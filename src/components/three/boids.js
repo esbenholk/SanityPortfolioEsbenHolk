@@ -31,7 +31,7 @@ function Loader(props) {
 
     return <Html center><p className="standard-button">
                 content incoming
-    </p></Html>
+    </p><div className="loader"></div></Html>
 }
 
 
@@ -64,8 +64,9 @@ export default function Boids(projects) {
   return (
     <>
  
-
+     
       <Canvas className="mainCanvas" >
+
         <Suspense fallback={<Loader/>}>
             <Environment files="/environment.hdr" />
 

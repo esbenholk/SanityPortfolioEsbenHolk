@@ -33,15 +33,26 @@ const Cross = (props) => {
       const mouseX = clientX;
       const mouseY = clientY;
 
-      mainCursor.current.style.transform = `translate3d(${mouseX -
-        mainCursor.current.clientWidth / 2}px, ${mouseY -
-        mainCursor.current.clientHeight / 2}px, 0)`;
+
     
-      verCursor.current.style.transform = `translate3d(${mouseX -
-          verCursor.current.clientWidth / 2}px, 0px, 0`;
-          
-      horCursor.current.style.transform = `translate3d(0px, ${mouseY -
+        if(mainCursor.current){
+          mainCursor.current.style.transform = `translate3d(${mouseX -
+            mainCursor.current.clientWidth / 2}px, ${mouseY -
+            mainCursor.current.clientHeight / 2}px, 0)`;
+        }
+   
+
+      
+      if(horCursor.current){
+        horCursor.current.style.transform = `translate3d(0px, ${mouseY -
           horCursor.current.clientHeight / 2}px, 0)`;
+      }
+
+      if(verCursor.current){
+        verCursor.current.style.transform = `translate3d(${mouseX -
+          verCursor.current.clientWidth / 2}px, 0px, 0`;
+      }
+
 
       if(projectContainer.current){
         projectContainer.current.style.width =  `${(mouseX -

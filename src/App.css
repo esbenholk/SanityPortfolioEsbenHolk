@@ -8,7 +8,8 @@
   --normalColor: #39FF14;
   /* --detailColor: rgb(246, 124, 255); */
   --detailColor: blue;
-  --textColor: rgb(255, 0, 217);
+  --textColor: blue;
+  --linkColor: rgb(255, 0, 217);
 }
 
 * {
@@ -422,6 +423,11 @@ strong {
 a {
   text-decoration: none;
   font-size: 20px;
+  color: var(--textColor);
+  z-index: 9999999999999;
+}
+a:hover {
+  color: var(--linkColor);
 }
 a.visited {
   color: inherit;
@@ -490,6 +496,7 @@ a.visited {
 
 .projectnamecontainer{
   margin: 10px;
+  z-index: 999999999999999999;
 }
 
 .inverse {

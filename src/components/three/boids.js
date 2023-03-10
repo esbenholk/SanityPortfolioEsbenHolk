@@ -31,7 +31,7 @@ function Loader(props) {
 
     return <Html center><p className="standard-button">
                 content incoming...
-    </p><div className="loader"></div></Html>
+    </p><div className="loader fixedMiddle"></div></Html>
 }
 
 

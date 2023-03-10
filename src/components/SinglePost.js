@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 import BlockContent from "./blocks/BlockContent";
 
-import Masonry from "react-masonry-css";
+// import Masonry from "react-masonry-css";
 
 import useWindowDimensions from "./functions/useWindowDimensions";
 
@@ -28,9 +28,9 @@ function urlFor(source) {
 }
 
 
-const minibreakpointColumnsObj = {
-  default: 2,
-};
+// const minibreakpointColumnsObj = {
+//   default: 2,
+// };
 
 export default function SinglePost() {
   const [singlePost, setSinglePost] = useState();
@@ -234,24 +234,7 @@ export default function SinglePost() {
 
           <div className="flex-column contentColumn" style={{position: width>600 ? "absolute" : "relative", top: width>600 ? "-170px" : "0", overflow: "scroll", zIndex: "-10"}}>
             <div className="flex-row align-center" >
-              {singlePost.imagesGallery &&
-                singlePost.imagesGallery.length > 1 ? (
-                // <CustomCarousel arrows={true} swipe={true} classsss={""}>
-                //   {singlePost.imagesGallery.map((image, index) => (
-                //     <div className="project_main_image" key={index}>
-                //       <Image image={image} mainImageHeight={mainImageHeight} />
-                //     </div>
-                //   ))}
-                // </CustomCarousel>
-          
-                  singlePost.imagesGallery.map((image, index) => (
-                    <div className="project_main_image" key={index}>
-                      <Image image={image} mainImageHeight={mainImageHeight} />
-                    </div>
-                  ))
-
-              ) : (
-                <div className="project_main_image">
+              <div className="project_main_image">
                     {singlePost.mainImage.hotspot ? (
                     <img
                       src={urlFor(singlePost.mainImage.asset.url)}
@@ -271,7 +254,23 @@ export default function SinglePost() {
                     />
                   )}
                 </div>
-              )}
+              {singlePost.imagesGallery &&
+                singlePost.imagesGallery.length > 1 ? (
+                // <CustomCarousel arrows={true} swipe={true} classsss={""}>
+                //   {singlePost.imagesGallery.map((image, index) => (
+                //     <div className="project_main_image" key={index}>
+                //       <Image image={image} mainImageHeight={mainImageHeight} />
+                //     </div>
+                //   ))}
+                // </CustomCarousel>
+          
+                  singlePost.imagesGallery.map((image, index) => (
+                    <div className="project_main_image" key={index}>
+                      <Image image={image} mainImageHeight={mainImageHeight} />
+                    </div>
+                  ))
+
+              ) : null}
             </div>
 
 
@@ -279,53 +278,40 @@ export default function SinglePost() {
             <div className="contentColumn">
    
 
-   {singlePost.body && (
-     <div className="standard-container projectnamecontainer ">
-       <div className="flex-row justifyBetween header noshade projectRecap">
-         <h2 className="projectTitle">{singlePost.title}</h2>
+              {singlePost.body && (
+                <div className="standard-container projectnamecontainer ">
+                  <div className="flex-row justifyBetween header noshade projectRecap">
+                    <h2 className="projectTitle">{singlePost.title}</h2>
 
-         <button
-           onClick={scrollToBottom}
-           className="arrow"
-           style={{ transform: "rotate(90deg)" }}
-         >
-           {">"}
-         </button>
-       </div>
-         <BlockContent blocks={singlePost.body} class="noshade" />
-         <div className="projectHeader"></div>
+                    <button
+                      onClick={scrollToBottom}
+                      className="arrow"
+                      style={{ transform: "rotate(90deg)" }}
+                    >
+                      {">"}
+                    </button>
+                  </div>
+                    <BlockContent blocks={singlePost.body} class="noshade" />
+                    <div className="projectHeader"></div>
 
-         <div className="flex-row align-right header projectRecap">
-         <button
-           onClick={scrollToTop}
-           className="arrow"
-           style={{ transform: "rotate(-90deg)" }}
-         >
-           {">"}
-         </button>
-       </div>
-     </div>
-   )}
+                    <div className="flex-row align-right header projectRecap">
+                    <button
+                      onClick={scrollToTop}
+                      className="arrow"
+                      style={{ transform: "rotate(-90deg)" }}
+                    >
+                      {">"}
+                    </button>
+                  </div>
+                </div>
+              )}
 
-        {singlePost.miniImagesGallery &&
-        singlePost.miniImagesGallery.length > 0 ? (
-          <Masonry
-            breakpointCols={minibreakpointColumnsObj}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column singleProjectMasonry"
-          >
-            {singlePost.miniImagesGallery.map((image, index) => (
-              <div key={index}>
-                <Image image={image} />
-              </div>
-            ))}
-          </Masonry>
-        ) : null}
+ 
 
 
-        <div className="borderTop"></div>
-        <div className="projectHeader"></div>
-      </div>
+              <div className="borderTop"></div>
+              <div className="projectHeader"></div>
+            </div>
           </div>
 
 

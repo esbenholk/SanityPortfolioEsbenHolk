@@ -17,6 +17,17 @@ import useWindowDimensions from "./functions/useWindowDimensions";
 import { NavLink } from "react-router-dom";
 
 
+import imageUrlBuilder from "@sanity/image-url";
+// import useWindowDimensions from "../functions/useWindowDimensions";
+
+// Get a pre-configured url-builder from your sanity client
+const builder = imageUrlBuilder(sanityClient);
+
+function urlFor(source) {
+  return builder.image(source);
+}
+
+
 const minibreakpointColumnsObj = {
   default: 2,
 };
@@ -26,7 +37,7 @@ export default function SinglePost() {
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();
   const { slug } = useParams();
-  const [mainImageHeight, setMainImageHeight] = useState();
+  const [mainImageHeight, setMainImageHeight] = useState(600);
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
@@ -222,7 +233,7 @@ export default function SinglePost() {
    
 
           <div className="flex-column contentColumn" style={{position: width>600 ? "absolute" : "relative", top: width>600 ? "-170px" : "0", overflow: "scroll", zIndex: "-10"}}>
-            <div className="flex-row align-center" style={{maxHeight: window.location.pathname.includes("esben") ?  "600px" : null}} >
+            <div className="flex-row align-center" >
               {singlePost.imagesGallery &&
                 singlePost.imagesGallery.length > 1 ? (
                 // <CustomCarousel arrows={true} swipe={true} classsss={""}>
@@ -241,10 +252,24 @@ export default function SinglePost() {
 
               ) : (
                 <div className="project_main_image">
-                  <Image
-                    image={singlePost.mainImage}
-                    mainImageHeight={mainImageHeight}
-                  />
+                    {singlePost.mainImage.hotspot ? (
+                    <img
+                      src={urlFor(singlePost.mainImage.asset.url)}
+                      alt={singlePost.mainImage.alt}
+                      style={{
+                        objectPosition: `${singlePost.mainImage.hotspot.x * 100}% ${
+                          singlePost.mainImage.hotspot.y * 100
+                        }%`,
+                      }}
+                      className="project_main_image"
+                    />
+                  ) : (
+                    <img
+                      src={urlFor(singlePost.mainImage.asset.url)}
+                      alt={singlePost.mainImage.alt}
+                      className="project_main_image"
+                    />
+                  )}
                 </div>
               )}
             </div>

@@ -49,10 +49,10 @@ export default function Model (props  ) {
         attach="material"
         roughness={0}
         color="#39FF14"
-        emmision="white"
+        emmision="#39FF14"
         map={texture}
         material={material}
-        thickness={4} metalness={1} clearcoat={1}
+        thickness={4} metalness={0.8} clearcoat={1}
       />
     );
   };
@@ -72,7 +72,6 @@ export default function Model (props  ) {
   onClick={e => onClick(e)}
   onPointerOver={e => onHover(e, true)}
   onPointerOut={e => onHover(e, false)}> 
-        <ImageTextureMaterial    imageUrl={"https://cdn.sanity.io/images/swdt1dj3/production/50e0726142d16da248d3ebd90237f98fe76badce-3000x3000.png?w=1000&h=1000&fit=max"} material={material}/>
-        {/* <meshPhysicalMaterial envMapIntensity={100} color={0x04ff00} emmisive={0x4a9d39} flatShading={true} attenuationTint={0x4a9d39} attenuationDistance={0} transmission={1} thickness={2} roughness={0} metalness={1} clearcoat={1} clearcoatRoughness={1} /> */}
+        <ImageTextureMaterial    imageUrl={"https://cdn.sanity.io/images/swdt1dj3/production/571220f22322bb73a455caf9a1ab9c1bccb9f20a-1713x1701.jpg?w=1000&h=1000&fit=max"} material={material}/>
   </mesh>
 };

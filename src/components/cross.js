@@ -117,7 +117,7 @@ const Cross = (props) => {
                   )}
                 </div>
                 {props.selectedProject.year && (
-                      <p className="standard-container projectYear">{props.selectedProject.year}</p>
+                      <p className="standard-container projectYear background">{props.selectedProject.year}</p>
                 )}
               </>: null}
        

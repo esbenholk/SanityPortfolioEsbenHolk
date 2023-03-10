@@ -44,7 +44,7 @@
 .projectTitle{
   color: var(--detailColor);
   font-weight: 200;
-  font-size: 23px;
+  /* font-size: 23px; */
 }
 .projectYear{
   margin: 10px;
@@ -54,7 +54,7 @@
 }
 .projectRecap{
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .projectRecap p{
   color: var(--detailColor);
@@ -304,8 +304,8 @@ h1 {
 .loader,
 .loader:after {
   border-radius: 50%;
-  width: 100em;
-  height: 100em;
+  width: 80em;
+  height: 80em;
 }
 .loader {
   margin: 60px auto;

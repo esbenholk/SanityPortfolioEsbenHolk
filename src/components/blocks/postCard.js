@@ -41,34 +41,6 @@ export default function PostCard(props) {
         key={props.post.slug.current}
         className="w-full teaser-link"
       >
-        {/* {width > 700 && isShown ? (
-          <div className="post_card_overlay seeOnHover">
-            <div className="details">
-              <h3>{post.title}</h3>
-              <div className="flex-row">
-                {post.tags &&
-                  post.tags.map((tag, index) => (
-                    <p className="tag" key={index}>
-                      {tag}
-                      {index + 1 !== post.tags.length ? "," : null}
-                    </p>
-                  ))}
-              </div>
-            </div>
-            <BlockContent blocks={post.recap} />
-
-            <div className="flex-row">
-              {post.categories &&
-                post.categories.map((category, index) => (
-                  <p className="standard-button inverse" key={index}>
-                    {" "}
-                    {category.title}{" "}
-                  </p>
-                ))}
-            </div>
-          </div>
-        ) : null} */}
-
         {props.post.mainImage.hotspot ? (
           <img
             src={urlFor(props.post.mainImage.asset.url)}

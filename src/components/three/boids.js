@@ -30,7 +30,7 @@ function Cubes(props) {
 function Loader(props) {
 
     return <Html center><p className="standard-button">
-                content incoming
+                content incoming...
     </p><div className="loader"></div></Html>
 }
 
@@ -39,7 +39,7 @@ function Lights ()  {
 
       return (
       <group>
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.3} />
    
         <pointLight intensity={1} position={[0, 0, 0]} color={0x1dff00}/>
       </group>

@@ -1,14 +1,6 @@
-import React from "react";
-import sanityClient from "../../client";
-
-import imageUrlBuilder from "@sanity/image-url";
-import useWindowDimensions from "../functions/useWindowDimensions";
-
-// function urlFor(source) {
-//   return builder.image(source);
-// }
 // Get a pre-configured url-builder from your sanity client
-const ImageBuilder = imageUrlBuilder(sanityClient);
+const builder = imageUrlBuilder(sanityClient);
+
 
 
 function getImageDimensions(image) {
@@ -37,7 +29,7 @@ const DEFAULT_WIDTH_STEPS = [400, 600, 850, 1000, 1150]; // arbitrary
 // Based on statcounter's most common screen sizes: https://gs.statcounter.com/screen-resolution-stats
 const DEFAULT_FULL_WIDTH_STEPS = [360, 414, 768, 1366, 1536, 1920];
 
-function getImageProps({
+export default function getImageProps({
   /**
    * The image's reference object.
    * Example: {asset: {_ref: string}, hotspot: {...}, crop: {...} }
@@ -68,7 +60,7 @@ function getImageProps({
     typeof userMaxWidth === "number" ? userMaxWidth : LARGEST_VIEWPORT;
 
   // For all image variations, we'll use an auto format and prevent scaling it over its max dimensions
-  const builder = ImageBuilder.image(image).fit("max").auto("format");
+  const builder = builder.image(image).fit("max").auto("format");
 
   const imageDimensions = getImageDimensions(image);
 
@@ -115,7 +107,7 @@ function getImageProps({
     src: builder.width(maxWidth).url(),
 
     // Build a `{URL} {SIZE}w, ...` string for the srcset
-    srcSet: retinaSizes
+    srcset: retinaSizes
       .map((size) => `${builder.width(size).url()} ${size}w`)
       .join(", "),
     sizes:
@@ -128,77 +120,3 @@ function getImageProps({
     height: retinaSizes[0] / imageDimensions.aspectRatio,
   };
 }
-
-const SanityImage = ({ image, ccsclass, height }) => {
-  const { width } = useWindowDimensions();
-
-  return (
-    <img     
-      style={{height: "auto",
-              objectPosition: `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`,maxHeight:height}}
-      loading="lazy"
-      className={ccsclass}
-      alt={image.alt || " "}
-      {// Pass src, srcset, width, height and sizes to the image element
-        ...getImageProps({
-          image,
-          maxWidth: width
-        })
-      }
-    />
-  )
-}
-const SanityImageNoHotspot = ({ image, ccsclass, height }) => {
-  const { width } = useWindowDimensions();
-
-  return (
-    <img     
-      style={{height: "auto", maxHeight: height}}
-      loading="lazy"
-      className={ccsclass}
-      alt={image.alt || " "}
-      {// Pass src, srcset, width, height and sizes to the image element
-        ...getImageProps({
-          image,
-          maxWidth: width
-        })
-      }
-    />
-  )
-}
-
-
-
-class Image extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      image: props.image,
-      class: props.class,
-      height: props.mainImageHeight
-    };
-  }
-
-  render() {
-    console.log(this.state.image);
-    return (
-      <>
-        {this.state.image && (
-          <>
-            {this.state.image.hotspot ? (
-
-              <SanityImage image={this.state.image} ccsclass={this.state.class} height={this.state.height}/>
-
-            ) : (
-              <SanityImageNoHotspot image={this.state.image} ccsclass={this.state.class} height={this.state.height}/>
-
-            )}
-          </>
-        )}
-      </>
-    );
-  }
-}
-
-export default Image;

@@ -29,9 +29,9 @@ function Cubes(props) {
 
 function Loader(props) {
 
-    return <Html center><p className="standard-button">
+    return <Html center className="fixedMiddle"><p className="standard-button fixedMiddle">
                 content incoming...
-    </p><div className="loader fixedMiddle"></div></Html>
+    </p><div className="loader "></div></Html>
 }
 
 

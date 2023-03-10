@@ -41,7 +41,27 @@ export default function PostCard(props) {
         key={props.post.slug.current}
         className="w-full teaser-link"
       >
-        {props.post.mainImage.hotspot ? (
+        {props.post.productImage ? <>
+          {props.post.productImage.hotspot ? (
+          <img
+            src={urlFor(props.post.productImage.asset.url)}
+            alt={props.post.productImage.alt}
+            style={{
+              objectPosition: `${props.post.productImage.hotspot.x * 100}% ${
+                props.post.productImage.hotspot.y * 100
+              }%`,
+            }}
+            className="post_card_image"
+          />
+        ) : (
+          <img
+            src={urlFor(props.post.productImage.asset.url)}
+            alt={props.post.productImage.alt}
+            className="post_card_image"
+          />
+        )}
+        </> : <>
+          {props.post.mainImage.hotspot ? (
           <img
             src={urlFor(props.post.mainImage.asset.url)}
             alt={props.post.mainImage.alt}
@@ -59,6 +79,8 @@ export default function PostCard(props) {
             className="post_card_image"
           />
         )}
+        </>}
+
       </Link>
     </div>
   );

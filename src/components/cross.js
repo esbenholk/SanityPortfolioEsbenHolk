@@ -23,7 +23,6 @@ const Cross = (props) => {
     key: -1,
   });
 
-  console.log("CROSS PROJECT", props.selectedProject);
 
   useEffect(() => {
     document.addEventListener("mousemove", (event) => {

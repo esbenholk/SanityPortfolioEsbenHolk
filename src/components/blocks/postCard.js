@@ -20,7 +20,9 @@ export default function PostCard(props) {
   // const [isShown, setIsShown] = useState(false);
 
   // const { width } = useWindowDimensions();
-
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
   const onHover = useCallback(
     (e, value) => {
       e.stopPropagation();
@@ -49,7 +51,7 @@ export default function PostCard(props) {
             style={{
               objectPosition: `${props.post.productImage.hotspot.x * 100}% ${
                 props.post.productImage.hotspot.y * 100
-              }%`,
+              }%`, zIndex: getRandomInt(200)
             }}
             className="post_card_image"
           />
@@ -58,6 +60,7 @@ export default function PostCard(props) {
             src={urlFor(props.post.productImage.asset.url)}
             alt={props.post.productImage.alt}
             className="post_card_image"
+            style={{ zIndex: getRandomInt(200)}}
           />
         )}
         </> : <>
@@ -68,7 +71,7 @@ export default function PostCard(props) {
             style={{
               objectPosition: `${props.post.mainImage.hotspot.x * 100}% ${
                 props.post.mainImage.hotspot.y * 100
-              }%`,
+              }%`, zIndex: getRandomInt(200)
             }}
             className="post_card_image"
           />
@@ -77,6 +80,8 @@ export default function PostCard(props) {
             src={urlFor(props.post.mainImage.asset.url)}
             alt={props.post.mainImage.alt}
             className="post_card_image"
+            style={{ zIndex: getRandomInt(200)}}
+
           />
         )}
         </>}

@@ -76,24 +76,49 @@ export default function Projects({ projectList}) {
               <a href={"/projects/" + project.slug.current}>
                 {project.title ? project.title : "undefined"}
               </a>
-              {project.mainImage.hotspot ? (
+
+              {project.productImage ? <>
+                {project.productImage.hotspot ? (
                 <img
-                  src={urlFor(project.mainImage.asset.url).url()}
-                  alt={project.mainImage.alt}
+                  src={urlFor(project.productImage.asset.url).width(600).url()}
+                  alt={project.productImage.alt}
                   style={{
-                    objectPosition: `${project.mainImage.hotspot.x * 100}% ${
-                      project.mainImage.hotspot.y * 100
+                    objectPosition: `${project.productImage.hotspot.x * 100}% ${
+                      project.productImage.hotspot.y * 100
                     }%`,
                   }}
                   className="thumbnail seeOnHover hidden"
                 />
               ) : (
                 <img
-                  src={urlFor(project.mainImage.asset.url).url()}
-                  alt={project.mainImage.alt}
+                  src={urlFor(project.productImage.asset.url).width(600).url()}
+                  alt={project.productImage.alt}
                   className="thumbnail seeOnHover hidden"
                 />
               )}
+              
+               </> : <>
+                {project.mainImage.hotspot ? (
+                  <img
+                    src={urlFor(project.mainImage.asset.url).width(600).url()}
+                    alt={project.mainImage.alt}
+                    style={{
+                      objectPosition: `${project.mainImage.hotspot.x * 100}% ${
+                        project.mainImage.hotspot.y * 100
+                      }%`,
+                    }}
+                    className="thumbnail seeOnHover hidden"
+                  />
+                ) : (
+                  <img
+                    src={urlFor(project.mainImage.asset.url).width(600).url()}
+                    alt={project.mainImage.alt}
+                    className="thumbnail seeOnHover hidden"
+                  />
+                )}
+              
+              </>}
+    
             </div>
             <p className="flex-row align-left">
               {project.year ? project.year : "undefined"}{" "}

@@ -21,13 +21,13 @@ export default function Gallery() {
   }, []);
 
   const [featuredProjects, setFeaturedProjects] = useState([]);
-  console.log(featuredProjects);
 
+  // console.log(featuredProjects);
 
 
   useEffect(() => {
     if (myContext.hasFeaturedPosts === true && projectList) {
-      const featuredProjects = [];
+      // const featuredProjects = [];
       for (let index = 0; index < projectList.length; index++) {
         const post = projectList[index];
         if (info.featuredProjects.includes(post.title)) {
@@ -36,7 +36,7 @@ export default function Gallery() {
       }
       setFeaturedProjects(featuredProjects);
     }
-  }, [myContext.hasFeaturedPosts, projectList, info]);
+  }, [myContext.hasFeaturedPosts, projectList, info, featuredProjects]);
 
   return (
         <>

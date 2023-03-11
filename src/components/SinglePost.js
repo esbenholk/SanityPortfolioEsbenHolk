@@ -16,6 +16,7 @@ import useWindowDimensions from "./functions/useWindowDimensions";
 
 import { NavLink } from "react-router-dom";
 
+import YoutubeVideo from "./blocks/youtube";
 
 import imageUrlBuilder from "@sanity/image-url";
 // import useWindowDimensions from "../functions/useWindowDimensions";
@@ -71,12 +72,14 @@ export default function SinglePost() {
       .fetch(
         `*[slug.current == "${slug}"]{
           id,
-          title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, miniImagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client
+          title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, miniImagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client, videos[]
         }`
       )
       .then((data) => {
         setSinglePost(data[0]);
   
+
+        console.log("SINGLE PROJECT", data[0].title, data[0].videos );
         for (let index = 0; index < projectList.length; index++) {
     
           if (
@@ -161,10 +164,11 @@ export default function SinglePost() {
             </div>
         
           
-        <article className="borderTop singlePost">
+        <article className="singlePost">
 
-  
-            <div className="standard-container projectnamecontainer projectDetails background">
+            <div>
+            <div className="borderTop" style={{zIndex: "21", position: width>600  ? "absolute" : "relative", width: "100%"}}></div>
+            <div className="standard-container projectnamecontainer projectDetails background" style={{position: width>600 ? "absolute" : "relative"}}>
                   {singlePost.title && (
                     <p className="projectTitle">{singlePost.title}</p>
                   )}
@@ -217,13 +221,21 @@ export default function SinglePost() {
                       <BlockContent blocks={singlePost.recap} />
                     </div>
                   )}
+
+
             </div>
 
 
-     
-            {singlePost.year && (
-                    <p className="standard-container projectYear background">{singlePost.year}</p>
+              {singlePost.year && (
+
+                    <p className="standard-container projectYear background" style={{zIndex: "20"}}>{singlePost.year}</p>
               )}
+            </div>
+          
+
+
+     
+      
           
         
         
@@ -232,9 +244,9 @@ export default function SinglePost() {
     
    
 
-          <div className="flex-column contentColumn" style={{position: width>600 ? "absolute" : "relative", top: width>600 ? "-170px" : "0", overflow: "scroll", zIndex: "-10"}}>
+          <div className={window.location.pathname.includes("esben")?"flex-column contentColumn customFixedSpace" :"flex-column contentColumn"} style={{position: width>600 ? "absolute" : "relative", top: width>600 &&  !window.location.pathname.includes("esben")? "-170px" :"0", overflow: "scroll", zIndex: "0"}}>
             <div className="flex-row align-center" >
-              <div className="project_main_image">
+              <div className={window.location.pathname.includes("esben")? "customfixed project_main_image": "project_main_image"} >
                     {singlePost.mainImage.hotspot ? (
                     <img
                       src={urlFor(singlePost.mainImage.asset.url)}
@@ -242,7 +254,7 @@ export default function SinglePost() {
                       style={{
                         objectPosition: `${singlePost.mainImage.hotspot.x * 100}% ${
                           singlePost.mainImage.hotspot.y * 100
-                        }%`,
+                        }%`, maxHeight: mainImageHeight
                       }}
                       className="project_main_image"
                     />
@@ -251,9 +263,22 @@ export default function SinglePost() {
                       src={urlFor(singlePost.mainImage.asset.url)}
                       alt={singlePost.mainImage.alt}
                       className="project_main_image"
+                      style={{maxHeight: mainImageHeight}}
                     />
                   )}
-                </div>
+              </div>
+
+              {singlePost.videos != null && singlePost.videos.length > 0 ? <>
+
+                {singlePost.videos.map((video, index) => (
+                  <div className="project_main_image" key={index}>
+                      <YoutubeVideo url={video.url}/>
+
+                  </div>
+                ))
+              }
+              </>: null}
+
               {singlePost.imagesGallery &&
                 singlePost.imagesGallery.length > 1 ? (
                 // <CustomCarousel arrows={true} swipe={true} classsss={""}>
@@ -271,6 +296,7 @@ export default function SinglePost() {
                   ))
 
               ) : null}
+
             </div>
 
 
@@ -303,6 +329,10 @@ export default function SinglePost() {
                       {">"}
                     </button>
                   </div>
+
+
+                  
+     
                 </div>
               )}
 
@@ -313,11 +343,13 @@ export default function SinglePost() {
               <div className="projectHeader"></div>
             </div>
           </div>
-
-
-
+              
+     
+   
       
         </article>
+
+      
       </motion.div>
     </>
   );

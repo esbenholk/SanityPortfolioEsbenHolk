@@ -37,7 +37,6 @@ export default function Projects({ show_categories, show_tags, stateChanger }) {
 
     for (let index = 0; index < projectList.length; index++) {
       const post = projectList[index];
-      console.log(post.mainImage);
       post.value = 0;
 
       if (post.tags != null && Array.isArray(post.tags)) {
@@ -56,11 +55,7 @@ export default function Projects({ show_categories, show_tags, stateChanger }) {
   useEffect(() => {
     if (currentTags.length > 0 || currentCategories.length > 0) {
       const tempSortedPosts = [];
-      console.log(
-        "search criteria has been updated",
-        currentCategories,
-        currentTags
-      );
+
 
       ///loop through all posts
       for (let index = 0; index < allPosts.length; index++) {
@@ -83,8 +78,8 @@ export default function Projects({ show_categories, show_tags, stateChanger }) {
         if (post.categories) {
           for (let index = 0; index < post.categories.length; index++) {
             const category = post.categories[index];
-            // console.log("checks post categories", category);
 
+            
             ///compare post tags to currentTags
             if (currentCategories.includes(category.title)) {
               //set post_score depending on how many currentTags the post is matching
@@ -112,10 +107,7 @@ export default function Projects({ show_categories, show_tags, stateChanger }) {
       tempTags.push(tag.tag);
       setCurrentTags(tempTags);
       document.getElementById("tag_" + tag.tag).classList.add("active");
-      console.log(
-        "should make tag active",
-        document.getElementById("tag_" + tag.tag)
-      );
+
     } else if (currentTags.includes(tag.tag)) {
       var tagIndex = currentTags.indexOf(tag.tag);
       currentTags.splice(tagIndex, 1);

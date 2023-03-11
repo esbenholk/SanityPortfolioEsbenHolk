@@ -77,16 +77,16 @@ function App() {
 
     sanityClient
       .fetch(
-        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, body, yearString}'
+        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, body, yearString, videos[]}'
       )
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
         setProjectList(data);
+        console.log("if i whisper seductively in the inspector will you cum'n'free me plz?", data);
       })
       .catch(console.error);
 
 
-      console.log("PATH", window.location.path);
   }, []);
 
   useEffect(() => {
@@ -119,10 +119,10 @@ function App() {
             const category = post.categories[index];
 
             if (categories.some((item) => item.title === category.title)) {
-              console.log("obejct in array already");
+
             } else {
               categories.push(category);
-              console.log(category, categories);
+
             }
           }
         }

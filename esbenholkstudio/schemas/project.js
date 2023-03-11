@@ -105,5 +105,15 @@ export default {
         layout: "tags",
       },
     },
+    {
+      name: "videos",
+      title: "Video Gallery",
+      type: "array",
+      of: [
+        {
+          type: "youtube"
+        },
+      ],
+    },
   ],
 };

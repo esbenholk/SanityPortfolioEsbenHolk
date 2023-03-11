@@ -11,6 +11,8 @@ import press from "./press";
 import author from "./author";
 import project from "./project";
 import siteSettings from "./siteSettings.js";
+import youtube from './youtube'
+
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -26,6 +28,7 @@ export default createSchema({
     project,
     press,
     siteSettings,
+    youtube,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
     blockContent,

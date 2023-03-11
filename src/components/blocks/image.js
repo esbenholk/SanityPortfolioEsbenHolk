@@ -181,7 +181,6 @@ class Image extends React.Component {
   }
 
   render() {
-    console.log(this.state.image);
     return (
       <>
         {this.state.image && (

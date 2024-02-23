@@ -6,6 +6,7 @@ import Effects from "./functions/effects_3d";
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
+
 const tempObject = new THREE.Object3D();
 const tempColor = new THREE.Color();
 const data = Array.from({ length: 1000 }, () => ({

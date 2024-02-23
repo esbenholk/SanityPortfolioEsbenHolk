@@ -63,7 +63,8 @@ import React, {
     // color
     const color = isHovered ? 0xe5d54d : (isActive ? 0xf7e7e5 : 0xf95b3c);
 
-    const size = isHovered ? 1 : (isActive ? 0.7 : 0.5);
+    const randomSize = 0.8;
+    const size = isHovered ? randomSize*1.2 : (isActive ? randomSize : randomSize*0.8);
 
     //useEffect of the activeState
     useEffect(() => {
@@ -84,8 +85,12 @@ import React, {
       (e, value) => {
         e.stopPropagation();
         setIsHovered(value);
+        if(value){
+          props.stateChanger(props.project)
+        } else {
+          props.stateChanger(null);
+        }
 
-        props.stateChanger(props.project)
 
       },
       [setIsHovered, props]
@@ -110,17 +115,17 @@ import React, {
         onPointerOver={e => onHover(e, true)}
         onPointerOut={e => onHover(e, false)}
       >
-        <boxBufferGeometry attach="geometry" args={[size,size,size]} />
+        <boxGeometry attach="geometry" args={[size,size,size]} />
         <meshStandardMaterial
           attach="material"
           color={color}
-          roughness={0.6}
-          metalness={0.1}
+          // roughness={0.6}
+          // metalness={0.1}
         />
 
         <ImageTextureMaterial
           // imageUrl={props.project.mainImage.asset.url}
-          imageUrl={urlFor(props.project.mainImage).width(200).url()}
+          imageUrl={urlFor(props.project.mainImage).width(200).height(200).url()}
           material={material}
         />
       </mesh>

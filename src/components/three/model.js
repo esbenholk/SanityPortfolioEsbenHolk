@@ -49,10 +49,10 @@ export default function Model (props  ) {
         attach="material"
         roughness={0}
         color="#39FF14"
-        emmision="#39FF14"
+        // emmision="#39FF14"
         map={texture}
         material={material}
-        thickness={4} metalness={0.8} clearcoat={1}
+        thickness={4} metalness={0.4} clearcoat={1}
       />
     );
   };

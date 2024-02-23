@@ -19,8 +19,23 @@
 
 
 .main-cursor{
-
   pointer-events: none;
+  width: 50px;
+  height: 50px;
+  background-color: var(--normalColor);
+  mix-blend-mode: multiply !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.main-cursor-ring{
+  pointer-events: none;
+  width: 100px;
+  height: 100px;
+  border: 2px solid var(--detailColor);
+
 }
 
 .hor{
@@ -41,6 +56,7 @@
   position: fixed;
   background-color: var(--detailColor);
   pointer-events: none;
+
 }
 .projectTitle{
   color: var(--detailColor);
@@ -99,11 +115,13 @@ body {
 
 
 body {
-	background: radial-gradient(var(--normalColor),  var(--normalColor),  #23d5ab, blue);
+  background-color: var(--normalColor);
+	/* background: radial-gradient(var(--normalColor),  var(--normalColor),  #23d5ab, blue); */
 	background-size: 100% 100%;
   background-position: center;
-	animation: gradient 15s ease infinite;
+	/* animation: gradient 1s ease infinite; */
 	height: 100vh;
+  cursor:
 }
 
 @keyframes gradient {
@@ -257,6 +275,7 @@ body, #root, .app {
   bottom: 0;
   right: 0; 
   left: 0;
+  cursor: none;
 }
 
 h1 {
@@ -306,7 +325,7 @@ h1 {
   position: fixed;
   left: 50%;
   top: 50%;
-  transform: translate(-50%,0);
+  transform: translate(-50%,-50%);
 }
 
 .loader,
@@ -489,7 +508,7 @@ a.visited {
 
   font-family: "Pathway Gothic One", sans-serif;
 
-  /* mix-blend-mode: difference; */
+
   /* mix-blend-mode: exclusion; */
 }
 
@@ -506,6 +525,10 @@ a.visited {
 .projectnamecontainer{
   margin: 10px;
   z-index: 20;
+}
+
+.projectdesc{
+  mix-blend-mode: difference !important;
 }
 
 .inverse {

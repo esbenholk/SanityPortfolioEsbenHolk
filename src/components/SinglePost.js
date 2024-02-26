@@ -14,9 +14,11 @@ import useWindowDimensions from "./functions/useWindowDimensions";
 import HorizontalScrollComp from "./horizontalScroll";
 import { NavLink } from "react-router-dom";
 
+import EmptyBoids from "./three/emptyBoids";
+
 import YoutubeVideo from "./blocks/youtube";
 
-export default function SinglePost({updateSelectedProjectOnHover}) {
+export default function SinglePost({updateSelectedProjectOnHover, listIsActive, threedIsActive, galleryIsActive}) {
   const [singlePost, setSinglePost] = useState();
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();
@@ -27,20 +29,7 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
  
   const { width, height } = useWindowDimensions();
 
-  console.log("oh its u bitch. figured you'd sneak a peak at the code");
-
-  // const scrollToTop = () => {
-  //   window.scrollTo({
-  //     top: 0,
-  //     behavior: "smooth",
-  //   });
-  // };
-  // const scrollToBottom = () => {
-  //   window.scrollTo({
-  //     top: window.innerHeight,
-  //     behavior: "smooth",
-  //   });
-  // };
+  console.log("oh its u bitch. figured you'd sneak a peak at the code", singlePost);
 
   useEffect(() => {
     updateSelectedProjectOnHover(null);
@@ -73,10 +62,7 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
       .catch(console.error);
   }, [slug, projectList,updateSelectedProjectOnHover]);
 
-
-
   if (!singlePost) return <p className="fixedMiddle standard-button"> content incoming... </p>;
-
 
   return (
     <>
@@ -88,11 +74,7 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
         className="fullWidthPadded"
       >
  
-      
-      
-   
-        
-          
+
         <div className="singlePost post_details">
             <div className="borderTop" style={{zIndex: "9999999999",position: width>600?"absolute":"relative", top: width>600?"50px": "100px", width: "100%"}}>
               <div className="flex-row align-top project_directory_line noshade">
@@ -116,6 +98,17 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
                   {singlePost.title && (
                     <p className="projectTitle">{singlePost.title}</p>
                   )}
+
+                  {singlePost.recap && ( 
+                    <div className="projectRecap">
+                      <BlockContent blocks={singlePost.recap} />
+                    </div>
+                  )}
+
+                  {listIsActive && singlePost.body && <div className="authorInfo">
+                    <BlockContent blocks={singlePost.body} />
+                  </div>}
+                 
                   {/* {singlePost.categories && (
                     <>
                       <div className="flex-row align-left">
@@ -153,11 +146,7 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
 
    
              
-                {singlePost.recap && ( 
-                    <div className="projectRecap">
-                      <BlockContent blocks={singlePost.recap} />
-                    </div>
-                  )}
+          
 
 
               </div>
@@ -167,10 +156,10 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
             </div>
         </div>
 
-        
-        {singlePost.imagesGallery && width > 600 ? 
+        {singlePost.mainImage && listIsActive && <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div>}
+        {singlePost.imagesGallery && galleryIsActive && width > 600 ? 
             <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
-            : singlePost.imagesGallery && 
+            : singlePost.imagesGallery && galleryIsActive  && 
               <div className="flex-column align-center projectMedia">
                 {singlePost.imagesGallery.map((image, index)=>(
                   <>     
@@ -180,26 +169,27 @@ export default function SinglePost({updateSelectedProjectOnHover}) {
               </div>
           }
 
-
+          {singlePost.imagesGallery && threedIsActive && <EmptyBoids media={singlePost.imagesGallery}></EmptyBoids>}
           
 
           {!window.location.pathname.includes("esben") ? 
+          <>           
             <nav
              className={
                "footer-nav"
              }
             >
             {prevPost && (
-              <a href={prevPost.slug.current} className="standard-button">
+              <NavLink to={prevPost.slug.current} className="standard-button">
                 Prev
-              </a>
+              </NavLink>
             )}
             {nextPost && (
-              <a href={nextPost.slug.current} className="standard-button">
+              <NavLink to={nextPost.slug.current} className="standard-button">
                 Next
-              </a>
+              </NavLink>
             )}
-            </nav> : 
+            </nav> </>: 
             <><Projects projectList={projectList} />
               <nav className="footer-nav">
                   <NavLink className="standard-button" to="/">

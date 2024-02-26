@@ -18,19 +18,20 @@ import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
 import ScrollToTop from "./components/blocks/scrollToTop";
-import Boids from "./components/three/boids";
-import Cross from "./components/cross.js";
+
 
 
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 const SinglePost = lazy(() => import("./components/SinglePost.js"));
-// const LandingPage = lazy(() => import("./components/LandingPage.js"));
 const Projects = lazy(() => import("./components/projectList2022.js"));
 const Category = lazy(() => import("./components/Category.js"));
-// const ThreeDScene = lazy(() => import("./components/threeDscene"));
 
-const Gallery = lazy(()=> import("./components/Gallery"))
+const Gallery = lazy(() => import("./components/Gallery"));
+
+const Boids = lazy(() => import("./components/three/boids"));
+const Cross = lazy(() => import("./components/cross.js"));
+
 
 function App() {
   const [siteSettings, setSiteSettings] = useState();
@@ -40,22 +41,22 @@ function App() {
   const [listIsActive, setListIsActive] = useState(false);
   const [galleryIsActive, setGalleryIsActive] = useState(false);
   const [threedIsActive, setThreedIsActive] = useState(false);
-
-  
-
-
-  // const cursorRef = useRef(null);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
-
-
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
   const mainRef = createRef();
   const { width } = useWindowDimensions();
-
   const[selectedProject, setSelectedProject]=useState({});
   const [isActive, setIsActive] = useState();
+  const [slug, setSlug] = useState("/");
 
+
+  const updateSlug = useCallback((string)=>{
+    setSlug(string);
+    console.log("CURRENT SLUG", string);
+  },[]);
+
+  // console.log("has slug", params);
   const updateSelectedProjectOnHover = useCallback((project) => {
     if(project){
       setSelectedProject(project);
@@ -171,9 +172,7 @@ function App() {
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
           <BrowserRouter>
-            {siteSettings && <Header />}
-
-         
+            {siteSettings && <Header updateSlug={updateSlug }/>}
             <AnimatePresence>
 
                 <ScrollToTop>
@@ -189,52 +188,11 @@ function App() {
                             </>
                           )
                       }
-                    <div className="flex-column modeNav">
-                      {width>600 &&      <button className={threedIsActive ? "standard-button mode active" :"standard-button mode "} onClick={()=>{setThreedIsActive(!threedIsActive)}}>
-                      3D
-                    </button>}
-               
-          
-                    <button 
-                      className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
-                      onClick={function(){
-                        if(width>600){
-                          setGalleryIsActive(!galleryIsActive);
-                        } else {
-                      
-                          setGalleryIsActive(true);
-                          setListIsActive(false);
-                        }
-                        
-                   
-                      }}
-                      >
-                      GALLERY
-                    </button>
-                    <button 
-                      className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
-                      onClick={function(){
-                        if(width>600){
-                       
-                          setListIsActive(!listIsActive);
-
-                        } else {
-                      
-                          setGalleryIsActive(false);
-                          setListIsActive(true);
-                        }
-                        
-                   
-                      }}
-                      >
-                      LIST 
-                    </button>
-               
-                    </div>
+            
 
                     </Route>
                     <Route path="/projects/:slug">
-                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />}
+                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} listIsActive={listIsActive} galleryIsActive={galleryIsActive} threedIsActive={threedIsActive}/>}
                     </Route>
                     <Route path="/projects">
                     {siteSettings && (
@@ -260,18 +218,90 @@ function App() {
                     <Route path="/:slug">
                       <Category updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
                     </Route>
-
-
-
                   </Switch>
 
-                  <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>
+                  {width>600 && <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>}
 
+                
+                    <div className="flex-column modeNav">
+                      {width>600 &&      
+                        <button className={threedIsActive ? "standard-button mode active" :"standard-button mode "} onClick={()=>{setThreedIsActive(!threedIsActive)}}>
+                        3D
+                        </button>
+                      }
+                      {slug.length<2 ? <button 
+                        className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
+                        onClick={function(){
+                          if(width<600 && slug.length < 2){
+                            setGalleryIsActive(true);
+                            setListIsActive(false);
+                          } else {
+                        
+                            setGalleryIsActive(!galleryIsActive);
 
+                          }
+                        }}
+                        >
+                        GALLERY
+                      </button> : width>600 ? <button 
+                        className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
+                        onClick={function(){
+                          if(width<600 && slug.length < 2){
+                            setGalleryIsActive(true);
+                            setListIsActive(false);
+                          } else {
+                        
+                            setGalleryIsActive(!galleryIsActive);
+
+                          }
+                        }}
+                        >
+                        GALLERY
+                      </button>:null}
+              
+                      {slug.length<2 ?
+                     <button 
+                        className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
+                        onClick={function(){
+                          if(width<600 && slug.length < 2){
+                            
+                            setGalleryIsActive(false);
+                            setListIsActive(true);
+                          
+
+                          } else {
+                        
+                            setListIsActive(!listIsActive);
+                          }
+                          
+                    
+                        }}
+                        >
+                        LIST 
+                      </button> : width>600 ?  <button 
+                        className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
+                        onClick={function(){
+                          if(width<600 && slug.length < 2){
+                            
+                            setGalleryIsActive(false);
+                            setListIsActive(true);
+                          
+
+                          } else {
+                        
+                            setListIsActive(!listIsActive);
+                          }
+                          
+                    
+                        }}
+                        >
+                        LIST 
+                      </button> :null}
+                      
+               
+                    </div> 
+                  
                 </ScrollToTop>
-
-
-
             </AnimatePresence>        
           </BrowserRouter>
         </AppContext.Provider>

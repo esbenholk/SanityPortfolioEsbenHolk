@@ -26,7 +26,13 @@ export default function PostCard(props) {
   const onHover = useCallback(
     (e, value) => {
       e.stopPropagation();
-      props.stateChanger(props.post);
+
+      if(value){
+        props.stateChanger(props.post);
+      } else {
+        props.stateChanger(null);
+      }
+    
     },
     [props]
   );

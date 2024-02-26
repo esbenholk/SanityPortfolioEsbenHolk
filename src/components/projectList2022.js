@@ -8,21 +8,28 @@ import {motion } from "framer-motion"
 
 
 import { toggleHover } from "./functions/toggleHover";
+import useWindowDimensions from "./functions/useWindowDimensions";
 
 
 // Get a pre-configured url-builder from your sanity client
 const builder = imageUrlBuilder(sanityClient);
 
+
 function urlFor(source) {
   return builder.image(source);
 }
-function hover(e) {
-  toggleHover({ e });
-}
 
 export default function Projects({ projectList}) {
+  const {width} = useWindowDimensions();
 
-
+  function hover(e) {
+  
+    if(width>600){
+      toggleHover({ e });
+    }
+  
+  }
+  
   return (
  
       <motion.div
@@ -40,7 +47,7 @@ export default function Projects({ projectList}) {
         projectList.map((project, index) => (
           <div key={index} className="projectList-item noshade">
 
-            <div onMouseEnter={hover} onMouseLeave={hover} class="noshade">
+            <div onMouseEnter={hover} onMouseLeave={hover} className="noshade">
               {" "}
               <a href={"/projects/" + project.slug.current}>
                 {project.title ? project.title : "undefined"}

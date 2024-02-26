@@ -60,8 +60,7 @@ import React, {
     // random time mod factor
     const timeMod = useMemo(() => random(0.1, 1, true), []);
 
-    // color
-    const color = isHovered ? 0xe5d54d : (isActive ? 0xf7e7e5 : 0xf95b3c);
+
 
     const randomSize = 0.8;
     const size = isHovered ? randomSize*1.2 : (isActive ? randomSize : randomSize*0.8);
@@ -116,16 +115,58 @@ import React, {
         onPointerOut={e => onHover(e, false)}
       >
         <boxGeometry attach="geometry" args={[size,size,size]} />
-        <meshStandardMaterial
-          attach="material"
-          color={color}
-          // roughness={0.6}
-          // metalness={0.1}
-        />
+ 
 
         <ImageTextureMaterial
           // imageUrl={props.project.mainImage.asset.url}
           imageUrl={urlFor(props.project.mainImage).width(200).height(200).url()}
+          material={material}
+        />
+      </mesh>
+    );
+  };
+
+
+  export function EmptyCube({image}) {
+    const mesh = useRef();
+    const time = useRef(0);
+    const material = useRef();
+
+    const position = useMemo(() => {
+      return [random(-3, 3, true), random(-3, 3, true), random(-3, 3, true)];
+    }, []);
+
+    // random time mod factor
+    const timeMod = useMemo(() => random(0.1, 1, true), []);
+
+
+
+    const size = 2;
+
+
+    useFrame(() => {
+      mesh.current.rotation.y += 0.01 * timeMod;
+      mesh.current.rotation.x += 0.01 * timeMod;
+      mesh.current.rotation.y += 0.01 * timeMod;
+      time.current += 0.003;
+
+    });
+
+    console.log("CUBE:", image.image);
+
+
+    return (
+      <mesh
+        ref={mesh}
+        position={position}
+
+      >
+        <boxGeometry attach="geometry" args={[size,size,size]} />
+
+
+        <ImageTextureMaterial
+          // imageUrl={props.project.mainImage.asset.url}
+          imageUrl={urlFor(image.image.asset).width(200).height(200).url()}
           material={material}
         />
       </mesh>

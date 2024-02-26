@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
 import Masonry from "react-masonry-css";
 
@@ -6,7 +6,6 @@ import PostCard from "./postCard.js";
 
 import AppContext from "../../globalState";
 
-import useWindowDimensions from "../functions/useWindowDimensions";
 
 const breakpointColumnsObj = {
   default: 3,

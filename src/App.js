@@ -17,12 +17,7 @@ import Header from "./components/Header_function";
 import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
-
-import { NavLink } from "react-router-dom";
-
 import ScrollToTop from "./components/blocks/scrollToTop";
-
-// import HorizontalScrollComp from "./components/horizontalScroll";
 import Boids from "./components/three/boids";
 import Cross from "./components/cross.js";
 

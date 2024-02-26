@@ -10,8 +10,8 @@ export default function YoutubeVideo({url}){
       const { width } = useWindowDimensions();
 
       const opts = {
-        height: (width/16)*9,
-        width: width,
+        height: width>600 ? 900/2 : (width-20)/1.7,
+        width: width>600 ? 1600/2 : width-20,
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
           autoplay: 0,

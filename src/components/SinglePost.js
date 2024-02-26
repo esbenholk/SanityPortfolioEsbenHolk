@@ -5,69 +5,46 @@ import sanityClient from "../client";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Image from "./blocks/image";
-// import CustomCarousel from "./blocks/Carousel";
+import Projects from "./projectList2022";
 import { Link } from "react-router-dom";
 
 import BlockContent from "./blocks/BlockContent";
 
-// import Masonry from "react-masonry-css";
-
 import useWindowDimensions from "./functions/useWindowDimensions";
-
+import HorizontalScrollComp from "./horizontalScroll";
 import { NavLink } from "react-router-dom";
 
 import YoutubeVideo from "./blocks/youtube";
 
-import imageUrlBuilder from "@sanity/image-url";
-// import useWindowDimensions from "../functions/useWindowDimensions";
-
-// Get a pre-configured url-builder from your sanity client
-const builder = imageUrlBuilder(sanityClient);
-
-function urlFor(source) {
-  return builder.image(source);
-}
-
-
-// const minibreakpointColumnsObj = {
-//   default: 2,
-// };
-
-export default function SinglePost() {
+export default function SinglePost({updateSelectedProjectOnHover}) {
   const [singlePost, setSinglePost] = useState();
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();
   const { slug } = useParams();
-  const [mainImageHeight, setMainImageHeight] = useState(600);
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
  
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   console.log("oh its u bitch. figured you'd sneak a peak at the code");
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-  const scrollToBottom = () => {
-    window.scrollTo({
-      top: window.innerHeight,
-      behavior: "smooth",
-    });
-  };
+  // const scrollToTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth",
+  //   });
+  // };
+  // const scrollToBottom = () => {
+  //   window.scrollTo({
+  //     top: window.innerHeight,
+  //     behavior: "smooth",
+  //   });
+  // };
 
   useEffect(() => {
-    if(window.location.pathname.includes("esben")){
-      setMainImageHeight(500);
+    updateSelectedProjectOnHover(null);
 
-    }else{
-      setMainImageHeight(1000000);
-
-    }
     sanityClient
       .fetch(
         `*[slug.current == "${slug}"]{
@@ -79,7 +56,7 @@ export default function SinglePost() {
         setSinglePost(data[0]);
   
 
-        console.log("SINGLE PROJECT", data[0].title, data[0].videos );
+
         for (let index = 0; index < projectList.length; index++) {
     
           if (
@@ -94,7 +71,7 @@ export default function SinglePost() {
         }
       })
       .catch(console.error);
-  }, [slug, projectList]);
+  }, [slug, projectList,updateSelectedProjectOnHover]);
 
 
 
@@ -103,8 +80,6 @@ export default function SinglePost() {
 
   return (
     <>
-
-    <div style={{height: "110px"}}></div>
       <motion.div
         layout
         initial={{ opacity: 0 }}
@@ -112,67 +87,36 @@ export default function SinglePost() {
         exit={{ opacity: 0 }}
         className="fullWidthPadded"
       >
-
-     
-          {!window.location.pathname.includes("esben") ? 
-            <nav
-             className={
-               "footer-nav"
-             }
-            >
-            {prevPost && (
-              <a href={prevPost.slug.current} className="standard-button">
-                Prev
-              </a>
-            )}
-            {nextPost && (
-              <a href={nextPost.slug.current} className="standard-button">
-                Next
-              </a>
-            )}
-            </nav> : 
-              <nav className="footer-nav">
-                  <NavLink className="standard-button" to="/gallery">
-                    Gallery
-                  </NavLink>
-
-                  <NavLink className="standard-button" to="/gallery">
-                    Gallery
-                  </NavLink>
-            </nav>
-        }
+ 
       
       
-        <div className="flex-row align-top project_directory_line noshade">
-            <a href="/projects">{"Project >"}</a>
-            <div className="flex-row align-left noshade">
-              {singlePost.categories &&
-                singlePost.categories.map((category, index) => (
-                  <Link
-                    to={"../" + category.slug.current}
-                    className=""
-                    key={index}
-                  >
-                    {category.title}
-                    {index + 1 !== singlePost.categories.length ? "," : null}
-                  </Link>
-                ))}
-              <p>{" > "}</p>
-            </div>
-            
-  
-            </div>
+   
         
           
-        <article className="singlePost">
-
-            <div>
-            <div className="borderTop" style={{zIndex: "21", position: width>600  ? "absolute" : "relative", width: "100%"}}></div>
-            <div className="standard-container projectnamecontainer projectDetails background" style={{position: width>600 ? "absolute" : "relative"}}>
+        <div className="singlePost post_details">
+            <div className="borderTop" style={{zIndex: "9999999999",position: width>600?"absolute":"relative", top: width>600?"50px": "100px", width: "100%"}}>
+              <div className="flex-row align-top project_directory_line noshade">
+                <a href="/projects">{"Project >"}</a>
+                <div className="flex-row align-left noshade">
+                  {singlePost.categories &&
+                    singlePost.categories.map((category, index) => (
+                      <Link
+                        to={"../" + category.slug.current}
+                        className=""
+                        key={index}
+                      >
+                        {category.title}
+                        {index + 1 !== singlePost.categories.length ? "," : null}
+                      </Link>
+                    ))}
+                  <p>{" > "}</p>
+                </div>
+              </div>
+              <div className="standard-container projectnamecontainer projectDetails background" >
                   {singlePost.title && (
                     <p className="projectTitle">{singlePost.title}</p>
                   )}
-                  {singlePost.categories && (
+                  {/* {singlePost.categories && (
                     <>
                       <div className="flex-row align-left">
                         {singlePost.categories.map((category, index) => (
@@ -205,16 +149,9 @@ export default function SinglePost() {
                     </div>
                   
                   </>
-                )}
+                )} */}
 
-                <div className="flex-row project_details noshade">
-                    {singlePost.client && (
-                      <>
-                        <p>Collaborator(s): </p>
-                        <p className="project_tag">{singlePost.client}</p>
-                      </>
-                    )}
-                </div>
+   
              
                 {singlePost.recap && ( 
                     <div className="projectRecap">
@@ -223,132 +160,54 @@ export default function SinglePost() {
                   )}
 
 
-            </div>
-
-
-              {singlePost.year && (
-
-                    <p className="standard-container projectYear background" style={{zIndex: "20"}}>{singlePost.year}</p>
-              )}
-            </div>
-          
-
-
-     
-      
-          
-        
-        
-      
-
-    
-   
-
-          <div className={window.location.pathname.includes("esben")?"flex-column contentColumn customFixedSpace" :"flex-column contentColumn"} style={{position: width>600 ? "absolute" : "relative", top: width>600 &&  !window.location.pathname.includes("esben")? "-170px" :"0", overflow: "scroll", zIndex: "0"}}>
-            <div className="flex-row align-center" >
-              <div className={window.location.pathname.includes("esben")? "customfixed project_main_image": "project_main_image"} >
-                    {singlePost.mainImage.hotspot ? (
-                    <img
-                      src={urlFor(singlePost.mainImage.asset.url)}
-                      alt={singlePost.mainImage.alt}
-                      style={{
-                        objectPosition: `${singlePost.mainImage.hotspot.x * 100}% ${
-                          singlePost.mainImage.hotspot.y * 100
-                        }%`, maxHeight: mainImageHeight
-                      }}
-                      className="project_main_image"
-                    />
-                  ) : (
-                    <img
-                      src={urlFor(singlePost.mainImage.asset.url)}
-                      alt={singlePost.mainImage.alt}
-                      className="project_main_image"
-                      style={{maxHeight: mainImageHeight}}
-                    />
-                  )}
               </div>
-
-              {singlePost.videos != null && singlePost.videos.length > 0 ? <>
-
-                {singlePost.videos.map((video, index) => (
-                  <div className="project_main_image" key={index}>
-                      <YoutubeVideo url={video.url}/>
-
-                  </div>
-                ))
-              }
-              </>: null}
-
-              {singlePost.imagesGallery &&
-                singlePost.imagesGallery.length > 1 ? (
-                // <CustomCarousel arrows={true} swipe={true} classsss={""}>
-                //   {singlePost.imagesGallery.map((image, index) => (
-                //     <div className="project_main_image" key={index}>
-                //       <Image image={image} mainImageHeight={mainImageHeight} />
-                //     </div>
-                //   ))}
-                // </CustomCarousel>
-          
-                  singlePost.imagesGallery.map((image, index) => (
-                    <div className="project_main_image" key={index}>
-                      <Image image={image} mainImageHeight={mainImageHeight} />
-                    </div>
-                  ))
-
-              ) : null}
-
-            </div>
-
-
-
-            <div className="contentColumn">
-   
-
-              {singlePost.body && (
-                <div className="standard-container projectnamecontainer ">
-                  <div className="flex-row justifyBetween header noshade projectRecap">
-                    <h2 className="projectTitle">{singlePost.title}</h2>
-
-                    <button
-                      onClick={scrollToBottom}
-                      className="arrow"
-                      style={{ transform: "rotate(90deg)" }}
-                    >
-                      {">"}
-                    </button>
-                  </div>
-                    <BlockContent blocks={singlePost.body} class="noshade" />
-                    <div className="projectHeader"></div>
-
-                    <div className="flex-row align-right header projectRecap">
-                    <button
-                      onClick={scrollToTop}
-                      className="arrow"
-                      style={{ transform: "rotate(-90deg)" }}
-                    >
-                      {">"}
-                    </button>
-                  </div>
-
-
-                  
-     
-                </div>
+              {singlePost.year && (
+                <p className="standard-container projectYear background" style={{zIndex: "20"}}>{singlePost.year}</p>
               )}
-
- 
-
-
-              <div className="borderTop"></div>
-              <div className="projectHeader"></div>
             </div>
-          </div>
-              
-     
-   
-      
-        </article>
+        </div>
 
+        
+        {singlePost.imagesGallery && width > 600 ? 
+            <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
+            : singlePost.imagesGallery && 
+              <div className="flex-column align-center projectMedia">
+                {singlePost.imagesGallery.map((image, index)=>(
+                  <>     
+                  {image.youtube ? <YoutubeVideo url={image.youtube.url}/> : <Image image={image.image} width={width-20}/>}
+                  </>
+                ))}
+              </div>
+          }
+
+
+          
+
+          {!window.location.pathname.includes("esben") ? 
+            <nav
+             className={
+               "footer-nav"
+             }
+            >
+            {prevPost && (
+              <a href={prevPost.slug.current} className="standard-button">
+                Prev
+              </a>
+            )}
+            {nextPost && (
+              <a href={nextPost.slug.current} className="standard-button">
+                Next
+              </a>
+            )}
+            </nav> : 
+            <><Projects projectList={projectList} />
+              <nav className="footer-nav">
+                  <NavLink className="standard-button" to="/">
+                    Work
+                  </NavLink>
+            </nav>
+            </>
+        }
       
       </motion.div>
     </>

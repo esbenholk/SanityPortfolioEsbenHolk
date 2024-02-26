@@ -15,6 +15,10 @@
 * {
   box-sizing: border-box;
   font-family: "Pathway Gothic One", sans-serif;
+  cursor: none;
+}
+button, a, .standard-button{
+  cursor: pointer;
 }
 
 
@@ -194,13 +198,13 @@ body, #root, .app {
 
 }
 
-
+/* 
 .card-container {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
+} */
 
 
 
@@ -247,7 +251,102 @@ body, #root, .app {
 
 
 
+/* .main {
+  width: 100%;
+  min-height: calc(100vh - 50px);
+  position: relative;
+  top: 29px;
+  
+  padding: 0;
+  background-color: darkred;
+} */
 
+.content {
+  max-width: 1200px;
+  width: 90%;
+  height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  top: 0;
+  padding: 0 10px;
+  padding-top: 20px;
+}
+
+.card {
+  padding: 10px;
+  padding-left: 0px;
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  max-height: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+
+.card-img-container {
+  height: fit-content;
+  width: fit-content;
+
+
+}
+
+
+
+
+
+.card-container {
+  position: fixed;
+  top: 0;
+  left:0;
+  right:0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.scroll {
+  padding: 5px;
+  /* height: 235px; */
+  line-height: 235px;
+  position: absolute;
+  flex-basis: 0;
+  z-index: 5;
+
+  display: none;
+  transition: 2s;
+}
+
+.card-container:hover .scroll {
+  display: block;
+  transition: 2s;
+}
+
+.scroll-prev {
+  left: 10px;
+}
+
+.scroll-next {
+  right: 10px;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+
+  align-items: center;
+
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 
 
@@ -461,6 +560,20 @@ a.visited {
 .flex-column {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+}
+.modeNav{
+  margin: 10px;
+  position: fixed;
+  bottom: 0;
+}
+.modeNav button{
+  width: fit-content;
+}
+.modeNav button:hover{
+
+  color: var(--linkColor);
+  z-index: 9999999999999;
 }
 .flex-row {
   display: flex;
@@ -510,6 +623,14 @@ a.visited {
 
 
   /* mix-blend-mode: exclusion; */
+}
+.mode{
+  font-style: italic;
+  text-decoration: line-through;
+}
+.mode.active{
+  font-style:normal;
+  text-decoration: none;
 }
 
 .customfixed{
@@ -723,17 +844,27 @@ nav {
 .logo_container p {
   white-space: nowrap;
 }
+.overlayComp{
+  position: absolute;
+  top:0px;
 
+}
+.padding-top{
+  padding-top: 100px;
+
+}
 .projectList2022 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: var(--normalPadding);
+  width: 100%;
+
 }
-.projectList-item:first-of-type {
+/* .projectList-item:first-of-type {
   margin-top: 40px;
   margin-bottom: 20px;
-}
+} */
 .projectList-item {
   display: flex;
   flex-direction: row;
@@ -765,7 +896,7 @@ nav {
   left: 50%;
   transform: translate(-50%, -50%);
   max-height: 80%;
-  z-index: -99;
+  z-index: 999999999;
 }
 
 /* featured posts */
@@ -822,6 +953,7 @@ nav {
   display: -ms-flexbox; /* Not needed if autoprefixing */
   display: flex;
   width: auto;
+
 }
 .my-masonry-grid_column {
   padding-right: 2px;
@@ -886,6 +1018,7 @@ footer p {
 }
 .project_directory_line{
   margin-left: 10px;
+
 }
 .project_directory_line a,
 .project_directory_line p {
@@ -893,7 +1026,14 @@ footer p {
 }
 .projects{
   margin:10px;
-  overflow-x: hidden;
+
+}
+.gallery{
+  max-width: 1000px;
+
+}
+.projectList{
+  width: 100%;
 }
 .projectHeader{
   height: 50px;
@@ -906,6 +1046,17 @@ footer p {
   }
   .projectHeader{
     height: 95px;
+  }
+
+  .projectMedia{
+    padding-top: 100px;
+
+    padding-bottom: 100px;
+
+  }
+  .projectList{
+    width: 100%;
+    padding-bottom: 300px;
   }
 
   .featured_post_card_image {

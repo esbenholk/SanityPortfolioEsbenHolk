@@ -1,15 +1,10 @@
-import * as THREE from 'three'
 import React, { Suspense, useRef, useContext } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { Html, ScrollControls, Scroll, Preload, Image as ImageImpl } from '@react-three/drei'
 import AppContext from "../globalState";
 
 
-// {projectList &&
-//   projectList.map((element, index) => (
-//     <Page position={[width * index, 0, 0]} urls={[element.mainImage.asset.url]} key={index} />
-//   ))}
-// </>
+
 
 function Image(props) {
   const ref = useRef()

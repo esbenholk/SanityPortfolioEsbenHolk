@@ -52,25 +52,36 @@ export default {
       description:
         "image shown in 'Others have looked at' list and unveils main image on hover",
     },
-    {
-      name: "imageMap",
-      title: "image Map",
-      type: "string",
-      description: "export imagemap and attach for better link appearance",
-    },
-
+    
     {
       name: "imagesGallery",
       title: "Images gallery",
       type: "array",
       of: [
         {
-          type: "image",
-          options: {
-            hotspot: true,
-          },
+          title: "media",
+          name: "media",
+          type: "object",
+          fields: [
+      
+            {
+              name: "image",
+              title: "image",
+              type: "image",
+              options: {
+                hotspot: true,
+              }
+            },
+            {
+              name: "youtube",
+              title: "youtube",
+              type: "youtube",
+            },
+          ],
         },
       ],
+     
+
     },
     {
       name: "recap",
@@ -105,15 +116,6 @@ export default {
         layout: "tags",
       },
     },
-    {
-      name: "videos",
-      title: "Video Gallery",
-      type: "array",
-      of: [
-        {
-          type: "youtube"
-        },
-      ],
-    },
+   
   ],
 };

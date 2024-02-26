@@ -9,7 +9,6 @@ import {motion } from "framer-motion"
 
 import { toggleHover } from "./functions/toggleHover";
 
-import useWindowDimensions from "./functions/useWindowDimensions";
 
 // Get a pre-configured url-builder from your sanity client
 const builder = imageUrlBuilder(sanityClient);
@@ -22,55 +21,25 @@ function hover(e) {
 }
 
 export default function Projects({ projectList}) {
-  const { width } = useWindowDimensions();
 
 
   return (
-    <>
-    <div style={{height: "100px"}}></div>
+ 
       <motion.div
         layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fullWidthPadded"
+        className="fullWidthPadded padding-top projectList"
       >
 
     
 
         <article className="borderTop singlePost">
-
-
-        <div className="projectList-item">
-        {width > 900 ? (
-          <div className="categories">
-            <h2>Category</h2>
-          </div>
-        ) : null}
-        <div>
-          <h2>Project</h2>
-        </div>
-        <h2>Year</h2>
-    </div>
-
     {projectList &&
         projectList.map((project, index) => (
           <div key={index} className="projectList-item noshade">
-            {width > 900 ? (
-              <div className="categories noshade">
-                {project.categories &&
-                  project.categories.map((category, index) => (
-                    <a
-                      key={index}
-                      id={"category_" + category.title + ""}
-                      href={category.slug.current}
-                    >
-                      {category.title}
-                      {index + 1 !== project.categories.length ? ", " : null}
-                    </a>
-                  ))}
-              </div>
-            ) : null}
+
             <div onMouseEnter={hover} onMouseLeave={hover} class="noshade">
               {" "}
               <a href={"/projects/" + project.slug.current}>
@@ -135,7 +104,7 @@ export default function Projects({ projectList}) {
  
         </article>
       </motion.div>
-    </>
+
   );
 
   

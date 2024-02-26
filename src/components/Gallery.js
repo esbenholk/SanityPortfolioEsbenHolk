@@ -6,19 +6,15 @@ import Projects from "./blocks/Projects";
 
 import AppContext from "../globalState";
 
-import Cross from "./cross";
 
 
-export default function Gallery() {
+export default function Gallery({updateSelectedProjectOnHover}) {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
   const projectList = myContext.projectList;
 
-  const [selectedProject, setSelectedProject] = useState({});
 
-  const updateSelectedProjectOnHover = useCallback((project) => {
-    setSelectedProject(project);
-  }, []);
+
 
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
@@ -45,21 +41,18 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="projectContainer"
+            className="projectContainer overlayComp"
             // style={{ backgroundImage: `url(${info.backgroundImage.asset.url})` }}
           >
             {projectList ? (
               <Projects
                 projectList={projectList}
-                show_categories={true}
-                show_tags={true}
+                show_categories={false}
+                show_tags={false}
                 stateChanger={updateSelectedProjectOnHover}
               />
             ) : null}
           </motion.div>
-          <Cross selectedProject={selectedProject} shouldHaveBackground={true}/>
-
-          <div className="projectHeader"></div>
 
 
       

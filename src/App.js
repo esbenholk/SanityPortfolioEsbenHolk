@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
   createRef,
-  // useRef,
+ useCallback
 } from "react";
 // import NavBar from "./components/NavBar.js";
 import "./App.css";
@@ -24,7 +24,7 @@ import ScrollToTop from "./components/blocks/scrollToTop";
 
 // import HorizontalScrollComp from "./components/horizontalScroll";
 import Boids from "./components/three/boids";
-
+import Cross from "./components/cross.js";
 
 
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
@@ -42,25 +42,44 @@ function App() {
   const [projectList, setProjectList] = useState();
   const [sortedProjects, setSortedProjects] = useState();
   const [settingsProject, setSettingsproject] = useState();
+  const [listIsActive, setListIsActive] = useState(false);
+  const [galleryIsActive, setGalleryIsActive] = useState(false);
+  const [threedIsActive, setThreedIsActive] = useState(false);
+
+  
 
 
   // const cursorRef = useRef(null);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const [basket, setBasket] = useState([]);
 
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
-
   const mainRef = createRef();
-
-
   const { width } = useWindowDimensions();
 
+  const[selectedProject, setSelectedProject]=useState({});
+  const [isActive, setIsActive] = useState();
 
-// console.log(location);
+  const updateSelectedProjectOnHover = useCallback((project) => {
+    if(project){
+      setSelectedProject(project);
+      setIsActive(true);
 
-  // const { width } = useWindowDimensions();
+    } else {
+      setIsActive(false);
+    }
+   
+  }, []);
+
+  useEffect(()=>{
+    
+    if(width<600){
+      setGalleryIsActive(true);
+    } else {
+      setThreedIsActive(true);
+    }
+  },[width])
 
   useEffect(() => {
     sanityClient
@@ -139,14 +158,12 @@ function App() {
   const globalContext = {
     siteSettings: siteSettings,
     projectList: projectList,
-    basket: basket,
     tags: tags,
     categories: categories,
     hasFeaturedPosts: hasFeaturedPosts,
     mainRef: mainRef,
     setSiteSettings,
     setProjectList,
-    setBasket,
     setTags,
     setCategories,
     setHasFeaturedPosts,
@@ -166,35 +183,63 @@ function App() {
 
                 <ScrollToTop>
                    <Switch>
-
                     <Route exact path="/">
                       {sortedProjects && (
                             <>
-                            {width>500 ? 
-                              <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject}  />
-                              : <Gallery info={siteSettings} projectList={sortedProjects}/> }
-
-                            {/* <HorizontalScrollComp projects={projectList} info={siteSettings}/> */}
-
-                            <nav className="footer-nav">
-                                <NavLink className="standard-button" to="/gallery">
-                                  Gallery
-                                </NavLink>
-
-                                <NavLink className="standard-button" to="/gallery">
-                                  Gallery
-                                </NavLink>
-                            </nav>
-                            
-                           
+                            {threedIsActive && 
+                              <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
+                              }
+                            {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
+                            {galleryIsActive && <Gallery info={siteSettings} projectList={sortedProjects} updateSelectedProjectOnHover={updateSelectedProjectOnHover} /> }          
                             </>
-
-                            
-                      )
+                          )
                       }
+                    <div className="flex-column modeNav">
+                      {width>600 &&      <button className={threedIsActive ? "standard-button mode active" :"standard-button mode "} onClick={()=>{setThreedIsActive(!threedIsActive)}}>
+                      3D
+                    </button>}
+               
+          
+                    <button 
+                      className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
+                      onClick={function(){
+                        if(width>600){
+                          setGalleryIsActive(!galleryIsActive);
+                        } else {
+                      
+                          setGalleryIsActive(true);
+                          setListIsActive(false);
+                        }
+                        
+                   
+                      }}
+                      >
+                      GALLERY
+                    </button>
+                    <button 
+                      className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
+                      onClick={function(){
+                        if(width>600){
+                       
+                          setListIsActive(!listIsActive);
+
+                        } else {
+                      
+                          setGalleryIsActive(false);
+                          setListIsActive(true);
+                        }
+                        
+                   
+                      }}
+                      >
+                      LIST 
+                    </button>
+               
+                    </div>
+
                     </Route>
                     <Route path="/projects/:slug">
-                      {projectList && <SinglePost projectList={projectList} />}
+                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />}
                     </Route>
                     <Route path="/projects">
                     {siteSettings && (
@@ -209,18 +254,24 @@ function App() {
                
                     <Route path="/gallery">
                     {siteSettings && (
-                        <>
+                
                        <Gallery info={siteSettings}
-                          projectList={projectList}/>
-                        </>
+                          projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
+                   
                       )}
                   
                     </Route>
                
                     <Route path="/:slug">
-                      <Category />
+                      <Category updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
                     </Route>
+
+
+
                   </Switch>
+
+                  <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>
+
 
                 </ScrollToTop>
 

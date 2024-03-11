@@ -5,8 +5,8 @@ import React, {
 
   useCallback
 } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
+import { useFrame } from "@react-three/fiber";
+// import { TextureLoader } from "three";
 
 import { useHistory } from "react-router-dom";
 
@@ -15,7 +15,7 @@ export default function Model (props  ) {
 
   const { nodes } = useGLTF('/three/simlogo.glb', true);
   const simlogo = useRef();
-  const material = useRef();
+  // const material = useRef();
 
   const history = useHistory();
 
@@ -42,20 +42,20 @@ export default function Model (props  ) {
   );
 
   
- const ImageTextureMaterial = (imageUrl, material) => {
-    const texture = useLoader(TextureLoader, imageUrl.imageUrl);
-    return (
-      <meshStandardMaterial
-        attach="material"
-        roughness={0}
-        color="#39FF14"
-        // emmision="#39FF14"
-        map={texture}
-        material={material}
-        thickness={4} metalness={0.4} clearcoat={1}
-      />
-    );
-  };
+//  const ImageTextureMaterial = (imageUrl, material) => {
+//     const texture = useLoader(TextureLoader, imageUrl.imageUrl);
+//     return (
+//       <meshStandardMaterial
+//         attach="material"
+//         roughness={0}
+//         color="#39FF14"
+//         // emmision="#39FF14"
+//         map={texture}
+//         material={material}
+//         thickness={4} metalness={0.4} clearcoat={1}
+//       />
+//     );
+//   };
 
   const onClick = useCallback(
     e => {
@@ -72,6 +72,8 @@ export default function Model (props  ) {
   onClick={e => onClick(e)}
   onPointerOver={e => onHover(e, true)}
   onPointerOut={e => onHover(e, false)}> 
-        <ImageTextureMaterial    imageUrl={"https://cdn.sanity.io/images/swdt1dj3/production/571220f22322bb73a455caf9a1ab9c1bccb9f20a-1713x1701.jpg?w=1000&h=1000&fit=max"} material={material}/>
+        <meshPhysicalMaterial transmission={1} roughness={0.1} thickness={5} envMapIntensity={4} color={"#39FF14"}/>
+
+        {/* <ImageTextureMaterial    imageUrl={"https://cdn.sanity.io/images/swdt1dj3/production/571220f22322bb73a455caf9a1ab9c1bccb9f20a-1713x1701.jpg?w=1000&h=1000&fit=max"} material={material}/> */}
   </mesh>
 };

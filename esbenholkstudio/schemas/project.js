@@ -57,6 +57,8 @@ export default {
       name: "imagesGallery",
       title: "Images gallery",
       type: "array",
+ 
+    
       of: [
         {
           title: "media",
@@ -78,6 +80,19 @@ export default {
               type: "youtube",
             },
           ],
+          preview: {
+            select: {
+              image: 'image',
+              title: 'youtube.url'
+            },
+            prepare({title, image}) {
+              return {
+                title: title || 'image',
+                subtitle: 'single image or youtube link',
+                media: image 
+              }
+            },
+          },
         },
       ],
      

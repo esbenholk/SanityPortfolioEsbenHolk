@@ -14,7 +14,7 @@ function Cubes({projects, stateChanger}) {
       });
 
       const nodesCubes = map(projects, (project, i) => {
-        return <Cube key={i} project={project} stateChanger={stateChanger} />;
+        return <><Cube key={i} project={project} stateChanger={stateChanger} /> </>;
       });
     
     return <group ref={group}>{nodesCubes}</group>;

@@ -222,8 +222,7 @@ function App() {
 
                   {width>600 && <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>}
 
-                
-                    <div className="flex-column modeNav">
+                    {!slug.includes("esben") &&      <div className="flex-column modeNav">
                       {width>600 &&      
                         <button className={threedIsActive ? "standard-button mode active" :"standard-button mode "} onClick={()=>{setThreedIsActive(!threedIsActive)}}>
                         3D
@@ -295,12 +294,13 @@ function App() {
                     
                         }}
                         >
-                        LIST 
+                       MORE DETAILS 
                       </button> :null}
                       
                
                     </div> 
-                  
+                  }
+               
                 </ScrollToTop>
             </AnimatePresence>        
           </BrowserRouter>

@@ -2,13 +2,14 @@
 import React from 'react';
 import YouTube from 'react-youtube';
 import getYouTubeId from 'get-youtube-id'
-
+import Vimeo from '@u-wave/react-vimeo';
 import useWindowDimensions from "../functions/useWindowDimensions";
+
 
 export default function YoutubeVideo({url}){
       
       const { width } = useWindowDimensions();
-
+      console.log("URL VIDEO",url);
       const opts = {
         height: width>600 ? 900/2 : (width-20)/1.7,
         width: width>600 ? 1600/2 : width-20,
@@ -25,7 +26,7 @@ export default function YoutubeVideo({url}){
         event.target.pauseVideo();
       }
 
-    return <YouTube videoId={id} opts={opts} onReady={_onReady} />;
+    return <>{url.includes("vimeo") ? <Vimeo   video={url} width={opts.width} height={opts.height}></Vimeo>: <YouTube videoId={id} opts={opts} onReady={_onReady} />}</>;
 
 
 }

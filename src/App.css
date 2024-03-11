@@ -702,13 +702,24 @@ a.visited {
   max-height: 50%;
   min-height: 50%;
   min-width: 50%;
-  position: fixed;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+
 
 }
 .projectDetails{
   max-width: 500px;
+
   padding-bottom: 20px;
 }
+@media only screen and (min-width: 600px){
+  .projectDetails{
+    max-height:500px;
+    overflow-y: scroll;
+  }
+}
+
 
 .mainImage {
   margin: 0;
@@ -1108,6 +1119,7 @@ footer p {
   }
   .authorInfo {
     max-width: 100%;
+
   }
   .nextArrow {
     position: absolute;

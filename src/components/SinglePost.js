@@ -105,9 +105,15 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
                     </div>
                   )}
 
-                  {listIsActive && singlePost.body && <div className="authorInfo">
+                  {listIsActive && singlePost.body ? 
+                  <div className="authorInfo">
                     <BlockContent blocks={singlePost.body} />
-                  </div>}
+                  </div> 
+                  : window.location.pathname.includes("esben") && singlePost.body ?  
+                  <div className="authorInfo">
+                    <BlockContent blocks={singlePost.body} />
+                  </div> 
+                  : null}
                  
                   {/* {singlePost.categories && (
                     <>
@@ -156,7 +162,7 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
             </div>
         </div>
 
-        {singlePost.mainImage && listIsActive && <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div>}
+        {singlePost.mainImage && listIsActive && width > 600 || window.location.pathname.includes("esben") && <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div>}
         {singlePost.imagesGallery && galleryIsActive && width > 600 ? 
             <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
             : singlePost.imagesGallery && galleryIsActive  && 
@@ -190,7 +196,8 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
               </NavLink>
             )}
             </nav> </>: 
-            <><Projects projectList={projectList} />
+            <>
+              {width < 600 && <Projects projectList={projectList} />}
               <nav className="footer-nav">
                   <NavLink className="standard-button" to="/">
                     Work

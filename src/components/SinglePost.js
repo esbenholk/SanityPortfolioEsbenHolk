@@ -162,7 +162,7 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
             </div>
         </div>
 
-        {singlePost.mainImage && listIsActive && width > 600 || window.location.pathname.includes("esben") && <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div>}
+        {(singlePost.mainImage && listIsActive && width > 600) || window.location.pathname.includes("esben") ? <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div> : null}
         {singlePost.imagesGallery && galleryIsActive && width > 600 ? 
             <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
             : singlePost.imagesGallery && galleryIsActive  && 

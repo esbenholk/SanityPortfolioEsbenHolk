@@ -14,7 +14,7 @@ export default function Header({updateSlug }) {
 
   useEffect(()=>{
     updateSlug(loc.pathname);
-  })
+  },[])
 
  
 

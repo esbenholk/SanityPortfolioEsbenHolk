@@ -112,6 +112,7 @@ export default function ThreeDScene(projects) {
         zIndex: "0",
         width: "100%",
         position: "fixed",
+        backgroundColor: "blue",
         top: "0",
         left: "0",
       }}

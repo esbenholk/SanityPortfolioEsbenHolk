@@ -12,6 +12,7 @@ import React, {
   import sanityClient from "../../client";
   import imageUrlBuilder from '@sanity/image-url'
   import { TextureLoader } from "three";
+  import * as THREE from 'three';
 
   // Get a pre-configured url-builder from your sanity client
   const builder = imageUrlBuilder(sanityClient)
@@ -26,7 +27,7 @@ import React, {
 
 
 
-  export const ImageTextureMaterial = (imageUrl, material) => {
+  export const ImageTextureMaterial = (imageUrl, material, opacity) => {
     const texture = useLoader(TextureLoader, imageUrl.imageUrl);
     return (
       <meshStandardMaterial
@@ -35,6 +36,8 @@ import React, {
         color="white"
         map={texture}
         material={material}
+        transparent
+        opacity={opacity}
       />
     );
   };
@@ -49,13 +52,19 @@ import React, {
 
     const [isHovered, setIsHovered] = useState(false);
     const [isActive, setIsActive] = useState(false);
+    const [opacity, setOpacity] = useState(1);
+    const [position, setPosition] = useState([
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+    ]);
 
     const isActiveRef = useRef(isActive);
 
     // position
-    const position = useMemo(() => {
-      return [random(-3, 3, true), random(-3, 3, true), random(-3, 3, true)];
-    }, []);
+    // const position = useMemo(() => {
+    //   return [random(-3, 3, true), random(-3, 3, true), random(-3, 3, true)];
+    // }, []);
 
     // random time mod factor
     const timeMod = useMemo(() => random(0.1, 1, true), []);
@@ -70,12 +79,33 @@ import React, {
       isActiveRef.current = isActive;
     }, [isActive]);
 
-    // raf loop
+
+
+    const resetPosition = () => {
+      setPosition([
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 10,
+      ]);
+      setOpacity(1);
+    };
+  
     useFrame(() => {
-      mesh.current.rotation.y += 0.01 * timeMod;
-      if (isActiveRef.current) {
-        time.current += 0.03;
-        mesh.current.position.y = position[1] + Math.sin(time.current) * 0.4;
+      mesh.current.rotation.y += 0.001 * timeMod;
+      if (mesh.current) {
+        // Move the cube closer to the origin (0, 0, 0)
+        const speed = 0.01;
+        mesh.current.position.lerp(new THREE.Vector3(0, 0, 0), speed);
+  
+        // Decrease opacity as it gets closer to the origin
+        const distanceToCenter = mesh.current.position.length();
+        const newOpacity = Math.max(0, opacity - 0.02 * (1 - distanceToCenter / 10));
+        setOpacity(0.1);
+  
+        // If cube is close enough to the center and fully transparent, reset position
+        if (distanceToCenter < 1 && newOpacity <= 0) {
+          resetPosition();
+        }
       }
     });
 
@@ -119,56 +149,59 @@ import React, {
 
         <ImageTextureMaterial
           // imageUrl={props.project.mainImage.asset.url}
-          imageUrl={urlFor(props.project.mainImage).width(200).height(200).url()}
+          imageUrl={urlFor(props.project.mainImage).width(500).height(500).url()}
           material={material}
+          opacity={opacity}
+
         />
       </mesh>
     );
   };
 
 
-  export function EmptyCube({image}) {
-    const mesh = useRef();
-    const time = useRef(0);
-    const material = useRef();
+  // export function EmptyCube({image}) {
+  //   const mesh = useRef();
+  //   const time = useRef(0);
+  //   const material = useRef();
 
-    const position = useMemo(() => {
-      return [random(-3, 3, true), random(-3, 3, true), random(-3, 3, true)];
-    }, []);
+  //   const position = useMemo(() => {
+  //     return [random(-3, 3, true), random(-3, 3, true), random(-3, 3, true)];
+  //   }, []);
 
-    // random time mod factor
-    const timeMod = useMemo(() => random(0.1, 1, true), []);
-
-
-
-    const size = 2;
+  //   // random time mod factor
+  //   const timeMod = useMemo(() => random(0.1, 1, true), []);
 
 
-    useFrame(() => {
-      mesh.current.rotation.y += 0.01 * timeMod;
-      mesh.current.rotation.x += 0.01 * timeMod;
-      mesh.current.rotation.y += 0.01 * timeMod;
-      time.current += 0.003;
 
-    });
-
-    console.log("CUBE:", image.image);
+  //   const size = 2;
 
 
-    return (
-      <mesh
-        ref={mesh}
-        position={position}
+  //   useFrame(() => {
+  //     mesh.current.rotation.y += 0.01 * timeMod;
+  //     mesh.current.rotation.x += 0.01 * timeMod;
+  //     mesh.current.rotation.y += 0.01 * timeMod;
+  //     time.current += 0.003;
 
-      >
-        <boxGeometry attach="geometry" args={[size,size,size]} />
+  //   });
+
+  //   console.log("CUBE:", image.image);
 
 
-        <ImageTextureMaterial
-          // imageUrl={props.project.mainImage.asset.url}
-          imageUrl={urlFor(image.image.asset).width(200).height(200).url()}
-          material={material}
-        />
-      </mesh>
-    );
-  };
+  //   return (
+  //     <mesh
+  //       ref={mesh}
+  //       position={position}
+
+  //     >
+  //       <boxGeometry attach="geometry" args={[size,size,size]} />
+
+
+  //       <ImageTextureMaterial
+  //         // imageUrl={props.project.mainImage.asset.url}
+  //         imageUrl={urlFor(image.image.asset).width(500).height(500).url()}
+  //         material={material}
+  //         opacity={opacity}
+  //       />
+  //     </mesh>
+  //   );
+  // };

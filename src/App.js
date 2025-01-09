@@ -57,13 +57,16 @@ function App() {
   },[]);
 
   // console.log("has slug", params);
-  const updateSelectedProjectOnHover = useCallback((project) => {
+  const updateSelectedProjectOnHover = useCallback((project, string) => {
+
+    
     if(project){
       setSelectedProject(project);
       setIsActive(true);
 
     } else {
       setIsActive(false);
+
     }
    
   }, []);
@@ -168,13 +171,14 @@ function App() {
 
 
   return (
-    <main>
+    <main >
+     
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
           <BrowserRouter>
             {siteSettings && <Header updateSlug={updateSlug }/>}
             <AnimatePresence>
-
+            <div className="mainbackground"></div>
                 <ScrollToTop>
                    <Switch>
                     <Route exact path="/">
@@ -183,8 +187,8 @@ function App() {
                             {threedIsActive && 
                               <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
                               }
-                            {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
-                            {galleryIsActive && <Gallery info={siteSettings} projectList={sortedProjects} updateSelectedProjectOnHover={updateSelectedProjectOnHover} /> }          
+                            {/* {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
+                            {galleryIsActive && <Gallery info={siteSettings} projectList={sortedProjects} updateSelectedProjectOnHover={updateSelectedProjectOnHover} /> }           */}
                             </>
                           )
                       }
@@ -222,91 +226,17 @@ function App() {
 
                   {width>600 && <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>}
 
-                    {!slug.includes("esben") &&      <div className="flex-column modeNav">
-                      {width>600 &&      
-                        <button className={threedIsActive ? "standard-button mode active" :"standard-button mode "} onClick={()=>{setThreedIsActive(!threedIsActive)}}>
-                        3D
-                        </button>
-                      }
-                      {slug.length<2 ? <button 
-                        className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
-                        onClick={function(){
-                          if(width<600 && slug.length < 2){
-                            setGalleryIsActive(true);
-                            setListIsActive(false);
-                          } else {
-                        
-                            setGalleryIsActive(!galleryIsActive);
 
-                          }
-                        }}
-                        >
-                        GALLERY
-                      </button> : width>600 ? <button 
-                        className={galleryIsActive ? "standard-button mode active" :"standard-button mode"}
-                        onClick={function(){
-                          if(width<600 && slug.length < 2){
-                            setGalleryIsActive(true);
-                            setListIsActive(false);
-                          } else {
-                        
-                            setGalleryIsActive(!galleryIsActive);
-
-                          }
-                        }}
-                        >
-                        GALLERY
-                      </button>:null}
-              
-                      {slug.length<2 ?
-                     <button 
-                        className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
-                        onClick={function(){
-                          if(width<600 && slug.length < 2){
-                            
-                            setGalleryIsActive(false);
-                            setListIsActive(true);
-                          
-
-                          } else {
-                        
-                            setListIsActive(!listIsActive);
-                          }
-                          
-                    
-                        }}
-                        >
-                        LIST 
-                      </button> : width>600 ?  <button 
-                        className={listIsActive ? "standard-button mode active" :"standard-button mode"}  
-                        onClick={function(){
-                          if(width<600 && slug.length < 2){
-                            
-                            setGalleryIsActive(false);
-                            setListIsActive(true);
-                          
-
-                          } else {
-                        
-                            setListIsActive(!listIsActive);
-                          }
-                          
-                    
-                        }}
-                        >
-                       MORE DETAILS 
-                      </button> :null}
                       
                
-                    </div> 
-                  }
-               
+            
                 </ScrollToTop>
             </AnimatePresence>        
           </BrowserRouter>
         </AppContext.Provider>
 
       </Suspense>
+
     </main>
   );
 }

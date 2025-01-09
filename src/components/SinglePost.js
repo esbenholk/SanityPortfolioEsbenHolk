@@ -162,10 +162,10 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
             </div>
         </div>
 
-        {(singlePost.mainImage && listIsActive && width > 600) || window.location.pathname.includes("esben") ? <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div> : null}
-        {singlePost.imagesGallery && galleryIsActive && width > 600 ? 
+        {/* {(singlePost.mainImage && listIsActive && width > 600) || window.location.pathname.includes("esben") ? <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div> : null} */}
+        {singlePost.imagesGallery  ? 
             <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
-            : singlePost.imagesGallery && galleryIsActive  && 
+            : singlePost.imagesGallery && 
               <div className="flex-column align-center projectMedia">
                 {singlePost.imagesGallery.map((image, index)=>(
                   <>     
@@ -175,7 +175,7 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive, 
               </div>
           }
 
-          {singlePost.imagesGallery && threedIsActive && <EmptyBoids media={singlePost.imagesGallery}></EmptyBoids>}
+          {/* {singlePost.imagesGallery && threedIsActive && <EmptyBoids media={singlePost.imagesGallery}></EmptyBoids>} */}
           
 
           {!window.location.pathname.includes("esben") ? 

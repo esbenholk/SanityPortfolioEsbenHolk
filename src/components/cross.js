@@ -43,8 +43,6 @@ const Cross = (props) => {
 
 
   useEffect(() => {
-
-
     document.addEventListener("mousemove", (event) => {
       
       const { clientX, clientY } = event;
@@ -76,40 +74,30 @@ const Cross = (props) => {
   
           
       });
-
-   
-
-      return () => {};
-
+    return () => {};
   }, []);
 
  
   useEffect(()=>{
-
-
-  console.log("updates selected project in CrossHair", props.selectedProject.title);
-  if(props.selectedProject !== trackedProject){
-    if(title.current){
-      JumbleLettersInElement(title.current, title.current.innerText);
+    if(props.selectedProject !== trackedProject){
+      if(title.current){
+        JumbleLettersInElement(title.current, title.current.innerText);
+      }
+      setTrackedProject(props.selectedProject);
     }
-    setTrackedProject(props.selectedProject);
-  }
   },[props.selectedProject, trackedProject])
-
-
-
 
   return (
 
         <>
-            {props.isActive && <div className="main-cursor-ring" ref={mainCursor}>
-              <div className="main-cursor "></div></div>}
+            {/* {props.isActive && <div className="main-cursor-ring" ref={mainCursor}>  </div>} */}
             <div className="cross hor" ref={horCursor}>
               {width>500 && props.isActive ? <> 
                 <div className="standard-container projectnamecontainer background" ref={projectContainer}>
                   {props.selectedProject.title && (
                     <p ref={title} id="title" className="projectTitle borderBottom">{props.selectedProject.title}</p>
                   )}
+                  {props.selectedProject.message != null && <p>{props.selectedProject.message}</p>}
                   {props.selectedProject.recap && ( 
                     <div className="projectRecap">
                       <BlockContent blocks={props.selectedProject.recap} />

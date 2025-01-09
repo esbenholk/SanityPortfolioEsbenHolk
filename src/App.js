@@ -73,11 +73,12 @@ function App() {
 
   useEffect(()=>{
     
-    if(width<600){
-      setGalleryIsActive(true);
-    } else {
-      setThreedIsActive(true);
-    }
+    // if(width<600){
+    //   setGalleryIsActive(true);
+    // } else {
+    //   setThreedIsActive(true);
+    // }
+    setThreedIsActive(true);
   },[width])
 
   useEffect(() => {

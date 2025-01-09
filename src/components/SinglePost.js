@@ -14,11 +14,10 @@ import useWindowDimensions from "./functions/useWindowDimensions";
 import HorizontalScrollComp from "./horizontalScroll";
 import { NavLink } from "react-router-dom";
 
-import EmptyBoids from "./three/emptyBoids";
 
 import YoutubeVideo from "./blocks/youtube";
 
-export default function SinglePost({updateSelectedProjectOnHover, listIsActive, threedIsActive, galleryIsActive}) {
+export default function SinglePost({updateSelectedProjectOnHover, listIsActive}) {
   const [singlePost, setSinglePost] = useState();
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();

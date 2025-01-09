@@ -1,7 +1,6 @@
 import React, {  useRef,     useState, useEffect, useCallback, Suspense} from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Html,  DeviceOrientationControls, useTexture } from '@react-three/drei'
-import { useHistory } from "react-router-dom";
 
 import sanityClient from "../../client";
 import imageUrlBuilder from '@sanity/image-url'
@@ -88,7 +87,7 @@ const OscillatingImagePlane = ({ upgradeImageOnClick, project, stateChanger,came
   useFrame((delta) => {
 
    
-    if (currentProject != null && currentProject.title == project.title) {
+    if (currentProject != null && currentProject.title === project.title) {
       // If the plane is in focus, move it to the center smoothly and stop oscillation
       const cameraDirection = new THREE.Vector3();
       camera.getWorldDirection(cameraDirection);
@@ -132,7 +131,7 @@ const OscillatingImagePlane = ({ upgradeImageOnClick, project, stateChanger,came
             stateChanger(null);
           }
 
-      },[]
+      },[stateChanger, project]
   );
 
   const onMissed = useCallback(
@@ -141,7 +140,7 @@ const OscillatingImagePlane = ({ upgradeImageOnClick, project, stateChanger,came
         // setIsActive(false);
         onClick(null);
         // setIsClicked(false);
-    },[]
+    },[onClick]
   );
   const handleFirstClick= useCallback(
     e => {
@@ -151,7 +150,7 @@ const OscillatingImagePlane = ({ upgradeImageOnClick, project, stateChanger,came
       upgradeImageOnClick();
       onClick(project);         
     },
-    []
+    [onClick, project, upgradeImageOnClick]
   );
 
 

@@ -38,7 +38,7 @@ function App() {
   const [projectList, setProjectList] = useState();
   const [sortedProjects, setSortedProjects] = useState();
   const [settingsProject, setSettingsproject] = useState();
-  const [listIsActive, setListIsActive] = useState(false);
+  // const [listIsActive, setListIsActive] = useState(false);
   const [galleryIsActive, setGalleryIsActive] = useState(false);
   const [threedIsActive, setThreedIsActive] = useState(false);
   const [tags, setTags] = useState([]);
@@ -53,11 +53,11 @@ function App() {
 
   const updateSlug = useCallback((string)=>{
     setSlug(string);
-    console.log("CURRENT SLUG", string);
-  },[]);
+    console.log("CURRENT SLUG", slug);
+  },[slug]);
 
   // console.log("has slug", params);
-  const updateSelectedProjectOnHover = useCallback((project, string) => {
+  const updateSelectedProjectOnHover = useCallback((project) => {
 
     
     if(project){
@@ -196,7 +196,7 @@ function App() {
 
                     </Route>
                     <Route path="/projects/:slug">
-                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} listIsActive={listIsActive} galleryIsActive={galleryIsActive} threedIsActive={threedIsActive}/>}
+                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} galleryIsActive={galleryIsActive} threedIsActive={threedIsActive}/>}
                     </Route>
                     <Route path="/projects">
                     {siteSettings && (

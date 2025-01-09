@@ -39,7 +39,7 @@ function App() {
   const [sortedProjects, setSortedProjects] = useState();
   const [settingsProject, setSettingsproject] = useState();
   // const [listIsActive, setListIsActive] = useState(false);
-  const [galleryIsActive, setGalleryIsActive] = useState(false);
+  // const [galleryIsActive, setGalleryIsActive] = useState(false);
   const [threedIsActive, setThreedIsActive] = useState(false);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -197,7 +197,7 @@ function App() {
 
                     </Route>
                     <Route path="/projects/:slug">
-                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} galleryIsActive={galleryIsActive} threedIsActive={threedIsActive}/>}
+                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover}/>}
                     </Route>
                     <Route path="/projects">
                     {siteSettings && (

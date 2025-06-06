@@ -1,5 +1,5 @@
 /* eslint-disable no-lone-blocks */
-import { BrowserRouter, Route, Switch} from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import useWindowDimensions from "./components/functions/useWindowDimensions";
 
 import React, {
@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
   createRef,
- useCallback
+  useCallback,
 } from "react";
 // import NavBar from "./components/NavBar.js";
 import "./App.css";
@@ -17,21 +17,17 @@ import Header from "./components/Header_function";
 import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
-import ScrollToTop from "./components/blocks/scrollToTop";
-
-
 
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
 
-const SinglePost = lazy(() => import("./components/SinglePost.js"));
 const Projects = lazy(() => import("./components/projectList2022.js"));
 const Category = lazy(() => import("./components/Category.js"));
 
 const Gallery = lazy(() => import("./components/Gallery"));
+const SinglePost = lazy(() => import("./components/SinglePost"));
 
 const Boids = lazy(() => import("./components/three/boids"));
 const Cross = lazy(() => import("./components/cross.js"));
-
 
 function App() {
   const [siteSettings, setSiteSettings] = useState();
@@ -46,40 +42,35 @@ function App() {
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
   const mainRef = createRef();
   const { width } = useWindowDimensions();
-  const[selectedProject, setSelectedProject]=useState({});
+  const [selectedProject, setSelectedProject] = useState({});
   const [isActive, setIsActive] = useState();
   const [slug, setSlug] = useState("/");
 
-
-  const updateSlug = useCallback((string)=>{
+  const updateSlug = useCallback((string) => {
     setSlug(string);
-    console.log("CURRENT SLUG", slug);
-  },[slug]);
+  }, []);
+
+  useEffect(() => {
+    console.log("u have gone to far... to", slug);
+
+    setIsActive(false);
+  }, [slug]);
 
   // console.log("has slug", params);
   const updateSelectedProjectOnHover = useCallback((project) => {
-
-    
-    if(project){
+    if (project) {
       setSelectedProject(project);
-      setIsActive(true);
 
+      console.log("sets project active", project);
+      setIsActive(true);
     } else {
       setIsActive(false);
-
     }
-   
   }, []);
 
-  useEffect(()=>{
-    
-    // if(width<600){
-    //   setGalleryIsActive(true);
-    // } else {
-    //   setThreedIsActive(true);
-    // }
+  useEffect(() => {
     setThreedIsActive(true);
-  },[width])
+  }, [width]);
 
   useEffect(() => {
     sanityClient
@@ -101,26 +92,25 @@ function App() {
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
         setProjectList(data);
-        console.log("if i whisper seductively in the inspector will you cum'n'free me plz?", data);
+        console.log(
+          "if i whisper seductively in the inspector will you cum'n'free me plz?"
+        );
       })
       .catch(console.error);
-
-
   }, []);
 
   useEffect(() => {
     var tags = [];
     var categories = [];
     if (projectList) {
-
       const sortedProjects1 = projectList.filter((element) => {
         return element.slug.current !== "esben-holk-house-of-killing";
-      })
+      });
       setSortedProjects(sortedProjects1);
 
       const settingsProject1 = projectList.find((element) => {
         return element.slug.current === "esben-holk-house-of-killing";
-      })
+      });
 
       setSettingsproject(settingsProject1);
 
@@ -138,10 +128,8 @@ function App() {
             const category = post.categories[index];
 
             if (categories.some((item) => item.title === category.title)) {
-
             } else {
               categories.push(category);
-
             }
           }
         }
@@ -169,76 +157,88 @@ function App() {
     setHasFeaturedPosts,
   };
 
-
-
   return (
-    <main >
-     
+    <div id="main" style={{ overflowY: "auto", height: "100vh" }}>
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
-          <BrowserRouter>
-            {siteSettings && <Header updateSlug={updateSlug }/>}
-            <AnimatePresence>
-            <div className="mainbackground"></div>
-                <ScrollToTop>
-                   <Switch>
-                    <Route exact path="/">
-                      {sortedProjects && (
-                            <>
-                            {threedIsActive && 
-                              <Boids projects={sortedProjects} info={siteSettings} settingsProject={settingsProject} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
-                              }
-                            {/* {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
+          <AnimatePresence>
+            <BrowserRouter>
+              <div className="mainbackground"></div>
+              <Switch>
+                <Route exact path="/">
+                  {sortedProjects && (
+                    <>
+                      {threedIsActive && (
+                        <Boids
+                          projects={sortedProjects}
+                          info={siteSettings}
+                          settingsProject={settingsProject}
+                          updateSelectedProjectOnHover={
+                            updateSelectedProjectOnHover
+                          }
+                        />
+                      )}
+                      {/* {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
                             {galleryIsActive && <Gallery info={siteSettings} projectList={sortedProjects} updateSelectedProjectOnHover={updateSelectedProjectOnHover} /> }           */}
-                            </>
-                          )
+                    </>
+                  )}
+                </Route>
+                <Route path="/projects/:slug">
+                  {projectList && (
+                    <SinglePost
+                      projectList={projectList}
+                      updateSelectedProjectOnHover={
+                        updateSelectedProjectOnHover
                       }
-            
+                    />
+                  )}
+                </Route>
+                <Route path="/projects">
+                  {siteSettings && (
+                    <>
+                      <Projects
+                        info={siteSettings}
+                        projectList={projectList}
+                        updateSelectedProjectOnHover={
+                          updateSelectedProjectOnHover
+                        }
+                      />
+                    </>
+                  )}
+                </Route>
 
-                    </Route>
-                    <Route path="/projects/:slug">
-                      {projectList && <SinglePost projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover}/>}
-                    </Route>
-                    <Route path="/projects">
-                    {siteSettings && (
-                        <>
-                          <Projects info={siteSettings} projectList={projectList} />
-                      </>
-                      )}
-                  
+                <Route path="/gallery">
+                  {siteSettings && (
+                    <Gallery
+                      info={siteSettings}
+                      projectList={projectList}
+                      updateSelectedProjectOnHover={
+                        updateSelectedProjectOnHover
+                      }
+                    />
+                  )}
+                </Route>
 
+                <Route path="/:slug">
+                  <Category
+                    updateSelectedProjectOnHover={updateSelectedProjectOnHover}
+                  />
+                </Route>
+              </Switch>
 
-                    </Route>
-               
-                    <Route path="/gallery">
-                    {siteSettings && (
-                
-                       <Gallery info={siteSettings}
-                          projectList={projectList} updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
-                   
-                      )}
-                  
-                    </Route>
-               
-                    <Route path="/:slug">
-                      <Category updateSelectedProjectOnHover={updateSelectedProjectOnHover} />
-                    </Route>
-                  </Switch>
-
-                  {width>600 && <Cross selectedProject={selectedProject} shouldHaveBackground={true} isActive={isActive}/>}
-
-
-                      
-               
-            
-                </ScrollToTop>
-            </AnimatePresence>        
-          </BrowserRouter>
+              {width > 600 && (
+                <Cross
+                  selectedProject={selectedProject}
+                  shouldHaveBackground={true}
+                  isActive={isActive}
+                />
+              )}
+              {siteSettings && <Header updateSlug={updateSlug} />}
+            </BrowserRouter>
+          </AnimatePresence>
         </AppContext.Provider>
-
       </Suspense>
-
-    </main>
+    </div>
   );
 }
 

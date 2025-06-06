@@ -6,14 +6,13 @@ import PostCard from "./postCard.js";
 
 import AppContext from "../../globalState";
 
-
 const breakpointColumnsObj = {
   default: 3,
   1300: 2,
   600: 1,
 };
 
-export default function Projects({ stateChanger }) {
+export default function ProjectGallery({ stateChanger }) {
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
@@ -55,7 +54,6 @@ export default function Projects({ stateChanger }) {
   //   if (currentTags.length > 0 || currentCategories.length > 0) {
   //     const tempSortedPosts = [];
 
-
   //     ///loop through all posts
   //     for (let index = 0; index < allPosts.length; index++) {
   //       const post = allPosts[index];
@@ -78,7 +76,6 @@ export default function Projects({ stateChanger }) {
   //         for (let index = 0; index < post.categories.length; index++) {
   //           const category = post.categories[index];
 
-            
   //           ///compare post tags to currentTags
   //           if (currentCategories.includes(category.title)) {
   //             //set post_score depending on how many currentTags the post is matching
@@ -143,15 +140,15 @@ export default function Projects({ stateChanger }) {
 
   return (
     <div className="projects gallery">
-
-     <Masonry
+      <Masonry
         breakpointCols={breakpointColumnsObj}
+        spacing={10}
         className="my-masonry-grid fullWidthPadded"
         columnClassName="my-masonry-grid_column"
       >
         {projectList &&
           projectList.map((post, index) => (
-            <PostCard post={post} key={index} stateChanger={stateChanger}/>
+            <PostCard post={post} key={index} stateChanger={stateChanger} />
           ))}
       </Masonry>
     </div>

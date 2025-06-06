@@ -16,30 +16,33 @@ export default function Image(props) {
   const classs = props.class;
   const width = props.width;
   const maxHeight = props.height;
-
-  console.log("IMAGE", image);
-
+  const isFullHeight = props.isFullHeight;
 
   return (
-  
-        <LazyLoadImage
-               loading="lazy"
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               src={maxHeight ? urlFor(image.asset).height(maxHeight).url() : width ? urlFor(image.asset).width(width).url() : urlFor(image.asset).url()}
-               placeholdersrc={urlFor(image.asset).height(2).url()}
-               key={image.asset._ref}
-               alt={image.alt}
-               style={{
-                 objectPosition:image.hotspot && `${image.hotspot.x * 100}% ${
-                   image.hotspot.y * 100
-                 }%` ,
-                 maxHeight: maxHeight,
-               }}
-               className={classs}
-               effect="blur"
-             />
- 
+    <LazyLoadImage
+      loading="lazy"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      src={
+        maxHeight
+          ? urlFor(image.asset).height(maxHeight).url()
+          : width
+          ? urlFor(image.asset).width(width).url()
+          : urlFor(image.asset).url()
+      }
+      placeholdersrc={urlFor(image.asset).height(2).url()}
+      key={image.asset._ref}
+      alt={image.alt}
+      style={{
+        objectPosition:
+          image.hotspot &&
+          `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`,
+        maxHeight: maxHeight,
+        height: isFullHeight ? maxHeight : "auto",
+      }}
+      className={classs}
+      effect="blur"
+    />
   );
 }

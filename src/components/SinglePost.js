@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 
 import AppContext from "../globalState";
 import sanityClient from "../client";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Image from "./blocks/image";
-import Projects from "./projectList2022";
 import { Link } from "react-router-dom";
 
 import BlockContent from "./blocks/BlockContent";
 
 import useWindowDimensions from "./functions/useWindowDimensions";
-import HorizontalScrollComp from "./horizontalScroll";
+import { Card } from "./horizontalScrollInfinite";
 import { NavLink } from "react-router-dom";
 
-
-import YoutubeVideo from "./blocks/youtube";
-
-export default function SinglePost({updateSelectedProjectOnHover, listIsActive}) {
+export default function SinglePost({ updateSelectedProjectOnHover }) {
   const [singlePost, setSinglePost] = useState();
   const [nextPost, setnextPost] = useState();
   const [prevPost, setprevPost] = useState();
@@ -25,13 +21,22 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive})
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList;
 
- 
+  useEffect(() => {
+    console.log("hej dont look at me");
+
+    const el = document.getElementById("main");
+    if (el) {
+      el.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [slug]);
+
+  // const isMobile = /Mobi|Android/i.test(navigator.userAgent);
   const { width, height } = useWindowDimensions();
 
-  console.log("oh its u bitch. figured you'd sneak a peak at the code", singlePost);
-
   useEffect(() => {
-    updateSelectedProjectOnHover(null);
+    // updateSelectedProjectOnHover(null);
 
     sanityClient
       .fetch(
@@ -42,11 +47,8 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive})
       )
       .then((data) => {
         setSinglePost(data[0]);
-  
-
 
         for (let index = 0; index < projectList.length; index++) {
-    
           if (
             projectList[index].title === data[0].title &&
             index + 1 <= projectList.length
@@ -59,131 +61,127 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive})
         }
       })
       .catch(console.error);
-  }, [slug, projectList,updateSelectedProjectOnHover]);
+  }, [slug, projectList, updateSelectedProjectOnHover]);
 
-  if (!singlePost) return <p className="fixedMiddle standard-button"> content incoming... </p>;
+  if (!singlePost)
+    return <p className="fixedMiddle standard-button"> content incoming... </p>;
 
   return (
-    <>
-      <motion.div
-        layout
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fullWidthPadded"
+    <motion.div
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex-column align-center projectMedia fullWidthPadded"
+    >
+      <div className="postImage">
+        <Image
+          image={singlePost.mainImage}
+          width={width - 20}
+          height={height - 20}
+          isFullHeight={true}
+        />
+      </div>
+
+      {singlePost.imagesGallery &&
+        singlePost.imagesGallery.map((image, index) => (
+          <>
+            <Card
+              title={"card" + index}
+              image={image}
+              classes={""}
+              width={width - 20}
+              height={height}
+            />
+          </>
+        ))}
+
+      <div
+        className="borderTop"
+        style={{
+          position: "relative",
+          top: "5px",
+          paddingTop: "10px",
+          width: "100%",
+        }}
       >
- 
-
-        <div className="singlePost post_details">
-            <div className="borderTop" style={{zIndex: "9999999999",position: width>600?"absolute":"relative", top: width>600?"50px": "100px", width: "100%"}}>
-              <div className="flex-row align-top project_directory_line noshade">
-                <a href="/projects">{"Project >"}</a>
-                <div className="flex-row align-left noshade">
-                  {singlePost.categories &&
-                    singlePost.categories.map((category, index) => (
-                      <Link
-                        to={"../" + category.slug.current}
-                        className=""
-                        key={index}
-                      >
-                        {category.title}
-                        {index + 1 !== singlePost.categories.length ? "," : null}
-                      </Link>
-                    ))}
-                  <p>{" > "}</p>
-                </div>
-              </div>
-              <div className="standard-container projectnamecontainer projectDetails background" >
-                  {singlePost.title && (
-                    <p className="projectTitle">{singlePost.title}</p>
-                  )}
-
-                  {singlePost.recap && ( 
-                    <div className="projectRecap">
-                      <BlockContent blocks={singlePost.recap} />
-                    </div>
-                  )}
-
-                  {listIsActive && singlePost.body ? 
-                  <div className="authorInfo">
-                    <BlockContent blocks={singlePost.body} />
-                  </div> 
-                  : window.location.pathname.includes("esben") && singlePost.body ?  
-                  <div className="authorInfo">
-                    <BlockContent blocks={singlePost.body} />
-                  </div> 
-                  : null}
-                 
-                  {/* {singlePost.categories && (
-                    <>
-                      <div className="flex-row align-left">
-                        {singlePost.categories.map((category, index) => (
-                          <Link
-                            to={"../" + category.slug.current}
-                            className="tag project_tag"
-                            key={index}
-                          >
-                            {category.title}
-                            {index + 1 !== singlePost.categories.length
-                              ? ","
-                              : null}
-                          </Link>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                {singlePost.tags && (
-                  <>
-                    <div className="flex-row align-left project_tags noshade">
-                        {
-                          singlePost.tags.map((tag, index) => (
-                            <p className="tag project_tag" key={index}>
-                              {tag}
-                              {index + 1 !== singlePost.tags.length ? "," : null}
-                            </p>
-                          ))}
-                        
-                    </div>
-                  
-                  </>
-                )} */}
-
-   
-             
-          
-
-
-              </div>
-              {singlePost.year && (
-                <p className="standard-container projectYear background" style={{zIndex: "20"}}>{singlePost.year}</p>
-              )}
-            </div>
+        <div className="flex-row align-top project_directory_line noshade">
+          <a href="/projects">{"Project >"}</a>
+          <div className="flex-row align-left noshade">
+            {singlePost.categories &&
+              singlePost.categories.map((category, index) => (
+                <Link
+                  to={"../" + category.slug.current}
+                  className=""
+                  key={index}
+                >
+                  {category.title}
+                  {index + 1 !== singlePost.categories.length ? "," : null}
+                </Link>
+              ))}
+            <p>{" > "}</p>
+          </div>
         </div>
+        <div className="standard-container background">
+          {singlePost.recap && (
+            // <div className="projectRecap">
+            //   {singlePost.title && (
+            //     <p className="standard-button">{singlePost.title}</p>
+            //   )}
 
-        {/* {(singlePost.mainImage && listIsActive && width > 600) || window.location.pathname.includes("esben") ? <div className="mainImage"><Image image={singlePost.mainImage} height={height} width={width}/></div> : null} */}
-        {singlePost.imagesGallery  ? 
-            <HorizontalScrollComp images={singlePost.imagesGallery} height={height}/> 
-            : singlePost.imagesGallery && 
-              <div className="flex-column align-center projectMedia">
-                {singlePost.imagesGallery.map((image, index)=>(
-                  <>     
-                  {image.youtube ? <YoutubeVideo url={image.youtube.url}/> : <Image image={image.image} width={width-20}/>}
-                  </>
+            //   <div>
+            //     {singlePost.year && (
+            //       <p className="standard-button">{singlePost.year}</p>
+            //     )}
+
+            //     {singlePost.recap && (
+            //       <div className="standard-button">
+            //         {" "}
+            //         <BlockContent blocks={singlePost.recap} />
+            //       </div>
+            //     )}
+            //   </div>
+            // </div>
+            <ProjectRecap singlePost={singlePost} />
+          )}
+
+          {singlePost.body && <BlockContent blocks={singlePost.body} />}
+
+          {/* {singlePost.categories && (
+            <>
+              <div className="flex-row align-left">
+                {singlePost.categories.map((category, index) => (
+                  <Link
+                    to={"../" + category.slug.current}
+                    className="tag project_tag"
+                    key={index}
+                  >
+                    {category.title}
+                    {index + 1 !== singlePost.categories.length ? "," : null}
+                  </Link>
                 ))}
               </div>
-          }
+            </>
+          )}
 
-          {/* {singlePost.imagesGallery && threedIsActive && <EmptyBoids media={singlePost.imagesGallery}></EmptyBoids>} */}
-          
+          {singlePost.tags && (
+            <>
+              <div className="flex-row align-left project_tags noshade">
+                {singlePost.tags.map((tag, index) => (
+                  <p className="tag project_tag" key={index}>
+                    {tag}
+                    {index + 1 !== singlePost.tags.length ? "," : null}
+                  </p>
+                ))}
+              </div>
+            </>
+          )} */}
+        </div>
+      </div>
 
-          {!window.location.pathname.includes("esben") ? 
-          <>           
-            <nav
-             className={
-               "footer-nav"
-             }
-            >
+      {!window.location.pathname.includes("esben") ? (
+        <>
+          <nav className={"footer-nav"}>
             {prevPost && (
               <NavLink to={prevPost.slug.current} className="standard-button">
                 Prev
@@ -194,18 +192,99 @@ export default function SinglePost({updateSelectedProjectOnHover, listIsActive})
                 Next
               </NavLink>
             )}
-            </nav> </>: 
-            <>
-              {width < 600 && <Projects projectList={projectList} />}
-              <nav className="footer-nav">
-                  <NavLink className="standard-button" to="/">
-                    Work
-                  </NavLink>
-            </nav>
-            </>
-        }
-      
-      </motion.div>
-    </>
+          </nav>{" "}
+        </>
+      ) : (
+        <>
+          <nav className="footer-nav">
+            <NavLink className="standard-button" to="/">
+              Work
+            </NavLink>
+          </nav>
+        </>
+      )}
+    </motion.div>
   );
 }
+
+const ProjectRecap = ({ singlePost }) => {
+  const titleRef = useRef(null);
+  const recapContainerRef = useRef(null);
+  const [lines, setLines] = useState([]);
+
+  useEffect(() => {
+    if (!titleRef.current || !recapContainerRef.current) return;
+
+    const titleBox = titleRef.current.getBoundingClientRect();
+    const buttons =
+      recapContainerRef.current.querySelectorAll(".standard-button");
+
+    const newLines = Array.from(buttons).map((btn) => {
+      const btnBox = btn.getBoundingClientRect();
+      return {
+        x1: titleBox.right,
+        y1: titleBox.top + titleBox.height / 2,
+        x2: btnBox.left,
+        y2: btnBox.top + btnBox.height / 2,
+      };
+    });
+
+    setLines(newLines);
+  }, [singlePost]);
+
+  return (
+    <div
+      className="projectRecap"
+      style={{ position: "relative", zIndex: 9999999999 }}
+    >
+      {singlePost.title && (
+        <p className="standard-button" ref={titleRef}>
+          {singlePost.title}
+        </p>
+      )}
+
+      <div
+        ref={recapContainerRef}
+        className="recap-buttons"
+        style={{
+          position: "absolute",
+          top: "-130px",
+          right: 0,
+        }}
+      >
+        {singlePost.year && (
+          <p className="standard-button offset-1">{singlePost.year}</p>
+        )}
+
+        {singlePost.recap && (
+          <div className="standard-button offset-2">
+            <BlockContent blocks={singlePost.recap} />
+          </div>
+        )}
+      </div>
+
+      {/* <svg
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          pointerEvents: "none",
+        }}
+      >
+        {lines.map((line, i) => (
+          <path
+            key={i}
+            d={`M${line.x1},${line.y1} C${line.x1 + 50},${line.y1} ${
+              line.x2 - 50
+            },${line.y2} ${line.x2},${line.y2}`}
+            stroke="blue"
+            fill="blue"
+            strokeWidth="2"
+          />
+        ))}
+      </svg> */}
+    </div>
+  );
+};

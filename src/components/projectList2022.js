@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import sanityClient from "../client";
-import Masonry from "react-masonry-css";
 import imageUrlBuilder from "@sanity/image-url";
 
 import { motion } from "framer-motion";

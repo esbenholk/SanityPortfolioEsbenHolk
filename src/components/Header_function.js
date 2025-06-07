@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 
 import AppContext from "../globalState";
 import ProjectMenu from "./headerProjects";

@@ -43,7 +43,7 @@ const UnfoldingButtonMenu = forwardRef(
       } else {
         closeButton();
       }
-    }, [hoverProjectId]);
+    });
 
     // Expose functions via ref
     useImperativeHandle(ref, () => ({
@@ -115,7 +115,7 @@ const UnfoldingButtonMenu = forwardRef(
 
       window.addEventListener("scroll", handleScroll, { once: true });
       return () => window.removeEventListener("scroll", handleScroll);
-    }, [isOpen]);
+    }, [isOpen, onRequestOpen]);
 
     // Positioning logic
     useLayoutEffect(() => {
@@ -131,7 +131,7 @@ const UnfoldingButtonMenu = forwardRef(
         );
         setItemRects(rects);
       }
-    }, [pathsVisible]);
+    }, [pathsVisible, isOpen]);
 
     // Control path visibility delay
     useEffect(() => {
@@ -262,14 +262,14 @@ const UnfoldingButtonMenu = forwardRef(
                       transition={{ duration: 0.15, delay: idx * 0.05 }}
                       className="standard-button neonGreen"
                     >
-                      {idx == 3 ? (
+                      {idx === 3 ? (
                         <a
                           className="visitproject"
                           href={"/projects/" + project.slug.current}
                         >
                           see more
                         </a>
-                      ) : idx == 2 ? (
+                      ) : idx === 2 ? (
                         <BlockContent blocks={project.recap} />
                       ) : (
                         text
@@ -293,7 +293,7 @@ const ProjectList = ({ projects }) => {
   // const { width } = useWindowDimensions();
 
   const [openProjectId, setOpenProjectId] = useState(null);
-  const [hoverProjectId, setHoverProjectId] = useState(null);
+  const [hoverProjectId] = useState(null);
   const buttonRefs = useRef({});
   const focusProject = (project) => {
     openProjectById(project.title);
@@ -328,7 +328,7 @@ const ProjectList = ({ projects }) => {
   };
   const closeAllExceptOpen = () => {
     Object.values(buttonRefs.current).forEach((ref) => {
-      if (ref?.current != openProjectId) {
+      if (ref?.current !== openProjectId) {
         ref?.closeButton();
       }
     });

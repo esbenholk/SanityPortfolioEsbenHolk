@@ -51,8 +51,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("u have gone to far... to", slug);
-
+    console.log("hej babe, u have gone too far... to", slug);
     setIsActive(false);
   }, [slug]);
 
@@ -61,7 +60,6 @@ function App() {
     if (project) {
       setSelectedProject(project);
 
-      console.log("sets project active", project);
       setIsActive(true);
     } else {
       setIsActive(false);

@@ -3,11 +3,6 @@ import YoutubeVideo from "./blocks/youtube";
 import React, { useRef, useEffect } from "react";
 
 export class Card extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-  }
-
   render() {
     return (
       <div className={"card " + this.props.classes}>

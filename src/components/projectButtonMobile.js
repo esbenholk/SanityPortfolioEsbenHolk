@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import BlockContent from "./blocks/BlockContent";
 
@@ -18,13 +18,15 @@ const MobileUnfoldingMenu = ({ clickedProject }) => {
 
   const isVisible = !!clickedProject;
 
-  const items = clickedProject
-    ? [
-        clickedProject.title,
-        clickedProject.year,
-        (clickedProject.tags || []).join(" • "),
-      ]
-    : [];
+  const items = useMemo(() => {
+    return clickedProject
+      ? [
+          clickedProject.title,
+          clickedProject.year,
+          (clickedProject.tags || []).join(" • "),
+        ]
+      : [];
+  }, [clickedProject]);
 
   useLayoutEffect(() => {
     if (!isVisible || !triggerRef.current) return;
@@ -32,7 +34,7 @@ const MobileUnfoldingMenu = ({ clickedProject }) => {
     setOffsets(items.map(() => generateRandomOffset()));
     setItemRects([]); // reset item rects to ensure SVG updates on new project
     setPathKey((prev) => prev + 1); // trigger re-animation of SVG paths
-  }, [isVisible, clickedProject]);
+  }, [isVisible, clickedProject, items]);
 
   useLayoutEffect(() => {
     if (pathsVisible) {
@@ -92,7 +94,7 @@ const MobileUnfoldingMenu = ({ clickedProject }) => {
             >
               {items.map((_, idx) => {
                 const itemRect = itemRects[idx];
-                const offset = offsets[idx] || { x: 0, y: 0 };
+                // const offset = offsets[idx] || { x: 0, y: 0 };
                 if (!itemRect) return null;
 
                 const fromX = triggerPos.left + triggerPos.width / 2;
@@ -147,14 +149,14 @@ const MobileUnfoldingMenu = ({ clickedProject }) => {
                   }}
                   className="standard-button neonGreen mobilebuttondescription"
                 >
-                  {idx == 0 ? (
+                  {idx === 0 ? (
                     <a
                       className="visitproject"
                       href={"/projects/" + clickedProject.slug.current}
                     >
                       see more
                     </a>
-                  ) : idx == 2 ? (
+                  ) : idx === 2 ? (
                     <BlockContent blocks={clickedProject.recap} />
                   ) : (
                     text

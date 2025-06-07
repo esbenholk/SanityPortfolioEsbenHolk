@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { NavLink } from "react-router-dom";
@@ -75,9 +75,9 @@ export default function ProjectMenu({ projects }) {
               exit="closed"
               variants={containerVariants}
             >
-              {projects.map((project) => (
+              {projects.map((project, idx) => (
                 <motion.div
-                  key={project.slug}
+                  key={idx}
                   variants={itemVariants}
                   onClick={() => {
                     setOpen(false);

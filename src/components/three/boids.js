@@ -49,8 +49,6 @@ const OscillatingImagePlanes = forwardRef(
     }, [image]);
 
     const upgradeImageOnClick = () => {
-      console.log("runs upgrade on", project.title);
-
       if (!isUpgraded) {
         new THREE.TextureLoader().load(
           urlFor(image).width(1000).url(),
@@ -119,7 +117,7 @@ const OscillatingImagePlane = ({
       camera.getWorldDirection(cameraDirection);
       const centerPosition = new THREE.Vector3()
         .copy(camera.position)
-        .add(cameraDirection.multiplyScalar(isMobile ? 0.7 : 0.25));
+        .add(cameraDirection.multiplyScalar(isMobile ? 1 : 0.25));
 
       meshRef.current.position.lerp(centerPosition, 0.1);
       meshRef.current.lookAt(camera.position);
@@ -207,7 +205,7 @@ const OscillatingImagePlane = ({
         onPointerMissed={(e) => onMissed(e)}
       >
         <planeGeometry
-          args={isMobile ? [0.5 * aspectRatio, 0.5] : [0.3 * aspectRatio, 0.3]}
+          args={isMobile ? [0.7 * aspectRatio, 0.7] : [0.3 * aspectRatio, 0.3]}
         />
         <meshBasicMaterial map={texture} transparent />
       </mesh>
@@ -234,8 +232,6 @@ const ImageCubeScene = ({
   const [currentProject, setCurrentProject] = useState(null);
 
   const handlePlaneClick = (clickedProject) => {
-    console.log("handles click", clickedProject);
-
     handlePlaneClickOutsideCanvas(clickedProject);
     // window.deactivateActive();
     setCurrentProject(clickedProject); // Set the camera's target position to focus on the clicked plane
@@ -253,11 +249,8 @@ const ImageCubeScene = ({
   const upgradeByProjectId = (id) => {
     const ref = planeClusterRefs.current.get(id);
     if (ref?.upgradeImageOnClick) {
-      console.log("should have ref to run upgrade");
-
       ref.upgradeImageOnClick();
     } else {
-      console.log(`No upgrade function found for ${id}`);
     }
   };
 
@@ -265,17 +258,19 @@ const ImageCubeScene = ({
 
   return (
     <>
-      {projects.map((project) => (
-        <OscillatingImagePlanes
-          ref={(ref) => registerRef(project.title, ref)}
-          isMobile={isMobile}
-          project={project}
-          stateChanger={stateChanger}
-          camera={camera}
-          onClick={handlePlaneClick}
-          currentProject={currentProject}
-          image={project.mainImage}
-        />
+      {projects.map((project, idx) => (
+        <group key={idx}>
+          <OscillatingImagePlanes
+            ref={(ref) => registerRef(project.title, ref)}
+            isMobile={isMobile}
+            project={project}
+            stateChanger={stateChanger}
+            camera={camera}
+            onClick={handlePlaneClick}
+            currentProject={currentProject}
+            image={project.mainImage}
+          />
+        </group>
       ))}
 
       {isMobile ? (

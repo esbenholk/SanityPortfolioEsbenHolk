@@ -67,170 +67,173 @@ export default function SinglePost({ updateSelectedProjectOnHover }) {
     return <p className="fixedMiddle standard-button"> content incoming... </p>;
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex-column align-center projectMedia fullWidthPadded"
-    >
-      <div className="postImage">
-        <Image
-          image={singlePost.mainImage}
-          width={width - 20}
-          height={height - 20}
-          isFullHeight={true}
-        />
-      </div>
-
-      {singlePost.imagesGallery &&
-        singlePost.imagesGallery.map((image, index) => (
-          <>
-            <Card
-              title={"card" + index}
-              image={image}
-              classes={""}
-              width={width - 20}
-              height={height}
-            />
-          </>
-        ))}
-
-      <div
-        className="borderTop"
-        style={{
-          position: "relative",
-          top: "5px",
-          paddingTop: "10px",
-          width: "100%",
-        }}
+    <>
+      {" "}
+      <motion.div
+        layout
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex-column align-center projectMedia fullWidthPadded"
       >
-        <div className="flex-row align-top project_directory_line noshade">
-          <a href="/projects">{"Project >"}</a>
-          <div className="flex-row align-left noshade">
-            {singlePost.categories &&
-              singlePost.categories.map((category, index) => (
-                <Link
-                  to={"../" + category.slug.current}
-                  className=""
-                  key={index}
-                >
-                  {category.title}
-                  {index + 1 !== singlePost.categories.length ? "," : null}
-                </Link>
-              ))}
-            <p>{" > "}</p>
-          </div>
+        <div className="postImage">
+          <Image
+            image={singlePost.mainImage}
+            width={width - 20}
+            height={height - 20}
+            isFullHeight={true}
+          />
         </div>
-        <div className="standard-container background">
-          {singlePost.recap && (
-            // <div className="projectRecap">
-            //   {singlePost.title && (
-            //     <p className="standard-button">{singlePost.title}</p>
-            //   )}
 
-            //   <div>
-            //     {singlePost.year && (
-            //       <p className="standard-button">{singlePost.year}</p>
-            //     )}
+        {singlePost.imagesGallery &&
+          singlePost.imagesGallery.map((image, index) => (
+            <div key={index}>
+              <Card
+                title={"card" + index}
+                image={image}
+                classes={""}
+                width={width - 20}
+                height={height}
+              />
+            </div>
+          ))}
 
-            //     {singlePost.recap && (
-            //       <div className="standard-button">
-            //         {" "}
-            //         <BlockContent blocks={singlePost.recap} />
-            //       </div>
-            //     )}
-            //   </div>
-            // </div>
-            <ProjectRecap singlePost={singlePost} />
-          )}
-
-          {singlePost.body && <BlockContent blocks={singlePost.body} />}
-
-          {/* {singlePost.categories && (
-            <>
-              <div className="flex-row align-left">
-                {singlePost.categories.map((category, index) => (
+        <div
+          className="borderTop"
+          style={{
+            position: "relative",
+            top: "5px",
+            paddingTop: "10px",
+            width: "100%",
+          }}
+        >
+          <div className="flex-row align-top project_directory_line noshade">
+            <a href="/projects">{"Project >"}</a>
+            <div className="flex-row align-left noshade">
+              {singlePost.categories &&
+                singlePost.categories.map((category, index) => (
                   <Link
                     to={"../" + category.slug.current}
-                    className="tag project_tag"
+                    className=""
                     key={index}
                   >
                     {category.title}
                     {index + 1 !== singlePost.categories.length ? "," : null}
                   </Link>
                 ))}
-              </div>
-            </>
-          )}
+              <p>{" > "}</p>
+            </div>
+          </div>
+          <div className="standard-container background">
+            {singlePost.recap && (
+              // <div className="projectRecap">
+              //   {singlePost.title && (
+              //     <p className="standard-button">{singlePost.title}</p>
+              //   )}
 
-          {singlePost.tags && (
-            <>
-              <div className="flex-row align-left project_tags noshade">
-                {singlePost.tags.map((tag, index) => (
-                  <p className="tag project_tag" key={index}>
-                    {tag}
-                    {index + 1 !== singlePost.tags.length ? "," : null}
-                  </p>
-                ))}
-              </div>
-            </>
-          )} */}
+              //   <div>
+              //     {singlePost.year && (
+              //       <p className="standard-button">{singlePost.year}</p>
+              //     )}
+
+              //     {singlePost.recap && (
+              //       <div className="standard-button">
+              //         {" "}
+              //         <BlockContent blocks={singlePost.recap} />
+              //       </div>
+              //     )}
+              //   </div>
+              // </div>
+              <ProjectRecap singlePost={singlePost} />
+            )}
+
+            {singlePost.body && <BlockContent blocks={singlePost.body} />}
+
+            {/* {singlePost.categories && (
+          <>
+            <div className="flex-row align-left">
+              {singlePost.categories.map((category, index) => (
+                <Link
+                  to={"../" + category.slug.current}
+                  className="tag project_tag"
+                  key={index}
+                >
+                  {category.title}
+                  {index + 1 !== singlePost.categories.length ? "," : null}
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        {singlePost.tags && (
+          <>
+            <div className="flex-row align-left project_tags noshade">
+              {singlePost.tags.map((tag, index) => (
+                <p className="tag project_tag" key={index}>
+                  {tag}
+                  {index + 1 !== singlePost.tags.length ? "," : null}
+                </p>
+              ))}
+            </div>
+          </>
+        )} */}
+          </div>
         </div>
-      </div>
 
-      {!window.location.pathname.includes("esben") ? (
-        <>
-          <nav className={"footer-nav"}>
-            {prevPost && (
-              <NavLink to={prevPost.slug.current} className="standard-button">
-                Prev
+        {!window.location.pathname.includes("esben") ? (
+          <>
+            <nav className={"footer-nav"}>
+              {prevPost && (
+                <NavLink to={prevPost.slug.current} className="standard-button">
+                  Prev
+                </NavLink>
+              )}
+              {nextPost && (
+                <NavLink to={nextPost.slug.current} className="standard-button">
+                  Next
+                </NavLink>
+              )}
+            </nav>
+          </>
+        ) : (
+          <>
+            <nav className="footer-nav">
+              <NavLink className="standard-button" to="/projects">
+                Work
               </NavLink>
-            )}
-            {nextPost && (
-              <NavLink to={nextPost.slug.current} className="standard-button">
-                Next
-              </NavLink>
-            )}
-          </nav>{" "}
-        </>
-      ) : (
-        <>
-          <nav className="footer-nav">
-            <NavLink className="standard-button" to="/">
-              Work
-            </NavLink>
-          </nav>
-        </>
-      )}
-    </motion.div>
+            </nav>
+          </>
+        )}
+      </motion.div>
+    </>
   );
 }
 
 const ProjectRecap = ({ singlePost }) => {
   const titleRef = useRef(null);
   const recapContainerRef = useRef(null);
-  const [lines, setLines] = useState([]);
+  // const [lines, setLines] = useState([]);
 
-  useEffect(() => {
-    if (!titleRef.current || !recapContainerRef.current) return;
+  // useEffect(() => {
+  //   if (!titleRef.current || !recapContainerRef.current) return;
 
-    const titleBox = titleRef.current.getBoundingClientRect();
-    const buttons =
-      recapContainerRef.current.querySelectorAll(".standard-button");
+  //   const titleBox = titleRef.current.getBoundingClientRect();
+  //   const buttons =
+  //     recapContainerRef.current.querySelectorAll(".standard-button");
 
-    const newLines = Array.from(buttons).map((btn) => {
-      const btnBox = btn.getBoundingClientRect();
-      return {
-        x1: titleBox.right,
-        y1: titleBox.top + titleBox.height / 2,
-        x2: btnBox.left,
-        y2: btnBox.top + btnBox.height / 2,
-      };
-    });
+  //   const newLines = Array.from(buttons).map((btn) => {
+  //     const btnBox = btn.getBoundingClientRect();
+  //     return {
+  //       x1: titleBox.right,
+  //       y1: titleBox.top + titleBox.height / 2,
+  //       x2: btnBox.left,
+  //       y2: btnBox.top + btnBox.height / 2,
+  //     };
+  //   });
 
-    setLines(newLines);
-  }, [singlePost]);
+  //   setLines(newLines);
+  // }, [singlePost]);
 
   return (
     <div

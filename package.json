@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-spring/core": "^10.0.1",
+    "@react-spring/three": "^10.0.1",
+    "@react-spring/web": "^10.0.1",
     "@react-three/drei": "^9.56.4",
     "@react-three/fiber": "^8.10.1",
     "@react-three/postprocessing": "^2.7.0",
@@ -22,6 +25,7 @@
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
     "cloudinary-react": "^1.7.0",
+    "d3": "^7.9.0",
     "framer-motion": "^4.1.17",
     "get-youtube-id": "^1.0.1",
     "install": "^0.13.0",

@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import useWindowDimensions from "./components/functions/useWindowDimensions";
 
-import React, {
+import {
   Suspense,
   lazy,
   useEffect,
@@ -17,6 +17,7 @@ import Header from "./components/Header_function";
 import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
+import AsciiScene from "./components/three/asciimodel.js";
 
 // import useWindowDimensions from "./components/functions/useWindowDimensions";
 
@@ -28,6 +29,7 @@ const SinglePost = lazy(() => import("./components/SinglePost"));
 
 const Boids = lazy(() => import("./components/three/boids"));
 const Cross = lazy(() => import("./components/cross.js"));
+const ThreeCanvas = lazy(() => import("./components/threeCanvas.js"));
 
 function App() {
   const [siteSettings, setSiteSettings] = useState();
@@ -213,6 +215,17 @@ function App() {
                       updateSelectedProjectOnHover={
                         updateSelectedProjectOnHover
                       }
+                    />
+                  )}
+                </Route>
+
+                <Route path="/mappingconfusion">
+                  {siteSettings && <ThreeCanvas />}
+                </Route>
+                <Route path="/ascii">
+                  {siteSettings && (
+                    <AsciiScene
+                      modelUrl={process.env.PUBLIC_URL + "/assets/s2c_logo.glb"}
                     />
                   )}
                 </Route>

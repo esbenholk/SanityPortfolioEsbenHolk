@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&display=swap");
+@import url("https://rsms.me/inter/inter.css");
 
 /* #39FF14; */
 :root {
@@ -13,10 +14,17 @@
   --linkColor: rgb(255, 0, 217);
 }
 
-* {
+/* * {
   box-sizing: border-box;
   font-family: "Pathway Gothic One", sans-serif;
   cursor: none;
+} */
+
+canvas {
+  font-family: inter;
+  font-size: 13px;
+  color: #fefefe;
+  background: black;
 }
 button,
 a,

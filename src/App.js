@@ -1,76 +1,62 @@
 /* eslint-disable no-lone-blocks */
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import useWindowDimensions from "./components/functions/useWindowDimensions";
-
-import {
-  Suspense,
-  lazy,
-  useEffect,
-  useState,
-  createRef,
-  useCallback,
-} from "react";
-// import NavBar from "./components/NavBar.js";
+import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
+import React, { Suspense, lazy, useEffect, useState, createRef } from "react";
 import "./App.css";
+import "./themes.css";
+import "./chaos.css";
 import sanityClient from "./client";
 import Header from "./components/Header_function";
+import Footer from "./components/Footer";
 import { AnimatePresence } from "framer-motion";
 
 import AppContext from "./globalState";
-import AsciiScene from "./components/three/asciimodel.js";
+import ScrollToTop from "./components/blocks/scrollToTop";
+import CursorTrail from "./components/retro/CursorTrail";
+import { PageGlitch } from "./components/retro/Glitch";
+import PopupAds from "./components/retro/PopupAds";
+import SwampAtmosphere from "./components/retro/SwampAtmosphere";
 
-// import useWindowDimensions from "./components/functions/useWindowDimensions";
-
-const Projects = lazy(() => import("./components/projectList2022.js"));
+const LandingPage = lazy(() => import("./components/LandingPage.js"));
+const SinglePost = lazy(() => import("./components/SinglePost.js"));
+const ProjectList = lazy(() => import("./components/ProjectList.js"));
 const Category = lazy(() => import("./components/Category.js"));
+const ChaosPage = lazy(() => import("./components/ChaosPage"));
+const InstagramPage = lazy(() => import("./components/instagram/InstagramPage"));
 
-const Gallery = lazy(() => import("./components/Gallery"));
-const SinglePost = lazy(() => import("./components/SinglePost"));
+// The about page is a project with this slug; it's kept out of the project grids
+const ABOUT_SLUG = "esben-holk-house-of-killing";
 
-const Boids = lazy(() => import("./components/three/boids"));
-const Cross = lazy(() => import("./components/cross.js"));
-const ThreeCanvas = lazy(() => import("./components/threeCanvas.js"));
+// Tears the page briefly on every route change
+function RouteGlitch() {
+  const location = useLocation();
+  return <PageGlitch trigger={location.pathname} />;
+}
 
 function App() {
   const [siteSettings, setSiteSettings] = useState();
   const [projectList, setProjectList] = useState();
   const [sortedProjects, setSortedProjects] = useState();
   const [settingsProject, setSettingsproject] = useState();
-  // const [listIsActive, setListIsActive] = useState(false);
-  // const [galleryIsActive, setGalleryIsActive] = useState(false);
-  const [threedIsActive, setThreedIsActive] = useState(false);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
   const mainRef = createRef();
-  const { width } = useWindowDimensions();
-  const [selectedProject, setSelectedProject] = useState({});
-  const [isActive, setIsActive] = useState();
-  const [slug, setSlug] = useState("/");
 
-  const updateSlug = useCallback((string) => {
-    setSlug(string);
-  }, []);
-
-  useEffect(() => {
-    console.log("hej babe, u have gone too far... to", slug);
-    setIsActive(false);
-  }, [slug]);
-
-  // console.log("has slug", params);
-  const updateSelectedProjectOnHover = useCallback((project) => {
-    if (project) {
-      setSelectedProject(project);
-
-      setIsActive(true);
-    } else {
-      setIsActive(false);
+  // Site skin: "storefront" | "tube" | "swamp", remembered per browser
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("hok_theme") || "storefront";
+    } catch (e) {
+      return "storefront";
     }
-  }, []);
+  });
 
   useEffect(() => {
-    setThreedIsActive(true);
-  }, [width]);
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("hok_theme", theme);
+    } catch (e) {}
+  }, [theme]);
 
   useEffect(() => {
     sanityClient
@@ -92,64 +78,44 @@ function App() {
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
         setProjectList(data);
-        console.log(
-          "if i whisper seductively in the inspector will you cum'n'free me plz?"
-        );
       })
       .catch(console.error);
   }, []);
 
   useEffect(() => {
-    var tags = [];
-    var categories = [];
-    if (projectList) {
-      const sortedProjects1 = projectList.filter((element) => {
-        return element.slug.current !== "esben-holk-house-of-killing";
-      });
-      setSortedProjects(sortedProjects1);
+    if (!projectList) return;
 
-      const settingsProject1 = projectList.find((element) => {
-        return element.slug.current === "esben-holk-house-of-killing";
-      });
+    setSortedProjects(projectList.filter((post) => post.slug.current !== ABOUT_SLUG));
+    setSettingsproject(projectList.find((post) => post.slug.current === ABOUT_SLUG));
 
-      setSettingsproject(settingsProject1);
-
-      for (let index = 0; index < projectList.length; index++) {
-        const post = projectList[index];
-
-        if (post.tags != null && Array.isArray(post.tags)) {
-          for (let index = 0; index < post.tags.length; index++) {
-            const tag = post.tags[index];
-            tags.push(tag);
+    const allTags = [];
+    const allCategories = [];
+    projectList.forEach((post) => {
+      if (Array.isArray(post.tags)) allTags.push(...post.tags);
+      if (Array.isArray(post.categories)) {
+        post.categories.forEach((category) => {
+          if (!allCategories.some((item) => item.title === category.title)) {
+            allCategories.push(category);
           }
-        }
-        if (post.categories != null && Array.isArray(post.categories)) {
-          for (let index = 0; index < post.categories.length; index++) {
-            const category = post.categories[index];
-
-            if (categories.some((item) => item.title === category.title)) {
-            } else {
-              categories.push(category);
-            }
-          }
-        }
+        });
       }
-
-      let sortedTags = [...new Set(tags)];
-      setTags(sortedTags);
-
-      let sortedCategories = [...new Set(categories)];
-      setCategories(sortedCategories);
-    }
+    });
+    setTags([...new Set(allTags)]);
+    setCategories(allCategories);
   }, [projectList]);
 
   const globalContext = {
     siteSettings: siteSettings,
-    projectList: projectList,
+    // the storefront shows the works without the about project
+    projectList: sortedProjects,
+    allProjects: projectList,
+    settingsProject: settingsProject,
     tags: tags,
     categories: categories,
     hasFeaturedPosts: hasFeaturedPosts,
     mainRef: mainRef,
+    theme,
+    setTheme,
     setSiteSettings,
     setProjectList,
     setTags,
@@ -158,98 +124,55 @@ function App() {
   };
 
   return (
-    <div id="main" style={{ overflowY: "auto", height: "100vh" }}>
+    <main className="site">
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
-          <AnimatePresence>
-            <BrowserRouter>
-              <div className="mainbackground"></div>
-              <Switch>
-                <Route exact path="/">
-                  {sortedProjects && (
-                    <>
-                      {threedIsActive && (
-                        <Boids
-                          projects={sortedProjects}
-                          info={siteSettings}
-                          settingsProject={settingsProject}
-                          updateSelectedProjectOnHover={
-                            updateSelectedProjectOnHover
-                          }
-                        />
-                      )}
-                      {/* {listIsActive && <Projects info={siteSettings} projectList={projectList} />}
-                            {galleryIsActive && <Gallery info={siteSettings} projectList={sortedProjects} updateSelectedProjectOnHover={updateSelectedProjectOnHover} /> }           */}
-                    </>
-                  )}
-                </Route>
-                <Route path="/projects/:slug">
-                  {projectList && (
-                    <SinglePost
-                      projectList={projectList}
-                      updateSelectedProjectOnHover={
-                        updateSelectedProjectOnHover
-                      }
-                    />
-                  )}
-                </Route>
-                <Route path="/projects">
-                  {siteSettings && (
-                    <>
-                      <Projects
-                        info={siteSettings}
-                        projectList={projectList}
-                        updateSelectedProjectOnHover={
-                          updateSelectedProjectOnHover
-                        }
-                      />
-                    </>
-                  )}
-                </Route>
-
-                <Route path="/gallery">
-                  {siteSettings && (
-                    <Gallery
-                      info={siteSettings}
-                      projectList={projectList}
-                      updateSelectedProjectOnHover={
-                        updateSelectedProjectOnHover
-                      }
-                    />
-                  )}
-                </Route>
-
-                <Route path="/mappingconfusion">
-                  {siteSettings && <ThreeCanvas />}
-                </Route>
-                <Route path="/ascii">
-                  {siteSettings && (
-                    <AsciiScene
-                      modelUrl={process.env.PUBLIC_URL + "/assets/s2c_logo.glb"}
-                    />
-                  )}
-                </Route>
-
-                <Route path="/:slug">
-                  <Category
-                    updateSelectedProjectOnHover={updateSelectedProjectOnHover}
-                  />
-                </Route>
-              </Switch>
-
-              {width > 600 && (
-                <Cross
-                  selectedProject={selectedProject}
-                  shouldHaveBackground={true}
-                  isActive={isActive}
-                />
-              )}
-              {siteSettings && <Header updateSlug={updateSlug} />}
-            </BrowserRouter>
-          </AnimatePresence>
+          <BrowserRouter>
+            <RouteGlitch />
+            <CursorTrail />
+            {theme === "tube" && <PopupAds />}
+            {theme === "swamp" && <SwampAtmosphere />}
+            {siteSettings && <Header />}
+            <AnimatePresence>
+              <div className="mainContainer" ref={mainRef}>
+                <ScrollToTop>
+                  <Switch>
+                    <Route exact path="/">
+                      {siteSettings && <LandingPage />}
+                    </Route>
+                    <Route path="/projects/:slug">
+                      {projectList && <SinglePost />}
+                    </Route>
+                    <Route path="/projects">
+                      <ProjectList projectList={sortedProjects} />
+                    </Route>
+                    <Route path="/chaos">
+                      <ChaosPage mode="boids" />
+                    </Route>
+                    <Route path="/gallery">
+                      <ChaosPage mode="gallery" />
+                    </Route>
+                    <Route path="/mappingconfusion">
+                      <ChaosPage mode="mapping" />
+                    </Route>
+                    <Route path="/ascii">
+                      <ChaosPage mode="ascii" />
+                    </Route>
+                    <Route path="/instagram">
+                      <InstagramPage />
+                    </Route>
+                    <Route path="/:slug">
+                      <Category />
+                    </Route>
+                  </Switch>
+                </ScrollToTop>
+              </div>
+            </AnimatePresence>
+            {siteSettings && <Footer info={siteSettings} />}
+          </BrowserRouter>
         </AppContext.Provider>
       </Suspense>
-    </div>
+    </main>
   );
 }
 

@@ -98,9 +98,9 @@ const OscillatingImagePlane = ({
 }) => {
   const meshRef = useRef();
   const [originalPosition] = useState([
-    (Math.random() - 0.5) * 10,
-    (Math.random() - 0.5) * 10,
-    (Math.random() - 0.5) * 10,
+    (Math.random() - 0.5) * 5,
+    (Math.random() - 0.5) * 5,
+    (Math.random() - 0.5) * 5,
   ]);
   const [position] = useState(new THREE.Vector3(...originalPosition));
   const [movingToCenter, setMovingToCenter] = useState(true);
@@ -217,6 +217,7 @@ const ImageCubeScene = ({
   projects,
   stateChanger,
   handlePlaneClickOutsideCanvas,
+  autoRotate,
 }) => {
   const controlsRef = useRef();
   const { camera } = useThree();
@@ -273,7 +274,7 @@ const ImageCubeScene = ({
         </group>
       ))}
 
-      {isMobile ? (
+      {isMobile && !autoRotate ? (
         <DeviceOrientationControls ref={controlsRef} />
       ) : (
         <OrbitControls
@@ -281,6 +282,8 @@ const ImageCubeScene = ({
           ref={controlsRef}
           enableZoom={false}
           enablePan={false}
+          autoRotate={Boolean(autoRotate)}
+          autoRotateSpeed={typeof autoRotate === "number" ? autoRotate : 0.6}
         />
       )}
       <ambientLight intensity={0.5} />
@@ -293,6 +296,7 @@ export default function Boids({
   settingsProject,
   projects,
   updateSelectedProjectOnHover,
+  autoRotate, // true, or a speed (2 = one turn every 30s)
 }) {
   const [clickedProject, setClickedProject] = useState(null);
   const { width } = useWindowDimensions();
@@ -320,6 +324,7 @@ export default function Boids({
           projects={projects}
           stateChanger={updateSelectedProjectOnHover}
           handlePlaneClickOutsideCanvas={handlePlaneClick}
+          autoRotate={autoRotate}
         />
       </Canvas>
       {width > 600 ? (

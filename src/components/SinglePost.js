@@ -1,293 +1,219 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import AppContext from "../globalState";
 import sanityClient from "../client";
-import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import Image from "./blocks/image";
-import { Link } from "react-router-dom";
-
 import BlockContent from "./blocks/BlockContent";
+import YoutubeVideo from "./blocks/youtube";
+import Window from "./retro/Window";
+import FrameImage from "./retro/FrameImage";
 
-import useWindowDimensions from "./functions/useWindowDimensions";
-import { Card } from "./horizontalScrollInfinite";
-import { NavLink } from "react-router-dom";
+const ABOUT_SLUG = "esben-holk-house-of-killing";
 
-export default function SinglePost({ updateSelectedProjectOnHover }) {
+// Gallery entries are either { image } or { youtube: { url } }; skip empty slots
+const mediaOf = (gallery) =>
+  (gallery || []).filter(
+    (item) => item && ((item.image && item.image.asset) || (item.youtube && item.youtube.url))
+  );
+
+export default function SinglePost() {
   const [singlePost, setSinglePost] = useState();
-  const [nextPost, setnextPost] = useState();
-  const [prevPost, setprevPost] = useState();
+  const [slide, setSlide] = useState(0);
   const { slug } = useParams();
-  const myContext = useContext(AppContext);
-  const projectList = myContext.projectList;
+  const { projectList = [] } = useContext(AppContext);
 
   useEffect(() => {
-    console.log("hej dont look at me");
-
-    const el = document.getElementById("main");
-    if (el) {
-      el.scrollTo(0, 0);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [slug]);
-
-  // const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  const { width, height } = useWindowDimensions();
-
-  useEffect(() => {
-    // updateSelectedProjectOnHover(null);
-
+    setSlide(0);
     sanityClient
       .fetch(
-        `*[slug.current == "${slug}"]{
+        `*[slug.current == $slug]{
           id,
           title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, miniImagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client, videos[]
-        }`
+        }`,
+        { slug }
       )
-      .then((data) => {
-        setSinglePost(data[0]);
-
-        for (let index = 0; index < projectList.length; index++) {
-          if (
-            projectList[index].title === data[0].title &&
-            index + 1 <= projectList.length
-          ) {
-            setnextPost(projectList[index + 1]);
-          }
-          if (projectList[index].title === data[0].title && !index - 1 <= 0) {
-            setprevPost(projectList[index - 1]);
-          }
-        }
-      })
+      .then((data) => setSinglePost(data[0]))
       .catch(console.error);
-  }, [slug, projectList, updateSelectedProjectOnHover]);
+  }, [slug]);
 
-  if (!singlePost)
-    return <p className="fixedMiddle standard-button"> content incoming... </p>;
+  if (!singlePost) {
+    return <p className="loading blink">LOADING… PLEASE WAIT (56k)</p>;
+  }
+
+  const isAbout = slug === ABOUT_SLUG;
+  const media = mediaOf(singlePost.imagesGallery);
+  const current = media[slide % (media.length || 1)];
+
+  const position = projectList.findIndex((post) => post.slug.current === slug);
+  const prevPost = position > 0 ? projectList[position - 1] : null;
+  const nextPost =
+    position >= 0 && position < projectList.length - 1 ? projectList[position + 1] : null;
+
+  const price =
+    singlePost.abbreviated_year != null
+      ? String(singlePost.abbreviated_year).padStart(2, "0")
+      : singlePost.year
+      ? String(singlePost.year).slice(-2)
+      : null;
 
   return (
-    <>
-      {" "}
-      <motion.div
-        layout
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="flex-column align-center projectMedia fullWidthPadded"
-      >
-        <div className="postImage">
-          <Image
-            image={singlePost.mainImage}
-            width={width - 20}
-            height={height - 20}
-            isFullHeight={true}
-          />
-        </div>
-
-        {singlePost.imagesGallery &&
-          singlePost.imagesGallery.map((image, index) => (
-            <div key={index}>
-              <Card
-                title={"card" + index}
-                image={image}
-                classes={""}
-                width={width - 20}
-                height={height}
-              />
-            </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <div className="crumbs">
+        <Link to="/projects">ARCHIVE</Link>
+        {singlePost.categories &&
+          singlePost.categories.map((category, index) => (
+            <React.Fragment key={index}>
+              <span>›</span>
+              <Link to={"/" + category.slug.current}>{category.title}</Link>
+            </React.Fragment>
           ))}
-
-        <div
-          className="borderTop"
-          style={{
-            position: "relative",
-            top: "5px",
-            paddingTop: "10px",
-            width: "100%",
-          }}
-        >
-          <div className="flex-row align-top project_directory_line noshade">
-            <a href="/projects">{"Project >"}</a>
-            <div className="flex-row align-left noshade">
-              {singlePost.categories &&
-                singlePost.categories.map((category, index) => (
-                  <Link
-                    to={"../" + category.slug.current}
-                    className=""
-                    key={index}
-                  >
-                    {category.title}
-                    {index + 1 !== singlePost.categories.length ? "," : null}
-                  </Link>
-                ))}
-              <p>{" > "}</p>
-            </div>
-          </div>
-          <div className="standard-container background">
-            {singlePost.recap && (
-              // <div className="projectRecap">
-              //   {singlePost.title && (
-              //     <p className="standard-button">{singlePost.title}</p>
-              //   )}
-
-              //   <div>
-              //     {singlePost.year && (
-              //       <p className="standard-button">{singlePost.year}</p>
-              //     )}
-
-              //     {singlePost.recap && (
-              //       <div className="standard-button">
-              //         {" "}
-              //         <BlockContent blocks={singlePost.recap} />
-              //       </div>
-              //     )}
-              //   </div>
-              // </div>
-              <ProjectRecap singlePost={singlePost} />
-            )}
-
-            {singlePost.body && <BlockContent blocks={singlePost.body} />}
-
-            {/* {singlePost.categories && (
-          <>
-            <div className="flex-row align-left">
-              {singlePost.categories.map((category, index) => (
-                <Link
-                  to={"../" + category.slug.current}
-                  className="tag project_tag"
-                  key={index}
-                >
-                  {category.title}
-                  {index + 1 !== singlePost.categories.length ? "," : null}
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
-
-        {singlePost.tags && (
-          <>
-            <div className="flex-row align-left project_tags noshade">
-              {singlePost.tags.map((tag, index) => (
-                <p className="tag project_tag" key={index}>
-                  {tag}
-                  {index + 1 !== singlePost.tags.length ? "," : null}
-                </p>
-              ))}
-            </div>
-          </>
-        )} */}
-          </div>
-        </div>
-
-        {!window.location.pathname.includes("esben") ? (
-          <>
-            <nav className={"footer-nav"}>
-              {prevPost && (
-                <NavLink to={prevPost.slug.current} className="standard-button">
-                  Prev
-                </NavLink>
-              )}
-              {nextPost && (
-                <NavLink to={nextPost.slug.current} className="standard-button">
-                  Next
-                </NavLink>
-              )}
-            </nav>
-          </>
-        ) : (
-          <>
-            <nav className="footer-nav">
-              <NavLink className="standard-button" to="/projects">
-                Work
-              </NavLink>
-            </nav>
-          </>
-        )}
-      </motion.div>
-    </>
-  );
-}
-
-const ProjectRecap = ({ singlePost }) => {
-  const titleRef = useRef(null);
-  const recapContainerRef = useRef(null);
-  // const [lines, setLines] = useState([]);
-
-  // useEffect(() => {
-  //   if (!titleRef.current || !recapContainerRef.current) return;
-
-  //   const titleBox = titleRef.current.getBoundingClientRect();
-  //   const buttons =
-  //     recapContainerRef.current.querySelectorAll(".standard-button");
-
-  //   const newLines = Array.from(buttons).map((btn) => {
-  //     const btnBox = btn.getBoundingClientRect();
-  //     return {
-  //       x1: titleBox.right,
-  //       y1: titleBox.top + titleBox.height / 2,
-  //       x2: btnBox.left,
-  //       y2: btnBox.top + btnBox.height / 2,
-  //     };
-  //   });
-
-  //   setLines(newLines);
-  // }, [singlePost]);
-
-  return (
-    <div
-      className="projectRecap"
-      style={{ position: "relative", zIndex: 9999999999 }}
-    >
-      {singlePost.title && (
-        <p className="standard-button" ref={titleRef}>
-          {singlePost.title}
-        </p>
-      )}
-
-      <div
-        ref={recapContainerRef}
-        className="recap-buttons"
-        style={{
-          position: "absolute",
-          top: "-130px",
-          right: 0,
-        }}
-      >
-        {singlePost.year && (
-          <p className="standard-button offset-1">{singlePost.year}</p>
-        )}
-
-        {singlePost.recap && (
-          <div className="standard-button offset-2">
-            <BlockContent blocks={singlePost.recap} />
-          </div>
-        )}
+        <span>›</span>
+        <span>{singlePost.title}</span>
       </div>
 
-      {/* <svg
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          pointerEvents: "none",
-        }}
-      >
-        {lines.map((line, i) => (
-          <path
-            key={i}
-            d={`M${line.x1},${line.y1} C${line.x1 + 50},${line.y1} ${
-              line.x2 - 50
-            },${line.y2} ${line.x2},${line.y2}`}
-            stroke="blue"
-            fill="blue"
-            strokeWidth="2"
-          />
-        ))}
-      </svg> */}
-    </div>
+      <div className="product-detail">
+        <Window
+          title={isAbout ? "me.bmp" : `${singlePost.title}.exe`}
+          className="product-detail__media"
+        >
+          {current ? (
+            current.youtube ? (
+              <div className="video-frame">
+                <YoutubeVideo url={current.youtube.url} />
+              </div>
+            ) : (
+              <FrameImage image={current.image} width={1400} className="frame-img--contain" />
+            )
+          ) : (
+            <FrameImage image={singlePost.mainImage} width={1400} className="frame-img--contain" />
+          )}
+
+          {media.length > 1 && (
+            <div className="media-nav">
+              <button className="btn95" onClick={() => setSlide(slide - 1 + media.length)}>
+                ◀
+              </button>
+              <span className="media-nav__count">
+                {(slide % media.length) + 1} / {media.length}
+              </span>
+              <button className="btn95" onClick={() => setSlide(slide + 1)}>
+                ▶
+              </button>
+            </div>
+          )}
+        </Window>
+
+        <aside className="product-detail__info">
+          <h1 className="page-title">{singlePost.title}</h1>
+          {singlePost.star_rating && <p className="stars">{singlePost.star_rating}</p>}
+
+          {!isAbout && (
+            <dl className="spec-list">
+              {singlePost.year && (
+                <>
+                  <dt>Year</dt>
+                  <dd>
+                    {singlePost.year}
+                    {singlePost.yearString ? ` ${singlePost.yearString}` : ""}
+                  </dd>
+                </>
+              )}
+              {singlePost.client && (
+                <>
+                  <dt>Collaborator(s)</dt>
+                  <dd>{singlePost.client}</dd>
+                </>
+              )}
+              {singlePost.categories && (
+                <>
+                  <dt>Category</dt>
+                  <dd>
+                    {singlePost.categories.map((category, index) => (
+                      <Link to={"/" + category.slug.current} key={index}>
+                        {category.title}
+                        {index + 1 !== singlePost.categories.length ? ", " : ""}
+                      </Link>
+                    ))}
+                  </dd>
+                </>
+              )}
+            </dl>
+          )}
+
+          {singlePost.tags && (
+            <div className="tag-chips">
+              {singlePost.tags.map((tag, index) => (
+                <span className="chip" key={index}>
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {price && !isAbout && (
+            <div className="price-box">
+              <span className="price">
+                {price}
+                <sup>99</sup>
+              </span>
+              <span className="burst burst--small">SALE</span>
+            </div>
+          )}
+
+          {singlePost.recap && (
+            <div className="recap blockContent">
+              <BlockContent blocks={singlePost.recap} />
+            </div>
+          )}
+
+          {!isAbout && (
+            <div className="prev-next">
+              {prevPost ? (
+                <Link to={"/projects/" + prevPost.slug.current} className="btn95">
+                  ◀ PREV
+                </Link>
+              ) : (
+                <span />
+              )}
+              {nextPost && (
+                <Link to={"/projects/" + nextPost.slug.current} className="btn95">
+                  NEXT ▶
+                </Link>
+              )}
+            </div>
+          )}
+        </aside>
+      </div>
+
+      {singlePost.body && (
+        <Window title={isAbout ? "about_me.txt" : "readme.txt"} className="product-body">
+          <div className="blockContent">
+            <BlockContent blocks={singlePost.body} />
+          </div>
+        </Window>
+      )}
+
+      {media.length > 1 && (
+        <Window title="gallery" className="product-gallery">
+          <div className="thumb-strip">
+            {media.map((item, index) => (
+              <button
+                key={index}
+                className={`thumb ${index === slide % media.length ? "is-on" : ""}`}
+                onClick={() => setSlide(index)}
+                aria-label={`Show item ${index + 1}`}
+              >
+                {item.youtube ? (
+                  <span className="thumb__video">▶ VIDEO</span>
+                ) : (
+                  <FrameImage image={item.image} width={300} />
+                )}
+              </button>
+            ))}
+          </div>
+        </Window>
+      )}
+    </motion.div>
   );
-};
+}

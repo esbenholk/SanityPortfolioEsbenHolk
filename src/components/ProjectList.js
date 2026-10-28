@@ -1,96 +1,70 @@
-import React from "react";
-
-import sanityClient from "../client";
-
-import imageUrlBuilder from "@sanity/image-url";
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import { toggleHover } from "./functions/toggleHover";
+import urlFor, { hotspotStyle } from "./functions/urlFor";
+import Window from "./retro/Window";
 
-import useWindowDimensions from "./functions/useWindowDimensions";
-
-// Get a pre-configured url-builder from your sanity client
-const builder = imageUrlBuilder(sanityClient);
-
-function urlFor(source) {
-  return builder.image(source);
-}
-function hover(e) {
-  toggleHover({ e });
-}
-
-export default function Projects({ projectList }) {
-  const { width } = useWindowDimensions();
+// The full archive as a "tech specs" table; hovering a row pops a preview window
+export default function ProjectList({ projectList }) {
+  const [preview, setPreview] = useState(null);
 
   return (
- 
-    <>
-    <div className="projectList-item">
-        {width > 900 ? (
-          <div className="categories">
-            <h2>Category</h2>
-          </div>
-        ) : null}
-        <div>
-          <h2>Project</h2>
-        </div>
-        <h2>Year</h2>
-      </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <Window title="C:\ARCHIVE\*.* — tech specs" className="archive">
+        <table className="spec-table">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th className="hide-sm">Category</th>
+              <th className="hide-sm">Rating</th>
+              <th>Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            {projectList &&
+              projectList.map((project) => (
+                <tr
+                  key={project.slug.current}
+                  onMouseEnter={() => setPreview(project)}
+                  onMouseLeave={() => setPreview(null)}
+                >
+                  <td>
+                    <Link to={"/projects/" + project.slug.current}>
+                      {project.title || "untitled"}
+                    </Link>
+                  </td>
+                  <td className="hide-sm">
+                    {project.categories &&
+                      project.categories.map((category, index) => (
+                        <Link key={index} to={"/" + category.slug.current}>
+                          {category.title}
+                          {index + 1 !== project.categories.length ? ", " : null}
+                        </Link>
+                      ))}
+                  </td>
+                  <td className="hide-sm stars">{project.star_rating}</td>
+                  <td>
+                    {project.year}
+                    {project.yearString ? <u> {project.yearString}</u> : null}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </Window>
 
-    {projectList &&
-        projectList.map((project, index) => (
-          <div key={index} className="projectList-item noshade">
-            {width > 900 ? (
-              <div className="categories noshade">
-                {project.categories &&
-                  project.categories.map((category, index) => (
-                    <a
-                      key={index}
-                      id={"category_" + category.title + ""}
-                      href={category.slug.current}
-                    >
-                      {category.title}
-                      {index + 1 !== project.categories.length ? ", " : null}
-                    </a>
-                  ))}
-              </div>
-            ) : null}
-            <div onMouseEnter={hover} onMouseLeave={hover} class="noshade">
-              {" "}
-              <a href={"/projects/" + project.slug.current}>
-                {project.title ? project.title : "undefined"}
-              </a>
-              {project.mainImage.hotspot ? (
-                <img
-                  src={urlFor(project.mainImage.asset.url).url()}
-                  alt={project.mainImage.alt}
-                  style={{
-                    objectPosition: `${project.mainImage.hotspot.x * 100}% ${
-                      project.mainImage.hotspot.y * 100
-                    }%`,
-                  }}
-                  className="thumbnail seeOnHover hidden"
-                />
-              ) : (
-                <img
-                  src={urlFor(project.mainImage.asset.url).url()}
-                  alt={project.mainImage.alt}
-                  className="thumbnail seeOnHover hidden"
-                />
-              )}
-            </div>
-            <p className="flex-row align-left">
-              {project.year ? project.year : "undefined"}{" "}
-              {project.yearString ? <u>{project.yearString}</u> : null}
-            </p>
-          </div>
-        ))}
-    
-    
-    
-    
-    
-    </>
+      {preview && preview.mainImage && preview.mainImage.asset && (
+        <div className="hover-preview" aria-hidden="true">
+          <Window title={`${preview.title}.jpg`}>
+            <img
+              src={urlFor(preview.mainImage.asset).width(600).url()}
+              alt=""
+              style={hotspotStyle(preview.mainImage)}
+            />
+          </Window>
+        </div>
+      )}
+    </motion.div>
   );
 }

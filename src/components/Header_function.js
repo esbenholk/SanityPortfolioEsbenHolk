@@ -1,59 +1,84 @@
-import { useContext, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 import AppContext from "../globalState";
-import ProjectMenu from "./headerProjects";
+import ThemeSwitcher from "./retro/ThemeSwitcher";
+import { useTheme } from "./retro/theme";
 
-import useWindowDimensions from "./functions/useWindowDimensions";
-
-export default function Header({ updateSlug }) {
+export default function Header() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
-  const loc = useLocation();
-  const projects = myContext.projectList;
-
-  useEffect(() => {
-    updateSlug(loc.pathname);
-  }, [loc.pathname, updateSlug]);
-
-  const { width } = useWindowDimensions();
+  const categories = myContext.categories || [];
+  const { copy } = useTheme();
+  const firstHandle =
+    info.socialMediaHandles && info.socialMediaHandles.length > 0
+      ? info.socialMediaHandles[0]
+      : null;
 
   return (
-    <>
-      {width > 500 ? (
-        <nav className="headerNav">
-          <NavLink to="/">
-            <div className="logo_container">
-              {info.title && <p className="standard-button">{info.title}</p>}
-            </div>
-          </NavLink>
-          <NavLink
-            className="standard-button"
-            to="/projects/esben-holk-house-of-killing"
-          >
-            About us
-          </NavLink>
-        </nav>
-      ) : (
-        <>
-          <nav className="headerNav">
-            <NavLink
-              className="standard-button right"
-              to="/projects/esben-holk-house-of-killing"
-            >
-              About us
-            </NavLink>
+    <header className="site-header">
+      <div className="ad-row">
+        <Link to="/projects" className="ad ad--red">
+          {copy.ads[0]}
+        </Link>
+        <Link to="/projects/esben-holk-house-of-killing" className="ad ad--blue">
+          <span>{copy.ads[1]}</span>
+          <small className="blink">{copy.adSub}</small>
+        </Link>
+        <Link to="/chaos" className="ad ad--checker">
+          <span>{copy.ads[2]}</span>
+          <span className="ad__icon" aria-hidden="true">
+            ✉
+          </span>
+        </Link>
+      </div>
 
-            <ProjectMenu projects={projects} />
+      <div className="logo-bar">
+        <span className="flames" aria-hidden="true">
+          🔥🔥
+        </span>
+        <NavLink to="/" className="logo-bar__home">
+          {info.logo && (
+            <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
+          )}
+          <span className="chrome-text">
+            {info.title || "HOUSE OF KILLING"}
+          </span>
+        </NavLink>
+        <span className="flames flames--flip" aria-hidden="true">
+          🔥🔥
+        </span>
+        {firstHandle ? (
+          <a className="subscribe" href={firstHandle.url}>
+            FOLLOW NOW
+            <small>— {firstHandle.URLName || "IT'S FREE"}</small>
+            <span className="burst burst--small">NEW!</span>
+          </a>
+        ) : (
+          <a className="subscribe" href="#contact">
+            CONTACT NOW
+            <small>— IT'S FREE</small>
+            <span className="burst burst--small">NEW!</span>
+          </a>
+        )}
+      </div>
 
-            <NavLink className="fullwidth" to="/">
-              <div className="logo_container">
-                {info.title && <p className="standard-button">{info.title}</p>}
-              </div>
-            </NavLink>
-          </nav>
-        </>
-      )}
-    </>
+      <nav className="nav-strip">
+        <NavLink exact to="/">
+          HOME
+        </NavLink>
+        <NavLink exact to="/projects">ARCHIVE</NavLink>
+        {categories.slice(0, 3).map((category) => (
+          <NavLink to={"/" + category.slug.current} key={category.slug.current}>
+            {category.title.toUpperCase()}
+          </NavLink>
+        ))}
+        <NavLink to="/projects/esben-holk-house-of-killing">ABOUT</NavLink>
+        <NavLink to="/instagram">INSTAGRAM</NavLink>
+        <NavLink to="/chaos">CHAOS</NavLink>
+        <a href="#contact">CONTACT</a>
+      </nav>
+      <ThemeSwitcher />
+    </header>
   );
 }

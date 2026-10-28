@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 import AppContext from "../globalState";
 import ThemeSwitcher from "./retro/ThemeSwitcher";
+import { CommercialSlot, useCommercials } from "./retro/Commercial";
 import { useTheme } from "./retro/theme";
 
 export default function Header() {
@@ -10,6 +11,7 @@ export default function Header() {
   const info = myContext.siteSettings;
   const categories = myContext.categories || [];
   const { copy } = useTheme();
+  const hasCommercial = useCommercials("header").length > 0;
   const firstHandle =
     info.socialMediaHandles && info.socialMediaHandles.length > 0
       ? info.socialMediaHandles[0]
@@ -17,7 +19,7 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <div className="ad-row">
+      <div className={`ad-row ${hasCommercial ? "ad-row--commercial" : ""}`}>
         <Link to="/projects" className="ad ad--red">
           {copy.ads[0]}
         </Link>
@@ -31,12 +33,11 @@ export default function Header() {
             ✉
           </span>
         </Link>
+        <CommercialSlot slot="header" width={500} className="ad commercial--header" />
       </div>
 
       <div className="logo-bar">
-        <span className="flames" aria-hidden="true">
-          🔥🔥
-        </span>
+    
         <NavLink to="/" className="logo-bar__home">
           {info.logo && (
             <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
@@ -44,10 +45,11 @@ export default function Header() {
           <span className="chrome-text">
             {info.title || "HOUSE OF KILLING"}
           </span>
+            {info.logo && (
+            <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
+          )}
         </NavLink>
-        <span className="flames flames--flip" aria-hidden="true">
-          🔥🔥
-        </span>
+      
         {firstHandle ? (
           <a className="subscribe" href={firstHandle.url}>
             FOLLOW NOW
@@ -68,11 +70,11 @@ export default function Header() {
           HOME
         </NavLink>
         <NavLink exact to="/projects">ARCHIVE</NavLink>
-        {categories.slice(0, 3).map((category) => (
+        {/* {categories.slice(0, 3).map((category) => (
           <NavLink to={"/" + category.slug.current} key={category.slug.current}>
             {category.title.toUpperCase()}
           </NavLink>
-        ))}
+        ))} */}
         <NavLink to="/projects/esben-holk-house-of-killing">ABOUT</NavLink>
         <NavLink to="/instagram">INSTAGRAM</NavLink>
         <NavLink to="/chaos">CHAOS</NavLink>

@@ -12,6 +12,8 @@ import Window from "./retro/Window";
 import FrameImage from "./retro/FrameImage";
 import GifWall from "./retro/GifWall";
 import ChaosWindow from "./retro/ChaosWindow";
+import AsciiBox from "./retro/AsciiBox";
+import { CommercialSlot, useCommercials } from "./retro/Commercial";
 import { useTheme } from "./retro/theme";
 
 const NONE = [];
@@ -25,6 +27,7 @@ export default function LandingPage() {
   const categories = myContext.categories || NONE;
   const tags = myContext.tags || NONE;
   const { theme, copy } = useTheme();
+  const centerCommercials = useCommercials("center");
 
   const [activeTags, setActiveTags] = useState([]);
   const toggleTag = (tag) =>
@@ -87,6 +90,8 @@ export default function LandingPage() {
             </Link>
           ))}
 
+          <CommercialSlot slot="left" index={0} width={460} />
+
           <div className="webring-grid">
             {tags.slice(0, 10).map((tag, i) => (
               <button
@@ -107,7 +112,11 @@ export default function LandingPage() {
             ))}
           </div>
 
+          <AsciiBox />
+
           <HitCounter />
+
+          <CommercialSlot slot="left" index={1} width={460} />
 
           {/* <div className="construction">
             <span role="img" aria-label="construction">
@@ -126,17 +135,26 @@ export default function LandingPage() {
           <ChaosWindow />
           <Marquee
             className="marquee--ticker"
-            items={projectList.map((post) => post.title.toUpperCase())}
+            items={projectList.map((post) => ({
+              label: post.title.toUpperCase(),
+              to: "/projects/" + post.slug.current,
+            }))}
           />
-          {sideFrames.length > 0 && (
+          {centerCommercials.length > 0 ? (
             <div className="center-frames">
-              {sideFrames.map((frame, i) => (
-                <Link to={frame.to} className="frame-tile frame-tile--wide" key={i}>
-                  <FrameImage image={frame.image} width={600} />
-                  {frame.label && <span className="frame-tile__label">{frame.label}</span>}
-                </Link>
-              ))}
+              <CommercialSlot slot="center" width={700} />
             </div>
+          ) : (
+            sideFrames.length > 0 && (
+              <div className="center-frames">
+                {sideFrames.map((frame, i) => (
+                  <Link to={frame.to} className="frame-tile frame-tile--wide" key={i}>
+                    <FrameImage image={frame.image} width={600} />
+                    {frame.label && <span className="frame-tile__label">{frame.label}</span>}
+                  </Link>
+                ))}
+              </div>
+            )
           )}
         </section>
 
@@ -149,6 +167,8 @@ export default function LandingPage() {
             {copy.enter}
           </Link>
 
+          <CommercialSlot slot="right" index={0} width={580} />
+
           <div className="promo promo--purple">
             <strong>{projectList.length} WORKS</strong>
             <span>IN STOCK NOW</span>
@@ -156,9 +176,14 @@ export default function LandingPage() {
           <Link to="/projects" className="promo promo--red">
             ALL STOCK MUST GO
           </Link>
-          <Link to="/instagram" className="promo promo--insta">
-            INSTAGRAM.EXE ▶<span>NOW WITH 3D SHOOTER</span>
-          </Link>
+          <Marquee
+            to="/instagram"
+            className="marquee--insta"
+            separator="✦"
+            items={["INSTAGRAM.EXE ▶", "NOW WITH 3D SHOOTER", "NEW POSTS INSIDE"]}
+          />
+
+          <CommercialSlot slot="right" index={1} width={580} />
           <a href="#contact" className="promo promo--blue">
             SIGN MY GUESTBOOK{" "}
             <span role="img" aria-label="pen">

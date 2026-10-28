@@ -102,12 +102,13 @@ function AsciiRenderer({
   // This component returns nothing, it is a purely logical
   return null;
 }
-export default function AsciiScene({ modelUrl }) {
+// Fills the whole screen, unless `fill` is set: then it fills its parent (e.g. a box on the landing page)
+export default function AsciiScene({ modelUrl, fill = false }) {
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: fill ? "100%" : "100vw",
+        height: fill ? "100%" : "100vh",
         position: "relative",
         overflow: "hidden",
         zIndex: 0,

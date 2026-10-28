@@ -85,7 +85,7 @@ export default function Footer({ info }) {
 
         <div className="footer-side">
           <div className="webring">
-            <p className="webring__title">★ HOUSE OF KILLING WEBRING ★</p>
+            <p className="webring__title">★ HOUSE OF KILLING loves you ★</p>
             <div className="webring__links">
               <NavLink to="/projects">« archive</NavLink>
               {randomProject && (
@@ -95,25 +95,26 @@ export default function Footer({ info }) {
             </div>
           </div>
 
-          <button
+          {/* <button
             onClick={() => setChaos(!chaos)}
             className={`chaos-btn ${chaos ? "is-on" : ""}`}
             aria-pressed={chaos}
           >
             {chaos ? "■ UNTOGGLE CHAOS" : "▶ TOGGLE CHAOS"}
-          </button>
+          </button> */}
 
           <div className="footer-logo-row">
-            {info.footerlogo && info.footerlogo.asset && (
+        
+            <p className="netscape">
+              Best viewed watched over by machines of loving grace
+              <br />© {new Date().getFullYear()} {info.title}. All rights
+              reversed.
+            </p>
+                {info.footerlogo && info.footerlogo.asset && (
               <NavLink to="/">
                 <img className="footer-logo" src={info.footerlogo.asset.url} alt="" />
               </NavLink>
             )}
-            <p className="netscape">
-              Best viewed in Netscape Navigator at 800×600
-              <br />© {new Date().getFullYear()} {info.title}. All rights
-              reversed.
-            </p>
           </div>
         </div>
       </div>

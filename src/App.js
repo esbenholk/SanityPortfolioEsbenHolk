@@ -1,6 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
-import React, { Suspense, lazy, useEffect, useState, createRef } from "react";
+import React, { Suspense, lazy, useEffect, useMemo, useState, createRef } from "react";
 import "./App.css";
 import "./themes.css";
 import "./chaos.css";
@@ -12,6 +12,7 @@ import { AnimatePresence } from "framer-motion";
 import AppContext from "./globalState";
 import ScrollToTop from "./components/blocks/scrollToTop";
 import CursorTrail from "./components/retro/CursorTrail";
+import { scatterCommercials } from "./components/retro/Commercial";
 import { PageGlitch } from "./components/retro/Glitch";
 import PopupAds from "./components/retro/PopupAds";
 import SwampAtmosphere from "./components/retro/SwampAtmosphere";
@@ -40,6 +41,7 @@ function App() {
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
   const [hasFeaturedPosts, setHasFeaturedPosts] = useState(false);
+  const [commercials, setCommercials] = useState([]);
   const mainRef = createRef();
 
   // Site skin: "storefront" | "tube" | "swamp", remembered per browser
@@ -80,7 +82,17 @@ function App() {
         setProjectList(data);
       })
       .catch(console.error);
+
+    sanityClient
+      .fetch(
+        '*[_type == "commercial" && active != false]{_id, title, image{asset->{_id, url, mimeType, metadata{dimensions}}, hotspot, alt}, url, "projectSlug": project->slug.current, placements}'
+      )
+      .then(setCommercials)
+      .catch(console.error);
   }, []);
+
+  // where each commercial shows up this visit
+  const commercialSlots = useMemo(() => scatterCommercials(commercials), [commercials]);
 
   useEffect(() => {
     if (!projectList) return;
@@ -113,6 +125,7 @@ function App() {
     tags: tags,
     categories: categories,
     hasFeaturedPosts: hasFeaturedPosts,
+    commercialSlots,
     mainRef: mainRef,
     theme,
     setTheme,

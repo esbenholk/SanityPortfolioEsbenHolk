@@ -95,16 +95,17 @@ button {
 
 .site {
   position: relative;
-  max-width: 99%;
+  max-width: 95%;
   margin: 14px auto;
   background: var(--c-lime);
-  border: 6px solid var(--c-yellow);
+  border: 6px solid var(--win);
   outline: 4px solid var(--c-navy);
+  box-shadow: var(--bevel-out);
 }
 
 .mainContainer {
   position: relative;
-  padding: 12px;
+  padding: 10px;
   min-height: 60vh;
 }
 
@@ -162,8 +163,9 @@ button {
   background: var(--c-yellow);
   color: var(--ink) !important;
   box-shadow: var(--bevel-out);
-  font: 12px/1.2 var(--font-block);
+  font: 10px/1.2 var(--font-block);
   text-decoration: none;
+  text-wrap: nowrap;
 }
 .win__action:hover {
   background: var(--c-lime);
@@ -195,7 +197,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
+  padding: 6px 10px;
   background: var(--win);
   border: 0;
   box-shadow: var(--bevel-out);
@@ -324,7 +326,7 @@ body.page-glitch::after {
   transform: rotate(-14deg);
   clip-path: polygon(
     50% 0%,
-    61% 12%,
+    61% 10%,
     77% 7%,
     79% 23%,
     95% 27%,
@@ -445,7 +447,7 @@ body.page-glitch::after {
   background-color: var(--c-magenta);
   background-image: repeating-conic-gradient(var(--c-purple) 0 25%, var(--c-magenta) 0 50%);
   background-size: 18px 18px;
-  transform: rotate(-1deg);
+
 }
 .ad__icon {
   display: grid;
@@ -461,15 +463,14 @@ body.page-glitch::after {
 
 .logo-bar {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto 200px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
   padding: 8px 10px;
   background: var(--c-yellow);
   border: 4px solid var(--c-red);
-  outline: 3px solid var(--ink);
 }
 
 .flames {
@@ -484,7 +485,7 @@ body.page-glitch::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   min-width: 0;
   text-decoration: none;
 }
@@ -525,7 +526,7 @@ body.page-glitch::after {
   justify-content: center;
   height: 100%;
   min-height: 72px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   background: var(--c-blue);
   border: 3px solid var(--paper);
   outline: 3px solid var(--ink);
@@ -548,7 +549,7 @@ body.page-glitch::after {
 .nav-strip {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
   margin-top: 8px;
   padding: 4px;
   background: var(--c-navy);
@@ -580,7 +581,7 @@ body.page-glitch::after {
   display: grid;
   grid-template-columns: 230px minmax(0, 1fr) 290px;
   grid-template-areas: "left center right";
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 14px;
 }
 .col {
@@ -741,8 +742,11 @@ body.page-glitch::after {
 
 /* 3D showroom */
 .room-wrap {
+  display: block;
   border: 4px solid var(--ink);
   background: var(--win);
+  color: inherit;
+  text-decoration: none;
 }
 
 .room {
@@ -771,7 +775,7 @@ body.page-glitch::after {
   transform: translateZ(calc(var(--depth) * -1));
   background: radial-gradient(ellipse 30% 14% at 28% 30%, #fff 60%, transparent 62%),
     radial-gradient(ellipse 22% 10% at 70% 22%, #fff 60%, transparent 62%),
-    radial-gradient(ellipse 140% 40% at 50% 112%, #2fae2f 50%, transparent 51%),
+    radial-gradient(ellipse 140% 40% at 50% 110%, #2fae2f 50%, transparent 51%),
     linear-gradient(180deg, #0a5cff 0%, #59a8ff 55%, #bfe3ff 80%);
 }
 .room__left {
@@ -847,7 +851,7 @@ body.page-glitch::after {
 }
 @keyframes bob {
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-10px);
   }
 }
 @keyframes shadow {
@@ -985,6 +989,103 @@ body.page-glitch::after {
 .marquee--ticker .marquee__sep {
   color: var(--c-magenta);
 }
+.marquee__link {
+  color: inherit !important;
+  text-decoration: none;
+}
+.marquee__link:hover {
+  color: var(--c-lime) !important;
+  text-decoration: underline;
+}
+
+/* instagram link as a ticker */
+.marquee--link {
+  display: block;
+  text-decoration: none;
+}
+.marquee--insta {
+  padding: 8px 0;
+  border: 3px solid var(--ink);
+  background: linear-gradient(100deg, var(--c-purple), var(--c-magenta), var(--c-orange));
+  color: var(--paper) !important;
+  font: 20px/1 var(--font-block);
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.marquee--insta .marquee__track {
+  animation-duration: 10s;
+}
+.marquee--insta .marquee__sep {
+  color: var(--c-yellow);
+}
+.marquee--insta:hover {
+  filter: brightness(1.15);
+}
+
+/* commercials from Sanity, scattered over the header and columns */
+.commercial {
+  position: relative;
+  display: block;
+  border: 3px solid var(--ink);
+  background: var(--ink);
+  text-decoration: none;
+}
+.commercial img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.commercial__label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1px 4px;
+  background: var(--c-yellow);
+  color: var(--ink);
+  font: 9px/1.2 var(--font-block);
+  letter-spacing: 0.08em;
+}
+a.commercial:hover {
+  outline: 3px solid var(--c-lime);
+}
+.center-frames .commercial:only-child {
+  grid-column: 1 / -1;
+}
+.center-frames:has(.commercial) {
+  align-items: start;
+}
+.ad-row--commercial {
+  grid-template-columns: 1.1fr 1fr 1.1fr 1fr;
+}
+.commercial--header {
+  overflow: hidden;
+  padding: 0;
+}
+.commercial--header img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ascii scene box on the landing page */
+.ascii-box__screen {
+  position: relative;
+  display: block;
+  height: 260px;
+  border: 4px solid var(--ink);
+  border-top: 0;
+  background: lightgrey;
+  overflow: hidden;
+}
+.ascii-box__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  font: 22px/1 var(--font-pixel);
+}
 
 .enter-btn {
   display: grid;
@@ -1099,7 +1200,7 @@ body.page-glitch::after {
 .chaos-window__hint {
   position: absolute;
   left: 50%;
-  bottom: 12px;
+  bottom: 10px;
   transform: translateX(-50%);
   padding: 4px 10px;
   background: var(--ink);
@@ -1131,7 +1232,7 @@ body.page-glitch::after {
 .center-frames {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 .frame-tile--wide .frame-img {
   aspect-ratio: 16 / 10;
@@ -1161,6 +1262,7 @@ button.win__action {
   border: 0;
   margin-left: 4px;
   cursor: pointer;
+
 }
 .insta__status {
   margin: 0;
@@ -1247,7 +1349,7 @@ button.win__action {
 }
 
 .promo--insta {
-  background: linear-gradient(120deg, var(--c-purple), var(--c-magenta), var(--c-orange));
+  background: linear-gradient(100deg, var(--c-purple), var(--c-magenta), var(--c-orange));
   color: var(--paper) !important;
   text-shadow: 1px 1px 0 var(--ink);
 }
@@ -1281,7 +1383,7 @@ button.win__action {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   background: rgba(0, 0, 0, 0.55);
   border: 2px solid var(--c-lime);
   color: var(--c-lime);
@@ -1425,7 +1527,7 @@ button.win__action {
 }
 .shooter-inspect.win {
   width: min(440px, calc(100vw - 32px));
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 100px);
   margin: 0;
   overflow-y: auto;
   text-align: left;
@@ -1488,7 +1590,7 @@ button.win__action {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding-bottom: 12px;
+  padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 2px dotted var(--win-dark);
 }
@@ -1542,7 +1644,7 @@ button.win__action {
   padding: 3px 7px;
   background: var(--card-accent, var(--stripe));
   color: var(--paper);
-  font: 12px/1.3 var(--font-block);
+  font: 10px/1.3 var(--font-block);
   text-transform: uppercase;
   text-shadow: 1px 1px 0 var(--ink);
 }
@@ -1588,7 +1690,7 @@ button.win__action {
   padding: 5px 9px;
   background: var(--win);
   box-shadow: var(--bevel-out);
-  font: 12px/1 var(--font-block);
+  font: 10px/1 var(--font-block);
 }
 .product-card:hover .buy-btn {
   background: var(--c-yellow);
@@ -1597,7 +1699,7 @@ button.win__action {
 /* ============ pages ============ */
 
 .page-title {
-  margin: 4px 0 12px;
+  margin: 4px 0 10px;
   font: clamp(36px, 6vw, 72px) / 1 var(--font-display);
   text-transform: uppercase;
   color: var(--c-yellow);
@@ -1681,8 +1783,8 @@ button.win__action {
 .price-box {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 8px 0 12px;
+  gap: 10px;
+  margin: 8px 0 10px;
 }
 .price-box .price {
   font-size: 72px;
@@ -1691,7 +1793,7 @@ button.win__action {
 .prev-next {
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .mini-frame {
@@ -1705,8 +1807,8 @@ button.win__action {
   margin: 0 auto;
 }
 .retro-carousel .control-dots .dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 0;
   background: var(--win) !important;
   box-shadow: var(--bevel-out) !important;
@@ -1792,7 +1894,7 @@ button.win__action {
 /* category */
 .category_details .blockContent {
   margin-bottom: 14px;
-  padding: 12px;
+  padding: 10px;
   background: var(--paper);
   border: 3px solid var(--ink);
 }
@@ -1892,7 +1994,7 @@ body > .chaos-stage {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: 14px;
-  padding: 14px 12px 6px;
+  padding: 14px 10px 6px;
   background: var(--c-navy);
 }
 
@@ -1922,7 +2024,7 @@ body > .chaos-stage {
 .footer-side {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .webring {
@@ -1939,14 +2041,14 @@ body > .chaos-stage {
 }
 .webring__links {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .webring__links a {
   color: var(--c-cyan) !important;
 }
 
 .chaos-btn {
-  padding: 12px;
+  padding: 10px;
   border: 0;
   background: var(--win);
   box-shadow: var(--bevel-out);
@@ -1963,16 +2065,20 @@ body > .chaos-stage {
 .footer-logo-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-grow: 1;
+  margin-bottom: 14px;
 }
 .footer-logo {
-  max-height: 60px;
+  max-height: 100px;
   width: auto;
 }
 .netscape {
   margin: 0;
   color: var(--paper);
   font: italic 14px/1.3 "Times New Roman", Times, serif;
+  text-align: right;
 }
 
 
@@ -2009,6 +2115,7 @@ body > .chaos-stage {
     margin: 0;
     border-width: 4px;
     outline: 0;
+    max-width: 100%;
   }
   .ad-row {
     grid-template-columns: 1fr 1fr;
@@ -2084,7 +2191,7 @@ body > .chaos-stage {
   }
   .catalog-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    gap: 10px;
   }
   .price {
     font-size: 34px;

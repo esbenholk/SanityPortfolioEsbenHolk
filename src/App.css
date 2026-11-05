@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Archivo:wght@400;600&family=Bungee&family=VT323&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Archivo:wght@400;600&family=Bungee&family=VT323&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap");
 
 /* ============ tokens ============ */
 
@@ -12,8 +12,8 @@
   --c-cyan: #00e5ff;
   --c-orange: #ff8a00;
   --c-purple: #7a1fff;
-  --win: #c0c0c0;
-  --win-dark: #808080;
+  --win: lightgrey;
+  --win-dark: white;
   --ink: #000;
   --paper: #fff;
 
@@ -23,10 +23,12 @@
   --font-pixel: "VT323", "Courier New", monospace;
   --font-sign: "Bungee", "Archivo Black", sans-serif;
 
-  --bevel-out: inset -2px -2px #404040, inset 2px 2px #fff,
+  --bevel-out:
+    inset -2px -2px #404040, inset 2px 2px #fff,
     inset -3px -3px var(--win-dark), inset 3px 3px #dfdfdf;
-  --bevel-in: inset 2px 2px #404040, inset -2px -2px #fff,
-    inset 3px 3px var(--win-dark), inset -3px -3px #dfdfdf;
+  --bevel-in:
+    inset 2px 2px #404040, inset -2px -2px #fff, inset 3px 3px var(--win-dark),
+    inset -3px -3px #dfdfdf;
   --hard-shadow: 5px 5px 0 var(--ink);
 }
 
@@ -55,8 +57,44 @@ body {
   min-height: 100vh;
   font-family: var(--font-body);
   color: var(--ink);
-  background-color: var(--c-blue);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M14 4l2.4 7.6L24 14l-7.6 2.4L14 24l-2.4-7.6L4 14l7.6-2.4z' fill='%23ffe600'/%3E%3Cpath d='M42 32l1.6 4.4L48 38l-4.4 1.6L42 44l-1.6-4.4L36 38l4.4-1.6z' fill='%23ffffff'/%3E%3C/svg%3E");
+  background-color: #fff;
+}
+
+/* the diced background from /chaos (.mainbackground), turned 45° and pinned behind the page */
+body::before {
+  --dice: lightgrey;
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 300vmax;
+  height: 300vmax;
+  pointer-events: none;
+  background-color: #fff;
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dice) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dice) 75%,
+      var(--dice)
+    ),
+    linear-gradient(
+      -45deg,
+      var(--dice) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dice) 75%,
+      var(--dice)
+    );
+  background-size: 10px 10px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+/* the other skins have their own backgrounds */
+html[data-theme]:not([data-theme="storefront"]) body::before {
+  display: none;
 }
 
 img {
@@ -402,9 +440,9 @@ body.page-glitch::after {
 .ad {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   min-height: 74px;
   padding: 6px 10px;
   border: 4px solid var(--ink);
@@ -422,7 +460,9 @@ body.page-glitch::after {
   background: var(--paper);
   color: var(--c-red) !important;
   border-color: var(--c-red);
-  box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 5px var(--c-red);
+  box-shadow:
+    inset 0 0 0 3px var(--paper),
+    inset 0 0 0 5px var(--c-red);
 }
 .ad--blue {
   background: var(--c-blue);
@@ -445,9 +485,19 @@ body.page-glitch::after {
   font-size: 26px;
   -webkit-text-stroke: 1.5px var(--ink);
   background-color: var(--c-magenta);
-  background-image: repeating-conic-gradient(var(--c-purple) 0 25%, var(--c-magenta) 0 50%);
+  background-image: repeating-conic-gradient(
+    var(--c-purple) 0 25%,
+    var(--c-magenta) 0 50%
+  );
   background-size: 18px 18px;
+}
 
+.ad--checker-grey {
+  background-color: var(--win);
+  background-image: repeating-conic-gradient(
+    var(--win-dark) 0 25%,
+    var(--win) 0 50%
+  );
 }
 .ad__icon {
   display: grid;
@@ -492,12 +542,13 @@ body.page-glitch::after {
 .logo-bar__img {
   max-height: 72px;
   width: auto;
+  flex-grow: 1;
 }
 
 .chrome-text {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(36px, 6.4vw, 86px);
+  font-size: 30px;
   line-height: 1;
   letter-spacing: 0.01em;
   text-transform: uppercase;
@@ -733,7 +784,12 @@ body.page-glitch::after {
   padding: 8px;
   background: var(--c-yellow);
   border: 8px solid;
-  border-image: repeating-linear-gradient(45deg, var(--ink) 0 10px, var(--c-yellow) 10px 20px) 8;
+  border-image: repeating-linear-gradient(
+      45deg,
+      var(--ink) 0 10px,
+      var(--c-yellow) 10px 20px
+    )
+    8;
   font: 16px/1 var(--font-block);
 }
 .construction span:first-child {
@@ -773,7 +829,8 @@ body.page-glitch::after {
 .room__back {
   inset: 0;
   transform: translateZ(calc(var(--depth) * -1));
-  background: radial-gradient(ellipse 30% 14% at 28% 30%, #fff 60%, transparent 62%),
+  background:
+    radial-gradient(ellipse 30% 14% at 28% 30%, #fff 60%, transparent 62%),
     radial-gradient(ellipse 22% 10% at 70% 22%, #fff 60%, transparent 62%),
     radial-gradient(ellipse 140% 40% at 50% 110%, #2fae2f 50%, transparent 51%),
     linear-gradient(180deg, #0a5cff 0%, #59a8ff 55%, #bfe3ff 80%);
@@ -804,7 +861,8 @@ body.page-glitch::after {
   transform-origin: center top;
   transform: rotateX(-90deg);
   background-color: #0e0e3a;
-  background-image: linear-gradient(var(--c-cyan) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--c-cyan) 1px, transparent 1px),
     linear-gradient(90deg, var(--c-cyan) 1px, transparent 1px);
   background-size: 40px 40px;
 }
@@ -816,7 +874,10 @@ body.page-glitch::after {
   transform-origin: center bottom;
   transform: rotateX(90deg);
   background-color: var(--c-yellow);
-  background-image: repeating-conic-gradient(var(--c-lime) 0 25%, var(--c-yellow) 0 50%);
+  background-image: repeating-conic-gradient(
+    var(--c-lime) 0 25%,
+    var(--c-yellow) 0 50%
+  );
   background-size: 64px 64px;
 }
 
@@ -980,11 +1041,15 @@ body.page-glitch::after {
 }
 .marquee--ticker {
   padding: 6px 0;
-  background: var(--ink);
+  /* background: var(--ink); */
   border: 3px solid var(--c-yellow);
   color: var(--c-yellow);
   font: 26px/1 var(--font-display);
   letter-spacing: 0.04em;
+}
+
+.headline--ticker {
+  font: 100px/1 var(--font-display);
 }
 .marquee--ticker .marquee__sep {
   color: var(--c-magenta);
@@ -1006,7 +1071,12 @@ body.page-glitch::after {
 .marquee--insta {
   padding: 8px 0;
   border: 3px solid var(--ink);
-  background: linear-gradient(100deg, var(--c-purple), var(--c-magenta), var(--c-orange));
+  background: linear-gradient(
+    100deg,
+    var(--c-purple),
+    var(--c-magenta),
+    var(--c-orange)
+  );
   color: var(--paper) !important;
   font: 20px/1 var(--font-block);
   text-shadow: 1px 1px 0 var(--ink);
@@ -1098,12 +1168,17 @@ a.commercial:hover {
   color: #ff2a2a !important;
   font: 46px/1 var(--font-sign);
   text-decoration: none;
-  text-shadow: 0 0 4px #ff2a2a, 0 0 14px #ff2a2a, 0 0 28px #ff0040;
+  text-shadow:
+    0 0 4px #ff2a2a,
+    0 0 14px #ff2a2a,
+    0 0 28px #ff0040;
 }
 .enter-btn:hover {
   border-color: var(--c-yellow);
   color: var(--c-yellow) !important;
-  text-shadow: 0 0 4px var(--c-yellow), 0 0 18px var(--c-orange);
+  text-shadow:
+    0 0 4px var(--c-yellow),
+    0 0 18px var(--c-orange);
 }
 
 .promo {
@@ -1262,7 +1337,6 @@ button.win__action {
   border: 0;
   margin-left: 4px;
   cursor: pointer;
-
 }
 .insta__status {
   margin: 0;
@@ -1312,7 +1386,9 @@ button.win__action {
   transform: translateY(-50%);
   opacity: 0.85;
   cursor: pointer;
-  transition: opacity 0.15s, transform 0.15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 .ig-arrow:hover {
   opacity: 1;
@@ -1349,7 +1425,12 @@ button.win__action {
 }
 
 .promo--insta {
-  background: linear-gradient(100deg, var(--c-purple), var(--c-magenta), var(--c-orange));
+  background: linear-gradient(
+    100deg,
+    var(--c-purple),
+    var(--c-magenta),
+    var(--c-orange)
+  );
   color: var(--paper) !important;
   text-shadow: 1px 1px 0 var(--ink);
 }
@@ -1401,7 +1482,8 @@ button.win__action {
   width: 22px;
   height: 22px;
   transform: translate(-50%, -50%);
-  background: linear-gradient(var(--c-lime), var(--c-lime)) center / 2px 100% no-repeat,
+  background:
+    linear-gradient(var(--c-lime), var(--c-lime)) center / 2px 100% no-repeat,
     linear-gradient(var(--c-lime), var(--c-lime)) center / 100% 2px no-repeat;
   filter: drop-shadow(0 0 4px var(--c-lime));
   opacity: 0.4;
@@ -1615,7 +1697,9 @@ button.win__action {
   box-shadow: var(--hard-shadow);
   color: var(--ink) !important;
   text-decoration: none;
-  transition: transform 0.1s steps(2), box-shadow 0.1s steps(2);
+  transition:
+    transform 0.1s steps(2),
+    box-shadow 0.1s steps(2);
 }
 .product-card:hover {
   transform: translate(-3px, -3px);
@@ -1704,7 +1788,9 @@ button.win__action {
   text-transform: uppercase;
   color: var(--c-yellow);
   -webkit-text-stroke: 2px var(--ink);
-  text-shadow: 4px 4px 0 var(--c-red), 6px 6px 0 var(--ink);
+  text-shadow:
+    4px 4px 0 var(--c-red),
+    6px 6px 0 var(--ink);
   overflow-wrap: anywhere;
 }
 
@@ -2077,12 +2163,12 @@ body > .chaos-stage {
 .netscape {
   margin: 0;
   color: var(--paper);
-  font: italic 14px/1.3 "Times New Roman", Times, serif;
+  font:
+    italic 14px/1.3 "Times New Roman",
+    Times,
+    serif;
   text-align: right;
 }
-
-
-
 
 /* ============ responsive ============ */
 
@@ -2158,7 +2244,6 @@ body > .chaos-stage {
     height: 360px;
   }
 
-  
   .center-frames {
     grid-template-columns: 1fr;
   }
@@ -2215,4 +2300,196 @@ body > .chaos-stage {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ============ fit to screen ============ */
+
+/* chaos window + ticker + commercials: sized together to end at the bottom of the screen */
+.fit-main,
+.fit-core {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fit-main .center-frames .commercial img {
+  max-height: 16vh;
+}
+.fit-main .frame-tile--wide .frame-img {
+  max-height: 16vh;
+}
+
+/* ============ media carousel ============ */
+
+.carousel {
+  height: 60vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  background: var(--ink);
+  cursor: grab;
+  outline-offset: -3px;
+}
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.carousel__track {
+  display: flex;
+  gap: 6px;
+  height: 100%;
+  width: max-content;
+}
+.carousel__item {
+  flex: none;
+  height: 100%;
+}
+.carousel__item img {
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+.carousel__item--video iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.carousel__item--video {
+  position: relative;
+}
+/* covers a video so the carousel can still be dragged over it; a plain click removes it */
+.carousel__shield {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  font: 28px/1 var(--font-pixel);
+  text-shadow: 0 0 6px var(--ink);
+  cursor: inherit;
+}
+.product-detail__media {
+  margin-bottom: 0;
+}
+.product-detail__media-wrap {
+  min-width: 0;
+}
+
+/* phones: the project comes first, the header follows below it */
+@media (max-width: 760px) {
+  .site-header + .site-footer,
+  .mainContainer + .site-header {
+    border-top: 4px solid var(--ink);
+  }
+}
+
+/* pictures inside a ticker (the landing page's Instagram link) */
+.marquee__img {
+  display: inline-block;
+  height: 64px;
+  width: 64px;
+  object-fit: cover;
+  vertical-align: middle;
+  border: 2px solid var(--paper);
+}
+.marquee--insta .marquee__run {
+  align-items: center;
+}
+.marquee--insta .marquee__track {
+  animation-duration: 30s;
+}
+
+/* ============ /chaos buttons in the retro style ============ */
+/* `body` in front wins over chaos.css, which loads after this file */
+
+body .chaos-stage .standard-button {
+  padding: 5px 12px;
+  border: 0 !important;
+  border-radius: 0;
+  background: var(--win);
+  box-shadow: var(--bevel-out);
+  color: var(--ink);
+  font: 13px/1.2 var(--font-block);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+body .chaos-stage .standard-button:hover,
+body .chaos-stage .visitproject:hover {
+  background: var(--c-lime);
+  color: var(--ink);
+}
+body .chaos-stage .standard-button:active {
+  box-shadow: var(--bevel-in);
+}
+/* the project that's selected / hovered in the 3D scene */
+body .chaos-stage .project-button.active,
+body .chaos-stage .neonGreen {
+  background: var(--c-yellow);
+  box-shadow:
+    var(--bevel-out),
+    4px 4px 0 var(--c-magenta);
+}
+body .chaos-stage .project-button.active {
+  padding-left: 40px;
+}
+body .chaos-stage .project-button.active::before {
+  content: "▶";
+  position: absolute;
+  left: 14px;
+  color: var(--c-red);
+}
+body .chaos-stage .project-button {
+  position: relative;
+}
+body .chaos-stage .tag_button.active,
+body .chaos-stage .mode.active {
+  background: var(--c-magenta);
+  color: var(--paper);
+  box-shadow: var(--bevel-in);
+}
+body .chaos-stage .mode {
+  text-decoration: none;
+  opacity: 0.6;
+}
+body .chaos-stage .mode.active {
+  opacity: 1;
+}
+/* the site name button top left */
+body .chaos-stage .logo_container .standard-button {
+  background: var(--c-red);
+  color: var(--c-yellow);
+  font: 18px/1 var(--font-sign);
+  -webkit-text-stroke: 1px var(--ink);
+}
+/* info box that follows the cross cursor */
+body .chaos-stage .standard-container.background {
+  background: var(--paper);
+  border: 3px solid var(--ink) !important;
+  box-shadow: var(--hard-shadow);
+  color: var(--ink);
+}
+body .chaos-stage .projectTitle {
+  color: var(--ink);
+  font: 18px/1.1 var(--font-block);
+  text-transform: uppercase;
+}
+body .chaos-stage .projectYear {
+  color: var(--c-red);
+  font: 22px/1 var(--font-pixel);
+}
+body .chaos-stage .chaos-exit {
+  background: var(--c-red);
+  color: var(--c-yellow);
+  box-shadow: var(--bevel-out), var(--hard-shadow);
+  font-size: 15px;
 }

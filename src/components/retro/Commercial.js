@@ -21,15 +21,18 @@ export function scatterCommercials(commercials) {
   const slots = {};
   Object.keys(COMMERCIAL_SLOTS).forEach((slot) => (slots[slot] = []));
   const allowedFor = (ad) =>
-    ad.placements && ad.placements.length ? ad.placements : Object.keys(COMMERCIAL_SLOTS);
+    ad.placements && ad.placements.length
+      ? ad.placements
+      : Object.keys(COMMERCIAL_SLOTS);
   shuffle((commercials || []).filter((ad) => ad.image && ad.image.asset))
     // the pickiest ones choose first, so a header-only ad doesn't lose its spot to an "anywhere" one
     .sort((a, b) => allowedFor(a).length - allowedFor(b).length)
     .forEach((ad) => {
       const open = allowedFor(ad).filter(
-        (slot) => slots[slot] && slots[slot].length < COMMERCIAL_SLOTS[slot]
+        (slot) => slots[slot] && slots[slot].length < COMMERCIAL_SLOTS[slot],
       );
-      if (open.length) slots[open[Math.floor(Math.random() * open.length)]].push(ad);
+      if (open.length)
+        slots[open[Math.floor(Math.random() * open.length)]].push(ad);
     });
   return slots;
 }
@@ -45,7 +48,8 @@ export function useCommercials(slot) {
 function adSource(image, width) {
   const { asset } = image;
   // resizing would freeze a GIF on its first frame, so GIFs are shown as uploaded
-  const isGif = asset.mimeType === "image/gif" || /\.gif$/i.test(asset.url || "");
+  const isGif =
+    asset.mimeType === "image/gif" || /\.gif$/i.test(asset.url || "");
   return isGif ? asset.url : urlFor(asset).width(width).url();
 }
 
@@ -60,11 +64,13 @@ export default function Commercial({ ad, width = 600, className = "" }) {
         alt={image.alt || ad.title || ""}
         style={{
           ...hotspotStyle(image),
-          aspectRatio: dimensions ? `${dimensions.width} / ${dimensions.height}` : undefined,
+          aspectRatio: dimensions
+            ? `${dimensions.width} / ${dimensions.height}`
+            : undefined,
         }}
         loading="lazy"
       />
-      <span className="commercial__label">ADVERTISEMENT</span>
+      <span className="commercial__label">look at me</span>
     </>
   );
   const classes = `commercial ${className}`;
@@ -98,5 +104,7 @@ export default function Commercial({ ad, width = 600, className = "" }) {
 export function CommercialSlot({ slot, index, width, className }) {
   const ads = useCommercials(slot);
   const shown = index === undefined ? ads : ads.slice(index, index + 1);
-  return shown.map((ad) => <Commercial ad={ad} width={width} className={className} key={ad._id} />);
+  return shown.map((ad) => (
+    <Commercial ad={ad} width={width} className={className} key={ad._id} />
+  ));
 }

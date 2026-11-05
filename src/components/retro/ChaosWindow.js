@@ -10,7 +10,8 @@ const noop = () => {};
 
 // A live, non-interactive preview of the /chaos boids scene inside a window.
 // Clicking anywhere on it enters the full-screen version.
-export default function ChaosWindow() {
+// `screenRef` and `height` let the landing page size the screen to fit the window.
+export default function ChaosWindow({ screenRef, height }) {
   const { siteSettings, projectList, settingsProject } = useContext(AppContext);
 
   return (
@@ -23,8 +24,14 @@ export default function ChaosWindow() {
         </Link>
       }
     >
-      <Link to="/chaos" className="chaos-window chaos-stage" aria-label="Enter the chaos">
-      <div className="mainbackground"></div>
+      <Link
+        to="/chaos"
+        className="chaos-window chaos-stage"
+        aria-label="Enter the chaos"
+        innerRef={screenRef}
+        style={height ? { height } : undefined}
+      >
+        <div className="mainbackground"></div>
         <Suspense fallback={<span className="chaos-window__loading blink">LOADING CHAOS…</span>}>
           {projectList && (
             <Boids

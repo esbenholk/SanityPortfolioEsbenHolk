@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -13,11 +13,24 @@ import FrameImage from "./retro/FrameImage";
 import GifWall from "./retro/GifWall";
 import ChaosWindow from "./retro/ChaosWindow";
 import AsciiBox from "./retro/AsciiBox";
+import InstaTicker from "./retro/InstaTicker";
 import { CommercialSlot, useCommercials } from "./retro/Commercial";
-import { useTheme } from "./retro/theme";
+import { useMediaQuery, useTheme } from "./retro/theme";
+import useFitToScreen from "./functions/useFitToScreen";
 
 const NONE = [];
-const BADGE_ICONS = ["💿", "🌐", "👾", "⚡", "💾", "📼", "🛸", "🧿", "☎️", "🔮"];
+const BADGE_ICONS = [
+  "💿",
+  "🌐",
+  "👾",
+  "⚡",
+  "💾",
+  "📼",
+  "🛸",
+  "🧿",
+  "☎️",
+  "🔮",
+];
 const BADGE_COLORS = ["lime", "pink", "cyan", "red", "blue", "yellow"];
 
 export default function LandingPage() {
@@ -29,12 +42,21 @@ export default function LandingPage() {
   const { theme, copy } = useTheme();
   const centerCommercials = useCommercials("center");
 
+  // the chaos window grows/shrinks so header + window + ticker (+ commercials on desktop) fill the screen
+  const screenRef = useRef(null);
+  const mainRef = useRef(null);
+  const coreRef = useRef(null);
+  const isPhone = useMediaQuery("(max-width: 760px)");
+  const screenHeight = useFitToScreen(screenRef, isPhone ? coreRef : mainRef, {
+    min: 180,
+  });
+
   const [activeTags, setActiveTags] = useState([]);
   const toggleTag = (tag) =>
     setActiveTags((current) =>
       current.includes(tag)
         ? current.filter((item) => item !== tag)
-        : [...current, tag]
+        : [...current, tag],
     );
 
   // Featured projects from site settings first, topped up with the newest work
@@ -42,7 +64,9 @@ export default function LandingPage() {
   const featured = useMemo(() => {
     const picked =
       myContext.hasFeaturedPosts && info.featuredProjects
-        ? projectList.filter((post) => info.featuredProjects.includes(post.title))
+        ? projectList.filter((post) =>
+            info.featuredProjects.includes(post.title),
+          )
         : [];
     const rest = projectList.filter((post) => !picked.includes(post));
     return [...picked, ...rest].slice(0, Math.max(6, picked.length));
@@ -54,16 +78,18 @@ export default function LandingPage() {
       categories.slice(0, 2).map((category) => ({
         category,
         cover: projectList.find((post) =>
-          (post.categories || []).some((c) => c.title === category.title)
+          (post.categories || []).some((c) => c.title === category.title),
         ),
       })),
-    [categories, projectList]
+    [categories, projectList],
   );
 
   // Frames under the chaos window: site main images if set, otherwise projects after the featured ones
   const sideFrames = useMemo(() => {
     if (info.mainImages && info.mainImages.length > 0) {
-      return info.mainImages.slice(0, 2).map((image) => ({ image, to: "/projects" }));
+      return info.mainImages
+        .slice(0, 2)
+        .map((image) => ({ image, to: "/projects" }));
     }
     if (info.mainImage) return [{ image: info.mainImage, to: "/projects" }];
     return projectList.slice(6, 8).map((post) => ({
@@ -74,7 +100,11 @@ export default function LandingPage() {
   }, [info, projectList]);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <div className="storefront">
         {/* LEFT: equip */}
         <aside className="col col--left">
@@ -85,7 +115,12 @@ export default function LandingPage() {
               className="frame-tile"
               key={category.slug.current}
             >
-              {cover && <FrameImage image={cover.productImage || cover.mainImage} width={400} />}
+              {cover && (
+                <FrameImage
+                  image={cover.productImage || cover.mainImage}
+                  width={400}
+                />
+              )}
               <span className="frame-tile__label">{category.title}</span>
             </Link>
           ))}
@@ -106,7 +141,9 @@ export default function LandingPage() {
                   if (catalog) catalog.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                <span aria-hidden="true">{BADGE_ICONS[i % BADGE_ICONS.length]}</span>
+                <span aria-hidden="true">
+                  {BADGE_ICONS[i % BADGE_ICONS.length]}
+                </span>
                 {tag}
               </button>
             ))}
@@ -132,30 +169,40 @@ export default function LandingPage() {
 
         {/* CENTER: live window into /chaos */}
         <section className="col col--center">
-          <ChaosWindow />
-          <Marquee
-            className="marquee--ticker"
-            items={projectList.map((post) => ({
-              label: post.title.toUpperCase(),
-              to: "/projects/" + post.slug.current,
-            }))}
-          />
-          {centerCommercials.length > 0 ? (
-            <div className="center-frames">
-              <CommercialSlot slot="center" width={700} />
+          <div className="fit-main" ref={mainRef}>
+            <div className="fit-core" ref={coreRef}>
+              <ChaosWindow screenRef={screenRef} height={screenHeight} />
+              <Marquee
+                className="marquee--ticker ad--checker ad--checker-grey"
+                items={projectList.map((post) => ({
+                  label: post.title.toUpperCase(),
+                  to: "/projects/" + post.slug.current,
+                }))}
+              />
             </div>
-          ) : (
-            sideFrames.length > 0 && (
+            {centerCommercials.length > 0 ? (
               <div className="center-frames">
-                {sideFrames.map((frame, i) => (
-                  <Link to={frame.to} className="frame-tile frame-tile--wide" key={i}>
-                    <FrameImage image={frame.image} width={600} />
-                    {frame.label && <span className="frame-tile__label">{frame.label}</span>}
-                  </Link>
-                ))}
+                <CommercialSlot slot="center" width={700} />
               </div>
-            )
-          )}
+            ) : (
+              sideFrames.length > 0 && (
+                <div className="center-frames">
+                  {sideFrames.map((frame, i) => (
+                    <Link
+                      to={frame.to}
+                      className="frame-tile frame-tile--wide"
+                      key={i}
+                    >
+                      <FrameImage image={frame.image} width={600} />
+                      {frame.label && (
+                        <span className="frame-tile__label">{frame.label}</span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )
+            )}
+          </div>
         </section>
 
         {/* RIGHT: 3D showroom + enter */}
@@ -176,12 +223,7 @@ export default function LandingPage() {
           <Link to="/projects" className="promo promo--red">
             ALL STOCK MUST GO
           </Link>
-          <Marquee
-            to="/instagram"
-            className="marquee--insta"
-            separator="✦"
-            items={["INSTAGRAM.EXE ▶", "NOW WITH 3D SHOOTER", "NEW POSTS INSIDE"]}
-          />
+          <InstaTicker />
 
           <CommercialSlot slot="right" index={1} width={580} />
           <a href="#contact" className="promo promo--blue">
@@ -194,11 +236,7 @@ export default function LandingPage() {
       </div>
 
       {theme !== "storefront" && (
-        <GifWall
-          projects={projectList}
-          title={copy.wall}
-          interval={theme === "swamp" ? 4000 : 650}
-        />
+        <GifWall projects={projectList} title={copy.wall} interval={650} />
       )}
 
       {info.greeting && (

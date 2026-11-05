@@ -1,11 +1,38 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../globalState";
 
+// desktopOnly skins fall back to the storefront on phones and tablets
 export const THEMES = [
   { id: "storefront", label: "STORE" },
   { id: "tube", label: "TUBE" },
-  { id: "swamp", label: "SWAMP" },
+  { id: "ocean", label: "OCEAN", desktopOnly: true },
+  { id: "minimal", label: "MINIMAL" },
 ];
+
+const DESKTOP_QUERY = "(min-width: 900px) and (pointer: fine)";
+
+export function useMediaQuery(query) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(query).matches
+  );
+  useEffect(() => {
+    const list = window.matchMedia(query);
+    const onChange = () => setMatches(list.matches);
+    onChange();
+    list.addEventListener("change", onChange);
+    return () => list.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
+}
+
+export const useIsDesktop = () => useMediaQuery(DESKTOP_QUERY);
+
+// The skin actually shown: a desktop-only skin isn't used on small or touch screens
+export function effectiveTheme(theme, isDesktop) {
+  const option = THEMES.find((item) => item.id === theme);
+  if (!option || (option.desktopOnly && !isDesktop)) return "storefront";
+  return theme;
+}
 
 // Labels that change with the skin; everything else is styled in themes.css
 const COPY = {
@@ -27,15 +54,69 @@ const COPY = {
     wall: "TRENDING NOW 🔥",
     mega: "NEW UPLOADS EVERY DAY",
   },
-  swamp: {
-    ads: ["WANDER THE ARCHIVE", "WHISPERS & MEMORIES", "DESCEND INTO THE MIRE"],
-    adSub: "follow the lights",
-    equip: "GATHERINGS",
-    feature: "THE STILL POOL",
-    enter: "DESCEND",
-    wall: "REFLECTIONS ON THE WATER",
-    mega: "ALL THINGS RETURN TO THE BOG",
+  ocean: {
+    ads: ["DRIFT THROUGH THE WORK", "STILL WATER", "SAIL ON"],
+    adSub: "slowly",
+    equip: "CURRENTS",
+    feature: "ON THE HORIZON",
+    enter: "SET SAIL",
+    wall: "",
+    mega: "THE SEA KEEPS EVERYTHING",
   },
+  minimal: {
+    ads: ["", "", ""],
+    adSub: "",
+    equip: "",
+    feature: "",
+    enter: "",
+    wall: "",
+    mega: "",
+  },
+};
+
+// Slogans for the footer strip and tickers; one is picked at random per page
+export const SLOGANS = {
+  storefront: [
+    "EVERYTHING MUST GO",
+    "ALL STOCK MUST GO",
+    "FREE SHIPPING TO THE VOID",
+    "NO REFUNDS NO REGRETS",
+    "LIMITED EDITION FOREVER",
+    "BUY 1 GET CHAOS FREE",
+    "CLOSING DOWN SINCE 2004",
+    "PRICES SLASHED TO ZERO",
+    "NOW WITH 100% MORE INTERNET",
+    "YOUR CART MISSES YOU",
+    "ONE CLICK FROM PARADISE",
+    "WHILE SUPPLIES LAST",
+  ],
+  tube: [
+    "NEW UPLOADS EVERY DAY",
+    "HOT WORKS IN YOUR AREA",
+    "YOU WON'T BELIEVE #7",
+    "100% FREE — NO SIGNUP",
+    "TRENDING IN THE ARCHIVE",
+    "WATCH UNTIL THE END",
+    "THE ALGORITHM LOVES YOU",
+    "SKIP AD IN 5",
+    "VERIFIED CHAOS",
+  ],
+  ocean: [
+    "the sea keeps everything",
+    "drift a little longer",
+    "every wave is an archive",
+    "slow water, slow work",
+    "nothing here is in a hurry",
+    "listen to the tide",
+    "float until it makes sense",
+    "the horizon is a promise",
+  ],
+  minimal: ["Selected works", "Work in progress", "All works"],
+};
+
+export const randomSlogan = (theme) => {
+  const list = SLOGANS[theme] || SLOGANS.storefront;
+  return list[Math.floor(Math.random() * list.length)];
 };
 
 export function useTheme() {

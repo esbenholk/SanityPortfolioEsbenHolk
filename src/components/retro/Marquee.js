@@ -2,14 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // Endless ticker; content is rendered twice so the loop is seamless.
-// Items are text, or { label, to } to make each one a link.
+// Items are text, { label, to } to make each one a link, or { image } for a picture.
 // `to` makes the whole ticker one link instead.
 export default function Marquee({ items, separator = "*", className = "", to }) {
   if (!items || items.length === 0) return null;
   // the copy is only there for the loop, so keyboard users skip its links
   const run = (copy) =>
     items.map((item, index) => {
-      const label = typeof item === "string" ? item : item.label;
+      const label =
+        typeof item === "string" ? (
+          item
+        ) : item.image ? (
+          <img className="marquee__img" src={item.image} alt="" loading="lazy" draggable={false} />
+        ) : (
+          item.label
+        );
       return (
         <span key={index}>
           {item.to && !to ? (

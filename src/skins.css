@@ -1,0 +1,510 @@
+/* The two skins that replace the whole storefront: "minimal" and "ocean".
+   Each has only a home page and project pages (see MinimalLayout / OceanLayout). */
+
+/* both skins drop the storefront frame around the site */
+[data-theme="minimal"] .site,
+[data-theme="ocean"] .site {
+  max-width: none;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+
+/* ============ minimal: classic artist portfolio ============ */
+
+[data-theme="minimal"] body {
+  background: #fff;
+  color: #111;
+}
+
+.minimal {
+  --m-ink: #111;
+  --m-quiet: #9a9a9a;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  min-height: 100vh;
+  color: var(--m-ink);
+  font: 15px/1.55 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.minimal a {
+  color: var(--m-ink);
+  text-decoration: none;
+}
+.minimal a:hover {
+  color: var(--m-quiet);
+}
+.minimal p {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.minimal-index {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  height: 100vh;
+  padding: 32px 28px;
+  overflow-y: auto;
+}
+.minimal-index__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.minimal-name {
+  font-weight: 600;
+}
+.minimal-toggle {
+  display: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--m-ink);
+  font: inherit;
+}
+.minimal-year {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 0 8px;
+  margin-bottom: 10px;
+}
+.minimal-year__label {
+  color: var(--m-quiet);
+  font-variant-numeric: tabular-nums;
+}
+.minimal-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.minimal-list a.active {
+  color: var(--m-quiet);
+}
+.minimal-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+}
+.minimal-foot a.active {
+  color: var(--m-quiet);
+}
+/* the skin switcher as plain text */
+.minimal .theme-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-top: 14px;
+  padding: 0;
+  background: none;
+  color: var(--m-quiet);
+  font: 12px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.minimal .theme-switch {
+  justify-content: flex-start;
+}
+.minimal .theme-switch__label {
+  margin-right: 0;
+  color: var(--m-quiet);
+  text-shadow: none;
+  text-transform: lowercase;
+}
+.minimal .theme-switch__btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--m-quiet);
+  font: inherit;
+  text-transform: lowercase;
+}
+.minimal .theme-switch__btn.is-on,
+.minimal .theme-switch__btn:hover {
+  color: var(--m-ink);
+}
+
+.minimal-content {
+  max-width: 1100px;
+  padding: 32px 48px 96px 20px;
+}
+.minimal-loading {
+  color: var(--m-quiet);
+}
+.minimal-preview {
+  margin: 0;
+}
+.minimal-preview img {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 110px);
+  object-fit: contain;
+  animation: minimal-fade 0.25s ease;
+}
+.minimal-preview figcaption {
+  margin-top: 8px;
+  color: var(--m-quiet);
+  font-size: 13px;
+}
+@keyframes minimal-fade {
+  from {
+    opacity: 0;
+  }
+}
+.minimal-text {
+  max-width: 620px;
+}
+.minimal-project__head h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.minimal-meta {
+  color: var(--m-quiet);
+}
+.minimal-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 32px 0;
+}
+.minimal-media {
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+  object-position: left top;
+}
+.minimal-media--link {
+  display: block;
+  padding: 80px 0;
+  border: 1px solid #e5e5e5;
+  text-align: center;
+}
+.minimal-next {
+  display: inline-block;
+  margin-top: 32px;
+}
+
+@media (max-width: 760px) {
+  .minimal {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .minimal-index {
+    position: sticky;
+    z-index: 2;
+    height: auto;
+    gap: 0;
+    padding: 16px 20px;
+    background: #fff;
+  }
+  .minimal-toggle {
+    display: block;
+  }
+  .minimal-list,
+  .minimal-foot {
+    display: none;
+  }
+  .minimal-index.is-open {
+    height: 100vh;
+    gap: 24px;
+  }
+  .minimal-index.is-open .minimal-list,
+  .minimal-index.is-open .minimal-foot {
+    display: flex;
+    flex-direction: column;
+  }
+  .minimal-content {
+    padding: 8px 20px 64px;
+  }
+}
+
+/* ============ ocean: a sea to sail on, calm project pages ============ */
+
+[data-theme="ocean"] {
+  background: #cfe0e6;
+}
+[data-theme="ocean"] body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f2e2d2 0%, #e4ebee 45%, #cfe0e6 100%) fixed;
+  color: #24414f;
+}
+
+.ocean {
+  --o-ink: #24414f;
+  --o-quiet: #6f8a96;
+  --o-glass: rgba(255, 252, 248, 0.78);
+  --o-serif: "Cormorant Garamond", Georgia, serif;
+  --o-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  color: var(--o-ink);
+  font: 300 15px/1.6 var(--o-sans);
+}
+.ocean a {
+  color: var(--o-ink);
+}
+.ocean p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* name + skin switcher, floating over everything */
+.ocean-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 30px;
+  pointer-events: none;
+}
+.ocean-bar > * {
+  pointer-events: auto;
+}
+.ocean-name {
+  font: italic 400 26px/1 var(--o-serif);
+  text-decoration: none;
+}
+.ocean .theme-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--o-glass);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 24px rgba(36, 65, 79, 0.12);
+}
+.ocean .theme-switch__label {
+  display: none;
+}
+.ocean .theme-switch__btn {
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  box-shadow: none;
+  color: var(--o-quiet);
+  font: 400 12px/1.4 var(--o-sans);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+.ocean .theme-switch__btn.is-on {
+  background: var(--o-ink);
+  color: #fff;
+}
+
+.ocean-loading {
+  padding: 140px 20px;
+  color: var(--o-quiet);
+  font: italic 22px/1.4 var(--o-serif);
+  text-align: center;
+}
+
+/* home: the sea */
+.ocean-home {
+  position: fixed;
+  inset: 0;
+}
+.ocean-canvas {
+  position: absolute !important;
+  inset: 0;
+  touch-action: none;
+}
+.ocean-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 40px);
+  margin: 0;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--o-glass);
+  backdrop-filter: blur(10px);
+  color: var(--o-quiet);
+  font-size: 13px !important;
+  text-align: center;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  pointer-events: none;
+}
+.ocean-hint__slogan {
+  display: block;
+  color: var(--o-ink);
+  font: italic 400 22px/1.3 var(--o-serif);
+}
+.ocean-hint.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, 12px);
+}
+.ocean-progress {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  margin: 0;
+  color: var(--o-ink);
+  font: italic 16px/1 var(--o-serif) !important;
+  opacity: 0.7;
+}
+.ocean-tag {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--o-glass);
+  backdrop-filter: blur(8px);
+  color: var(--o-ink);
+  font: italic 400 17px/1.2 "Cormorant Garamond", Georgia, serif;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: ocean-rise 0.4s ease;
+}
+@keyframes ocean-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* what an explored cube unfolds into */
+.ocean-explore {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 90px 24px 24px;
+  background: rgba(242, 226, 210, 0.25);
+  animation: ocean-fade 0.5s ease;
+}
+@keyframes ocean-fade {
+  from {
+    opacity: 0;
+  }
+}
+.ocean-explore__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  width: min(920px, 100%);
+  max-height: calc(100vh - 140px);
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--o-glass);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(36, 65, 79, 0.25);
+  animation: ocean-rise 0.6s ease;
+}
+.ocean-explore__card img {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 140px);
+  object-fit: cover;
+}
+.ocean-explore__text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 34px 34px 28px;
+  overflow-y: auto;
+}
+.ocean-explore__text h2,
+.ocean-post__head h1 {
+  margin: 0;
+  font: 400 40px/1.05 var(--o-serif);
+}
+.ocean-meta {
+  margin: 0;
+  color: var(--o-quiet);
+  font-size: 12px !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ocean-prose {
+  margin-top: 12px;
+}
+.ocean-explore__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+.ocean-button {
+  padding: 10px 20px;
+  border: 1px solid var(--o-ink);
+  border-radius: 999px;
+  background: none;
+  color: var(--o-ink) !important;
+  font: 400 13px/1 var(--o-sans);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.ocean-button--solid,
+.ocean-button:hover {
+  background: var(--o-ink);
+  color: #fff !important;
+}
+.ocean-button--solid:hover {
+  background: #33596b;
+}
+
+/* project page */
+.ocean-post {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 120px 30px 80px;
+}
+.ocean-post__head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.ocean-post__head h1 {
+  font-size: 64px;
+}
+.ocean-carousel {
+  height: 68vh;
+  background: transparent;
+}
+.ocean-carousel .carousel__track {
+  gap: 16px;
+}
+.ocean-carousel .carousel__item img,
+.ocean-carousel .carousel__item--video {
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ocean-prose {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ocean-prose--lead p {
+  margin-top: 40px;
+  font: italic 400 24px/1.45 var(--o-serif);
+  text-align: center;
+}
+.ocean-post__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 640px;
+  margin: 64px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(36, 65, 79, 0.2);
+  font-family: var(--o-serif);
+  font-size: 19px;
+  font-style: italic;
+}
+.ocean-post__foot a {
+  text-decoration: none;
+}
+.ocean-post__foot a:hover {
+  text-decoration: underline;
+}

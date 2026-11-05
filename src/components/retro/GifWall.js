@@ -8,7 +8,7 @@ import { hashOf } from "./theme";
 const FRAMES = 6;
 
 // A wall of frames that flip through project images like GIFs.
-// `interval` sets the pace: fast and choppy for tube, slow fades for swamp.
+// `interval` sets the pace: fast and choppy for tube.
 export default function GifWall({ projects, title, interval = 700 }) {
   const [tick, setTick] = useState(0);
 

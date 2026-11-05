@@ -1,49 +1,37 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import AppContext from "../globalState";
-import sanityClient from "../client";
 import BlockContent from "./blocks/BlockContent";
-import YoutubeVideo from "./blocks/youtube";
 import Window from "./retro/Window";
 import FrameImage from "./retro/FrameImage";
+import MediaCarousel from "./retro/MediaCarousel";
+import useFitToScreen from "./functions/useFitToScreen";
+import useProject, { projectMedia } from "./functions/useProject";
 
 const ABOUT_SLUG = "esben-holk-house-of-killing";
 
-// Gallery entries are either { image } or { youtube: { url } }; skip empty slots
-const mediaOf = (gallery) =>
-  (gallery || []).filter(
-    (item) => item && ((item.image && item.image.asset) || (item.youtube && item.youtube.url))
-  );
-
 export default function SinglePost() {
-  const [singlePost, setSinglePost] = useState();
   const [slide, setSlide] = useState(0);
   const { slug } = useParams();
+  const singlePost = useProject(slug);
   const { projectList = [] } = useContext(AppContext);
+  const carouselRef = useRef(null);
 
-  useEffect(() => {
-    setSlide(0);
-    sanityClient
-      .fetch(
-        `*[slug.current == $slug]{
-          id,
-          title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, body, year, abbreviated_year, imagesGallery, miniImagesGallery, star_rating ,slug, categories[]->{title, slug}, tags, color, recap, yearString, client, videos[]
-        }`,
-        { slug }
-      )
-      .then((data) => setSinglePost(data[0]))
-      .catch(console.error);
-  }, [slug]);
+  // crumbs + media window fill the screen below the header (on phones the header moves below)
+  const viewportRef = useRef(null);
+  const mediaRef = useRef(null);
+  const mediaHeight = useFitToScreen(viewportRef, mediaRef, { min: 220, enabled: Boolean(singlePost) });
+
+  useEffect(() => setSlide(0), [slug]);
 
   if (!singlePost) {
     return <p className="loading blink">LOADING… PLEASE WAIT (56k)</p>;
   }
 
   const isAbout = slug === ABOUT_SLUG;
-  const media = mediaOf(singlePost.imagesGallery);
-  const current = media[slide % (media.length || 1)];
+  const media = projectMedia(singlePost);
 
   const position = projectList.findIndex((post) => post.slug.current === slug);
   const prevPost = position > 0 ? projectList[position - 1] : null;
@@ -73,36 +61,35 @@ export default function SinglePost() {
       </div>
 
       <div className="product-detail">
-        <Window
-          title={isAbout ? "me.bmp" : `${singlePost.title}.exe`}
-          className="product-detail__media"
-        >
-          {current ? (
-            current.youtube ? (
-              <div className="video-frame">
-                <YoutubeVideo url={current.youtube.url} />
-              </div>
-            ) : (
-              <FrameImage image={current.image} width={1400} className="frame-img--contain" />
-            )
-          ) : (
-            <FrameImage image={singlePost.mainImage} width={1400} className="frame-img--contain" />
-          )}
+        <div className="product-detail__media-wrap" ref={mediaRef}>
+          <Window
+            title={isAbout ? "me.bmp" : `${singlePost.title}.exe`}
+            className="product-detail__media"
+          >
+            <MediaCarousel
+              key={slug}
+              ref={carouselRef}
+              items={media}
+              height={mediaHeight}
+              viewportRef={viewportRef}
+              onIndexChange={setSlide}
+            />
 
-          {media.length > 1 && (
-            <div className="media-nav">
-              <button className="btn95" onClick={() => setSlide(slide - 1 + media.length)}>
-                ◀
-              </button>
-              <span className="media-nav__count">
-                {(slide % media.length) + 1} / {media.length}
-              </span>
-              <button className="btn95" onClick={() => setSlide(slide + 1)}>
-                ▶
-              </button>
-            </div>
-          )}
-        </Window>
+            {media.length > 1 && (
+              <div className="media-nav">
+                <button className="btn95" onClick={() => carouselRef.current.step(-1)}>
+                  ◀
+                </button>
+                <span className="media-nav__count">
+                  {slide + 1} / {media.length}
+                </span>
+                <button className="btn95" onClick={() => carouselRef.current.step(1)}>
+                  ▶
+                </button>
+              </div>
+            )}
+          </Window>
+        </div>
 
         <aside className="product-detail__info">
           <h1 className="page-title">{singlePost.title}</h1>
@@ -200,8 +187,8 @@ export default function SinglePost() {
             {media.map((item, index) => (
               <button
                 key={index}
-                className={`thumb ${index === slide % media.length ? "is-on" : ""}`}
-                onClick={() => setSlide(index)}
+                className={`thumb ${index === slide ? "is-on" : ""}`}
+                onClick={() => carouselRef.current.goTo(index)}
                 aria-label={`Show item ${index + 1}`}
               >
                 {item.youtube ? (

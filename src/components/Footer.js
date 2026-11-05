@@ -1,12 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 import AppContext from "../globalState";
 import BlockContent from "./blocks/BlockContent";
 import Window from "./retro/Window";
-import { useTheme } from "./retro/theme";
+import { randomSlogan, useTheme } from "./retro/theme";
+import Marquee from "./retro/Marquee";
 
-const CHAOS_VARS = ["--c-red", "--c-yellow", "--c-blue", "--c-magenta", "--c-lime", "--c-cyan"];
+const CHAOS_VARS = [
+  "--c-red",
+  "--c-yellow",
+  "--c-blue",
+  "--c-magenta",
+  "--c-lime",
+  "--c-cyan",
+];
 
 const randomColor = () =>
   `#${Math.floor(Math.random() * 0xffffff)
@@ -17,7 +25,14 @@ export default function Footer({ info }) {
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList || [];
   const [chaos, setChaos] = useState(false);
-  const { copy } = useTheme();
+  const { theme } = useTheme();
+  const { pathname } = useLocation();
+  // a new slogan on every page
+  const slogan1 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+  const slogan2 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+  const slogan3 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+  const slogan4 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+  const slogan5 = useMemo(() => randomSlogan(theme), [theme, pathname]);
 
   // Chaos mode: every scroll repaints the palette
   useEffect(() => {
@@ -31,7 +46,9 @@ export default function Footer({ info }) {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        CHAOS_VARS.forEach((name) => root.style.setProperty(name, randomColor()));
+        CHAOS_VARS.forEach((name) =>
+          root.style.setProperty(name, randomColor()),
+        );
         ticking = false;
       });
     };
@@ -48,17 +65,36 @@ export default function Footer({ info }) {
   return (
     <footer className="site-footer">
       <div className="mega-strip">
-        <span className="mega-strip__text">{copy.mega}</span>
-        <span className="mega-strip__price">
+        <span className="mega-strip__text">{slogan1}</span>
+        {/* <span className="mega-strip__price">
           {String(projectList.length || 39).padStart(2, "0")}
           <sup>99</sup>
-        </span>
-        <span className="burst">
-          {projectList.length || "∞"}
-          <br />
-          WORKS
-        </span>
+        </span> */}
+        <span className="burst">your attention matters</span>
       </div>
+      <Marquee
+        className="marquee--ticker"
+        items={projectList.map((post) => ({
+          label: post.title.toUpperCase(),
+          to: "/projects/" + post.slug.current,
+        }))}
+      />
+      <Marquee
+        className="marquee--ticker headline--ticker ad--checker ad--checker-grey"
+        items={[slogan5, slogan5, slogan5]}
+      />
+      <Marquee
+        className="marquee--ticker"
+        items={[slogan2, slogan2, slogan2]}
+      />
+      <Marquee
+        className="marquee--ticker"
+        items={[slogan3, slogan3, slogan3]}
+      />
+      <Marquee
+        className="marquee--ticker"
+        items={[slogan4, slogan4, slogan4]}
+      />
 
       <div className="footer-grid">
         <Window title="contact.txt" id="contact" className="footer-contact">
@@ -89,9 +125,13 @@ export default function Footer({ info }) {
             <div className="webring__links">
               <NavLink to="/projects">« archive</NavLink>
               {randomProject && (
-                <Link to={"/projects/" + randomProject.slug.current}>random</Link>
+                <Link to={"/projects/" + randomProject.slug.current}>
+                  random
+                </Link>
               )}
-              <NavLink to="/projects/esben-holk-house-of-killing">about »</NavLink>
+              <NavLink to="/projects/esben-holk-house-of-killing">
+                about »
+              </NavLink>
             </div>
           </div>
 
@@ -104,15 +144,18 @@ export default function Footer({ info }) {
           </button> */}
 
           <div className="footer-logo-row">
-        
             <p className="netscape">
               Best viewed watched over by machines of loving grace
               <br />© {new Date().getFullYear()} {info.title}. All rights
               reversed.
             </p>
-                {info.footerlogo && info.footerlogo.asset && (
+            {info.footerlogo && info.footerlogo.asset && (
               <NavLink to="/">
-                <img className="footer-logo" src={info.footerlogo.asset.url} alt="" />
+                <img
+                  className="footer-logo"
+                  src={info.footerlogo.asset.url}
+                  alt=""
+                />
               </NavLink>
             )}
           </div>

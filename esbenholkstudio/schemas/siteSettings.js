@@ -11,6 +11,14 @@ export default {
       type: "string",
     },
     {
+      name: "titleImage",
+      title: "title image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+    },
+    {
       name: "greeting",
       title: "Site Greeting",
       type: "blockContent",

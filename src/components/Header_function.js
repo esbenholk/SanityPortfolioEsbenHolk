@@ -20,36 +20,41 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className={`ad-row ${hasCommercial ? "ad-row--commercial" : ""}`}>
-        <Link to="/projects" className="ad ad--red">
-          {copy.ads[0]}
-        </Link>
-        <Link to="/projects/esben-holk-house-of-killing" className="ad ad--blue">
-          <span>{copy.ads[1]}</span>
-          <small className="blink">{copy.adSub}</small>
-        </Link>
-        <Link to="/chaos" className="ad ad--checker">
-          <span>{copy.ads[2]}</span>
-          <span className="ad__icon" aria-hidden="true">
-            ✉
-          </span>
-        </Link>
-        <CommercialSlot slot="header" width={500} className="ad commercial--header" />
-      </div>
-
-      <div className="logo-bar">
-    
-        <NavLink to="/" className="logo-bar__home">
+        {" "}
+        <NavLink to="/" className="ad ad--checker ad--checker-grey">
           {info.logo && (
             <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
           )}
-          <span className="chrome-text">
-            {info.title || "HOUSE OF KILLING"}
-          </span>
-            {info.logo && (
+          {info.titleImage ? (
+            <img
+              src={info.titleImage.asset.url}
+              alt=""
+              className="logo-bar__img"
+            />
+          ) : (
+            <span className="chrome-text">
+              {info.title || "HOUSE OF KILLING"}
+            </span>
+          )}
+
+          {info.logo && (
             <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
           )}
         </NavLink>
-      
+        <Link to="/projects" className="ad ad--red">
+          {copy.ads[0]}
+        </Link>
+        <Link to="/chaos" className="ad ad--checker blink">
+          <span>{copy.ads[2]}</span>
+        </Link>
+        <CommercialSlot
+          slot="header"
+          width={500}
+          className="ad commercial--header"
+        />
+      </div>
+
+      {/* <div className="logo-bar">
         {firstHandle ? (
           <a className="subscribe" href={firstHandle.url}>
             FOLLOW NOW
@@ -63,13 +68,15 @@ export default function Header() {
             <span className="burst burst--small">NEW!</span>
           </a>
         )}
-      </div>
+      </div> */}
 
       <nav className="nav-strip">
         <NavLink exact to="/">
           HOME
         </NavLink>
-        <NavLink exact to="/projects">ARCHIVE</NavLink>
+        <NavLink exact to="/projects">
+          ARCHIVE
+        </NavLink>
         {/* {categories.slice(0, 3).map((category) => (
           <NavLink to={"/" + category.slug.current} key={category.slug.current}>
             {category.title.toUpperCase()}

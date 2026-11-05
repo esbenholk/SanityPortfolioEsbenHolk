@@ -39,10 +39,19 @@ export const imagesOf = (posts) =>
       .map((item) => item.media_url)
   );
 
-// Fetched once per visit and shared by the grid and the 3D view.
-// The function answers one page at a time; the first page shows right away
-// and the rest keep arriving in the background.
-const store = { posts: null, error: null, done: false, loading: false, listeners: new Set() };
+// Fetched once per visit and shared by the grid, the 3D view and the landing page ticker.
+// The function answers one page at a time; the first page shows right away.
+// The landing page only needs that first page; the Instagram page asks for the rest,
+// which then keeps arriving in the background.
+const store = {
+  posts: null,
+  error: null,
+  done: false,
+  loading: false,
+  after: null, // cursor of the next page
+  wantAll: false,
+  listeners: new Set(),
+};
 
 const emit = () => store.listeners.forEach((listener) => listener());
 
@@ -60,20 +69,21 @@ async function fetchPage(after) {
   return body;
 }
 
-async function loadAll() {
+// Loads the first page, then (only if someone wants everything) the following ones
+async function load() {
+  if (store.loading || store.done) return;
   store.loading = true;
   store.error = null;
   emit();
-  let after = null;
   try {
     do {
-      const body = await fetchPage(after);
+      const body = await fetchPage(store.after);
       const posts = (body.posts || []).filter((post) => !isReel(post));
       store.posts = [...(store.posts || []), ...posts];
-      after = body.next || null;
+      store.after = body.next || null;
+      if (!store.after) store.done = true;
       emit();
-    } while (after);
-    store.done = true;
+    } while (store.after && store.wantAll);
   } catch (error) {
     // keep what already arrived; only show the error when there's nothing to show
     if (!store.posts) store.error = error.message;
@@ -83,17 +93,19 @@ async function loadAll() {
   emit();
 }
 
-export function useInstagramFeed() {
+// `all: false` is enough for a preview: it only loads the first page
+export function useInstagramFeed({ all = true } = {}) {
   const [, rerender] = useReducer((n) => n + 1, 0);
 
   useEffect(() => {
     store.listeners.add(rerender);
-    // first visit, or a retry after a failed first page
-    if (!store.loading && !store.done && !store.posts) loadAll();
+    if (all) store.wantAll = true;
+    // first visit, a retry after a failed first page, or the rest of the pages
+    if (!store.posts || (all && !store.done)) load();
     return () => {
       store.listeners.delete(rerender);
     };
-  }, []);
+  }, [all]);
 
   return { posts: store.posts, error: store.error, done: store.done };
 }

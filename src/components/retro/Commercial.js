@@ -5,7 +5,13 @@ import AppContext from "../../globalState";
 import urlFor, { hotspotStyle } from "../functions/urlFor";
 
 // How many commercials each spot on the site can hold
-export const COMMERCIAL_SLOTS = { header: 1, left: 2, center: 2, right: 2 };
+export const COMMERCIAL_SLOTS = {
+  header: 1,
+  left: 1,
+  center: 2,
+  right: 2,
+  greeting: 2,
+};
 
 const shuffle = (list) => {
   const copy = [...list];
@@ -36,8 +42,12 @@ export function scatterCommercials(commercials) {
   spots.forEach((slot) => {
     const allowed = ads.filter((ad) => allowedIn(ad, slot));
     if (!allowed.length) return;
+    // prefer one not on the page yet; else at least not twice in the same spot
     const fresh = allowed.filter((ad) => !used.has(ad._id));
-    const pool = fresh.length ? fresh : allowed;
+    const notHere = allowed.filter(
+      (ad) => !slots[slot].some((other) => other._id === ad._id),
+    );
+    const pool = fresh.length ? fresh : notHere.length ? notHere : allowed;
     const ad = pool[Math.floor(Math.random() * pool.length)];
     used.add(ad._id);
     slots[slot].push(ad);

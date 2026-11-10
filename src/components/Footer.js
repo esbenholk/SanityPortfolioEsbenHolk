@@ -74,24 +74,32 @@ export default function Footer({ info }) {
       </div>
       <Marquee
         className="marquee--ticker"
+        color="red"
         items={projectList.map((post) => ({
           label: post.title.toUpperCase(),
           to: "/projects/" + post.slug.current,
         }))}
       />
       <Marquee
+        speed={60}
+        reverse={true}
         className="marquee--ticker headline--ticker ad--checker ad--checker-grey"
         items={[slogan5, slogan5, slogan5]}
       />
       <Marquee
+        color="blue"
+        speed={300}
         className="marquee--ticker"
         items={[slogan2, slogan2, slogan2]}
       />
       <Marquee
         className="marquee--ticker"
+        speed={120}
         items={[slogan3, slogan3, slogan3]}
       />
       <Marquee
+        color="black"
+        speed={40}
         className="marquee--ticker"
         items={[slogan4, slogan4, slogan4]}
       />

@@ -113,7 +113,7 @@ export default function LandingPage() {
         style={topHeight ? { height: topHeight } : undefined}
       >
         <div className="col col--left">
-          <h2 className="box-label box-label--red">{copy.equip}</h2>
+          {/* <h2 className="box-label box-label--red">{copy.equip}</h2> */}
           <CommercialSlot slot="left" index={0} width={460} />
           <ShooterWindow />
         </div>
@@ -173,6 +173,7 @@ export default function LandingPage() {
       </div>
       <GifWall projects={projectList} title={copy.wall} interval={100} />
       <Marquee
+        reverse={true}
         className="marquee--ticker ad--checker ad--checker-grey"
         items={projectList.map((post) => ({
           label: post.title.toUpperCase(),
@@ -182,21 +183,19 @@ export default function LandingPage() {
       <div className="flex">
         {" "}
         <InstaTicker />
-        <CommercialSlot slot="right" index={0} width={580} />
+        {/* <CommercialSlot slot="right" index={0} width={580} /> */}
       </div>
-      {/* the rest of the side columns, below the fold */}
-      <div className="storefront storefront--rest">
-        <aside className="col col--left">
-          {info.greeting && (
-            <Window title="welcome.txt" className="welcome">
-              <div className="headline">
-                <BlockContent blocks={info.greeting} />
-              </div>
-            </Window>
-          )}
-        </aside>
-
-        <CommercialSlot slot="left" index={1} width={460} />
+      {/* the greeting with a commercial on either side, one full-width row */}
+      <div className="greeting-row">
+        <CommercialSlot slot="greeting" index={0} width={600} />
+        {info.greeting && (
+          <Window title="welcome.txt" className="welcome">
+            <div className="headline">
+              <BlockContent blocks={info.greeting} />
+            </div>
+          </Window>
+        )}
+        <CommercialSlot slot="greeting" index={1} width={600} />
       </div>
       <div id="catalog">
         <Catalog

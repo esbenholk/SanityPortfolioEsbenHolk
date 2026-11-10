@@ -48,6 +48,7 @@ export default {
           { title: "Left column", value: "left" },
           { title: "Centre column", value: "center" },
           { title: "Right column", value: "right" },
+          { title: "Next to the greeting", value: "greeting" },
         ],
       },
       description: "Leave empty to let it appear anywhere",

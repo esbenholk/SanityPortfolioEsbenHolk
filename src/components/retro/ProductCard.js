@@ -8,12 +8,12 @@ const STRIPES = ["red", "blue", "magenta", "lime", "cyan", "orange"];
 
 // A project shown as a storefront product card
 export default function ProductCard({ post, index = 0 }) {
-  const price =
-    post.abbreviated_year != null
-      ? String(post.abbreviated_year).padStart(2, "0")
-      : post.year
-      ? String(post.year).slice(-2)
-      : "00";
+  // const price =
+  //   post.abbreviated_year != null
+  //     ? String(post.abbreviated_year).padStart(2, "0")
+  //     : post.year
+  //       ? String(post.year).slice(-2)
+  //       : "00";
   const stripe = STRIPES[index % STRIPES.length];
 
   // Fake video stats for the tube skin (hidden in the other skins)
@@ -29,7 +29,11 @@ export default function ProductCard({ post, index = 0 }) {
       style={post.color ? { "--card-accent": post.color } : undefined}
     >
       <div className="product-card__head">
-        <span>{post.categories && post.categories[0] ? post.categories[0].title : "ITEM"}</span>
+        <span>
+          {post.categories && post.categories[0]
+            ? post.categories[0].title
+            : "ITEM"}
+        </span>
         <span>#{String(index + 1).padStart(3, "0")}</span>
       </div>
 
@@ -39,7 +43,9 @@ export default function ProductCard({ post, index = 0 }) {
           hoverImage={post.productImage ? post.mainImage : null}
           width={600}
         />
-        {index < 3 && <span className="burst burst--small product-card__new">HOT!</span>}
+        {index < 3 && (
+          <span className="burst burst--small product-card__new">HOT!</span>
+        )}
         <span className="tube-meta tube-meta--hd">HD</span>
         <span className="tube-meta tube-meta--duration">{duration}</span>
         <span className="tube-meta tube-meta--progress" />
@@ -52,13 +58,15 @@ export default function ProductCard({ post, index = 0 }) {
           {views} · <span>👍 {rating}</span>
         </p>
         {post.tags && post.tags.length > 0 && (
-          <p className="product-card__tags">{post.tags.slice(0, 4).join(" / ")}</p>
+          <p className="product-card__tags">
+            {post.tags.slice(0, 4).join(" / ")}
+          </p>
         )}
         <div className="product-card__foot">
-          <span className="price">
+          {/* <span className="price">
             {price}
             <sup>99</sup>
-          </span>
+          </span> */}
           <span className="buy-btn">VIEW ▶</span>
         </div>
       </div>

@@ -1,13 +1,16 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import ProductCard from "./ProductCard";
 import AppContext from "../../globalState";
 import Window from "./Window";
+import { useTheme } from "./theme";
 
 const NONE = [];
 
 const toggle = (list, value) =>
-  list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
+  list.includes(value)
+    ? list.filter((item) => item !== value)
+    : [...list, value];
 
 // Product-card catalog with category/tag filters. Pass `projectList` to show a
 // subset (e.g. a category page); otherwise all projects from context are shown.
@@ -26,18 +29,19 @@ export default function Catalog({
   const [localTags, setLocalTags] = useState([]);
   const [currentCategories, setCurrentCategories] = useState([]);
   const currentTags = activeTags || localTags;
-  const toggleTag = onToggleTag || ((tag) => setLocalTags(toggle(localTags, tag)));
+  const toggleTag =
+    onToggleTag || ((tag) => setLocalTags(toggle(localTags, tag)));
 
   const tags = useMemo(
     () => [...new Set(allPosts.flatMap((post) => post.tags || []))],
-    [allPosts]
+    [allPosts],
   );
   const categories = useMemo(() => {
     const seen = new Map();
     allPosts.forEach((post) =>
       (post.categories || []).forEach((category) =>
-        seen.set(category.title, category)
-      )
+        seen.set(category.title, category),
+      ),
     );
     return [...seen.values()];
   }, [allPosts]);
@@ -50,10 +54,10 @@ export default function Catalog({
     return allPosts
       .map((post) => {
         const tagScore = (post.tags || []).filter((tag) =>
-          currentTags.includes(tag)
+          currentTags.includes(tag),
         ).length;
         const categoryScore = (post.categories || []).filter((category) =>
-          currentCategories.includes(category.title)
+          currentCategories.includes(category.title),
         ).length;
         return { post, score: tagScore + categoryScore };
       })
@@ -63,10 +67,34 @@ export default function Catalog({
   }, [allPosts, currentTags, currentCategories]);
 
   const hasFilters = currentTags.length > 0 || currentCategories.length > 0;
+  const activeCount = currentTags.length + currentCategories.length;
+
+  // the categories/tags fold out from a button: folded on the store skin, open on tube
+  const { theme } = useTheme();
+  const [filtersOpen, setFiltersOpen] = useState(theme === "tube");
+  useEffect(() => {
+    setFiltersOpen(theme === "tube");
+  }, [theme]);
+  const hasFilterBar = show_categories || show_tags;
 
   return (
-    <Window title={title} className="catalog">
-      {(show_categories || show_tags) && (
+    <Window
+      title={title}
+      className="catalog"
+      actions={
+        hasFilterBar && (
+          <button
+            className={`win__action ${filtersOpen ? "is-on" : ""}`}
+            aria-expanded={filtersOpen}
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          >
+            {filtersOpen ? "▲" : "▼"} CATEGORIES & TAGS
+            {activeCount > 0 && ` (${activeCount})`}
+          </button>
+        )
+      }
+    >
+      {hasFilterBar && filtersOpen && (
         <div className="filter-bar">
           {show_categories &&
             categories.map((category) => (
@@ -77,7 +105,9 @@ export default function Catalog({
                 }`}
                 aria-pressed={currentCategories.includes(category.title)}
                 onClick={() =>
-                  setCurrentCategories(toggle(currentCategories, category.title))
+                  setCurrentCategories(
+                    toggle(currentCategories, category.title),
+                  )
                 }
               >
                 {category.title}

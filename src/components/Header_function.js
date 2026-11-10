@@ -23,7 +23,7 @@ export default function Header() {
         {" "}
         <NavLink to="/" className="ad ad--checker ad--checker-grey">
           {info.logo && (
-            <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
+            <img className="logo-bar__sign" src={info.logo.asset.url} alt="" />
           )}
           {info.titleImage ? (
             <img
@@ -38,7 +38,7 @@ export default function Header() {
           )}
 
           {info.logo && (
-            <img className="logo-bar__img" src={info.logo.asset.url} alt="" />
+            <img className="logo-bar__sign" src={info.logo.asset.url} alt="" />
           )}
         </NavLink>
         <Link to="/projects" className="ad ad--red">

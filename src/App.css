@@ -148,7 +148,7 @@ button {
 }
 
 .blink {
-  animation: blink 1s steps(1) infinite;
+  animation: blink 0.1s steps(1) infinite;
 }
 @keyframes blink {
   50% {
@@ -442,7 +442,7 @@ body.page-glitch::after {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   min-height: 74px;
   padding: 6px 10px;
   border: 4px solid var(--ink);
@@ -539,10 +539,18 @@ body.page-glitch::after {
   min-width: 0;
   text-decoration: none;
 }
+.logo-bar {
+  display: flex;
+}
 .logo-bar__img {
   max-height: 72px;
   width: auto;
-  flex-grow: 1;
+  flex: 1 1 0; /* grow: 1, shrink: 1, basis: 0 */
+  min-width: 0; /* Key safety net */
+}
+.logo-bar__sign {
+  flex: 0 0 0; /* grow: 1, shrink: 1, basis: 0 */
+  min-width: 20px; /* Key safety net */
 }
 
 .chrome-text {

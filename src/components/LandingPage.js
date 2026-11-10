@@ -169,8 +169,14 @@ export default function LandingPage() {
 
         {/* CENTER: live window into /chaos */}
         <section className="col col--center">
-          <div className="fit-main" ref={mainRef}>
-            <div className="fit-core" ref={coreRef}>
+          <div
+            className={`fit-main ${isPhone ? "" : "fit-zone"}`}
+            ref={mainRef}
+          >
+            <div
+              className={`fit-core ${isPhone ? "fit-zone" : ""}`}
+              ref={coreRef}
+            >
               <ChaosWindow screenRef={screenRef} height={screenHeight} />
               <Marquee
                 className="marquee--ticker ad--checker ad--checker-grey"

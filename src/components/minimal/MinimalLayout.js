@@ -17,18 +17,26 @@ const yearOf = (project) =>
 function MinimalMedia({ item }) {
   if (item.youtube) {
     return (
-      <a className="minimal-media minimal-media--link" href={item.youtube.url} target="_blank" rel="noreferrer">
+      <a
+        className="minimal-media minimal-media--link"
+        href={item.youtube.url}
+        target="_blank"
+        rel="noreferrer"
+      >
         Video ↗
       </a>
     );
   }
-  const dims = item.image.asset.metadata && item.image.asset.metadata.dimensions;
+  const dims =
+    item.image.asset.metadata && item.image.asset.metadata.dimensions;
   return (
     <img
       className="minimal-media"
       src={urlFor(item.image.asset).width(1600).url()}
       alt={item.image.alt || ""}
-      style={dims ? { aspectRatio: `${dims.width} / ${dims.height}` } : undefined}
+      style={
+        dims ? { aspectRatio: `${dims.width} / ${dims.height}` } : undefined
+      }
       loading="lazy"
     />
   );
@@ -42,7 +50,10 @@ function MinimalHome({ preview }) {
     <div className="minimal-home">
       {image && image.asset ? (
         <figure className="minimal-preview" key={preview.slug.current}>
-          <img src={urlFor(image.asset).width(1600).url()} alt={image.alt || preview.title} />
+          <img
+            src={urlFor(image.asset).width(1600).url()}
+            alt={image.alt || preview.title}
+          />
           <figcaption>
             {preview.title}, {yearOf(preview)}
           </figcaption>
@@ -67,7 +78,8 @@ function MinimalProject() {
   if (project === null) return <p className="minimal-loading">Not found.</p>;
 
   const position = projectList.findIndex((post) => post.slug.current === slug);
-  const next = position >= 0 ? projectList[(position + 1) % projectList.length] : null;
+  const next =
+    position >= 0 ? projectList[(position + 1) % projectList.length] : null;
 
   return (
     <article className="minimal-project">
@@ -76,7 +88,11 @@ function MinimalProject() {
         <p className="minimal-meta">
           {yearOf(project)}
           {project.categories && project.categories.length > 0 && (
-            <> · {project.categories.map((category) => category.title).join(", ")}</>
+            <>
+              {" "}
+              ·{" "}
+              {project.categories.map((category) => category.title).join(", ")}
+            </>
           )}
           {project.client && <> · with {project.client}</>}
         </p>
@@ -105,10 +121,43 @@ function MinimalProject() {
   );
 }
 
+// The works, newest first, under their year
+function ProjectIndex({ byYear, onPreview = () => {}, className = "" }) {
+  return (
+    <nav
+      className={`minimal-list ${className}`}
+      onMouseLeave={() => onPreview(null)}
+    >
+      {byYear.map((group) => (
+        <div className="minimal-year" key={group.year}>
+          <span className="minimal-year__label">{group.year}</span>
+          <ul>
+            {group.projects.map((project) => (
+              <li key={project.slug.current}>
+                <NavLink
+                  to={"/projects/" + project.slug.current}
+                  onMouseEnter={() => onPreview(project)}
+                  onFocus={() => onPreview(project)}
+                >
+                  {project.title}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  );
+}
+
 // The "minimal" skin: a classic artist portfolio. Works listed by year on the left,
 // images and text on the right. Only a home page and project pages.
 export default function MinimalLayout() {
-  const { siteSettings, projectList = [], settingsProject } = useContext(AppContext);
+  const {
+    siteSettings,
+    projectList = [],
+    settingsProject,
+  } = useContext(AppContext);
   const [preview, setPreview] = useState(null);
   const [indexOpen, setIndexOpen] = useState(false);
   const { pathname } = useLocation();
@@ -138,34 +187,23 @@ export default function MinimalLayout() {
           <Link to="/" className="minimal-name">
             {siteSettings.title || "Esben Holk"}
           </Link>
-          <button className="minimal-toggle" onClick={() => setIndexOpen(!indexOpen)} aria-expanded={indexOpen}>
+          <button
+            className="minimal-toggle"
+            onClick={() => setIndexOpen(!indexOpen)}
+            aria-expanded={indexOpen}
+          >
             {indexOpen ? "Close" : "Index"}
           </button>
         </div>
 
-        <nav className="minimal-list" onMouseLeave={() => setPreview(null)}>
-          {byYear.map((group) => (
-            <div className="minimal-year" key={group.year}>
-              <span className="minimal-year__label">{group.year}</span>
-              <ul>
-                {group.projects.map((project) => (
-                  <li key={project.slug.current}>
-                    <NavLink
-                      to={"/projects/" + project.slug.current}
-                      onMouseEnter={() => setPreview(project)}
-                      onFocus={() => setPreview(project)}
-                    >
-                      {project.title}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
+        <ProjectIndex byYear={byYear} onPreview={setPreview} />
 
         <div className="minimal-foot">
-          {settingsProject && <NavLink to={"/projects/" + settingsProject.slug.current}>Info</NavLink>}
+          {settingsProject && (
+            <NavLink to={"/projects/" + settingsProject.slug.current}>
+              Info
+            </NavLink>
+          )}
           {(siteSettings.socialMediaHandles || []).map((handle, index) => (
             <a href={handle.url} key={index} target="_blank" rel="noreferrer">
               {handle.URLName || "Link"}
@@ -176,7 +214,14 @@ export default function MinimalLayout() {
       </aside>
 
       <main className="minimal-content">
-        <OnlyHomeAndProjects home={<MinimalHome preview={preview} />} project={<MinimalProject />} />
+        <OnlyHomeAndProjects
+          home={<MinimalHome preview={preview} />}
+          project={<MinimalProject />}
+        />
+        {/* phones: the index again at the end of the page */}
+        <footer className="minimal-footer">
+          <ProjectIndex byYear={byYear} className="minimal-list--footer" />
+        </footer>
       </main>
     </div>
   );

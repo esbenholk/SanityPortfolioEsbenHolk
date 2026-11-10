@@ -2501,3 +2501,43 @@ body .chaos-stage .chaos-exit {
   box-shadow: var(--bevel-out), var(--hard-shadow);
   font-size: 15px;
 }
+
+/* ============ which boxes fit the window ============ */
+/* Shown while developing (npm start / netlify dev), or with ?fit in the address.
+   Magenta dashes: the whole box that ends at the bottom of the window.
+   Cyan: the one element inside it that grows or shrinks to make that happen. */
+[data-show-fit] .fit-zone {
+  position: relative;
+  outline: 3px dashed #ff00ff;
+  outline-offset: 2px;
+}
+[data-show-fit] .fit-zone::after {
+  content: "↕ FITS THE WINDOW (header + this box)";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  padding: 2px 6px;
+  background: #ff00ff;
+  color: #fff;
+  font: 11px/1.3 var(--font-block);
+  pointer-events: none;
+}
+[data-show-fit] .fit-target {
+  outline: 3px solid #00e5ff;
+  outline-offset: 0;
+}
+/* drawn above the 3D scene so it can't hide behind it */
+[data-show-fit] .chaos-window.fit-target::after {
+  content: "↕ THIS STRETCHES";
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  border: 3px solid #00e5ff;
+  color: #000;
+  font: 11px/1.3 var(--font-block);
+  pointer-events: none;
+}

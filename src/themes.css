@@ -13,6 +13,7 @@
   gap: 4px;
   margin-top: 6px;
   font: 12px/1 var(--font-block);
+  flex-wrap: wrap;
 }
 .theme-switch__label {
   margin-right: 4px;
@@ -25,6 +26,8 @@
   background: var(--win);
   box-shadow: var(--bevel-out);
   font: 12px/1 var(--font-block);
+  text-wrap: nowrap;
+  overflow-x: hidden;
 }
 .theme-switch__btn.is-on {
   box-shadow: var(--bevel-in);
@@ -218,7 +221,8 @@
 }
 [data-theme="tube"] .room__floor {
   background-color: #0d0d0d;
-  background-image: linear-gradient(rgba(255, 144, 0, 0.25) 1px, transparent 1px),
+  background-image:
+    linear-gradient(rgba(255, 144, 0, 0.25) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 144, 0, 0.25) 1px, transparent 1px);
   background-size: 48px 48px;
 }
@@ -550,7 +554,9 @@
   pointer-events: auto;
   background: #000;
   border: 2px solid #ff9000;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 0 4px #ff2d75;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.7),
+    0 0 0 4px #ff2d75;
   animation: popup-in 0.25s steps(3) both;
 }
 @keyframes popup-in {
@@ -600,4 +606,78 @@
   color: #000;
   font: 13px/1 var(--font-block);
   animation: blink 1s steps(1) infinite;
+}
+
+/* ================================================================
+   TEXTURE: every background covered in images (--tex-1 … --tex-8,
+   set by components/retro/texture.js from Sanity's "Texture images")
+   ================================================================ */
+
+[data-theme="texture"] body {
+  background: #111 var(--tex-1) center / 480px repeat fixed;
+}
+[data-theme="texture"] .site {
+  background: var(--tex-2) center / 380px repeat;
+  border-color: #000;
+  outline-color: #fff;
+}
+
+/* each kind of box gets one of the images, filling it */
+[data-theme="texture"] .ad,
+[data-theme="texture"] .promo:nth-of-type(odd),
+[data-theme="texture"] .product-card:nth-child(4n + 1),
+[data-theme="texture"] .crumbs {
+  background: #000 var(--tex-3) center / cover;
+}
+[data-theme="texture"] .logo-bar,
+[data-theme="texture"] .room-wrap,
+[data-theme="texture"] .product-card:nth-child(4n + 2),
+[data-theme="texture"] .mega-strip {
+  background: #000 var(--tex-4) center / cover;
+}
+[data-theme="texture"] .nav-strip,
+[data-theme="texture"] .box-label,
+[data-theme="texture"] .marquee,
+[data-theme="texture"] .product-card:nth-child(4n + 3),
+[data-theme="texture"] .product-detail__info {
+  background: #000 var(--tex-5) center / cover;
+}
+[data-theme="texture"] .win,
+[data-theme="texture"] .product-card:nth-child(4n) {
+  background: #000 var(--tex-6) center / cover;
+}
+[data-theme="texture"] .win__bar,
+[data-theme="texture"] .enter-btn,
+[data-theme="texture"] .promo:nth-of-type(even),
+[data-theme="texture"] .hit-counter,
+[data-theme="texture"] .site-footer {
+  background: #000 var(--tex-7) center / cover;
+}
+[data-theme="texture"] .frame-tile,
+[data-theme="texture"] .badge,
+[data-theme="texture"] .btn95,
+[data-theme="texture"] .chip,
+[data-theme="texture"] .theme-switch__btn,
+[data-theme="texture"] .scrollbar__track,
+[data-theme="texture"] .webring {
+  background: #000 var(--tex-8) center / cover;
+}
+
+/* white text with a black edge stays readable on any picture */
+[data-theme="texture"] .site,
+[data-theme="texture"] .site a,
+[data-theme="texture"] .site button {
+  color: #fff !important;
+  -webkit-text-stroke: 0;
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    0 0 8px #000;
+}
+[data-theme="texture"] .theme-switch__btn.is-on,
+[data-theme="texture"] .badge.is-on {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
 }

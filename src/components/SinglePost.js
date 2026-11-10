@@ -22,7 +22,10 @@ export default function SinglePost() {
   // crumbs + media window fill the screen below the header (on phones the header moves below)
   const viewportRef = useRef(null);
   const mediaRef = useRef(null);
-  const mediaHeight = useFitToScreen(viewportRef, mediaRef, { min: 220, enabled: Boolean(singlePost) });
+  const mediaHeight = useFitToScreen(viewportRef, mediaRef, {
+    min: 220,
+    enabled: Boolean(singlePost),
+  });
 
   useEffect(() => setSlide(0), [slug]);
 
@@ -36,17 +39,23 @@ export default function SinglePost() {
   const position = projectList.findIndex((post) => post.slug.current === slug);
   const prevPost = position > 0 ? projectList[position - 1] : null;
   const nextPost =
-    position >= 0 && position < projectList.length - 1 ? projectList[position + 1] : null;
+    position >= 0 && position < projectList.length - 1
+      ? projectList[position + 1]
+      : null;
 
   const price =
     singlePost.abbreviated_year != null
       ? String(singlePost.abbreviated_year).padStart(2, "0")
       : singlePost.year
-      ? String(singlePost.year).slice(-2)
-      : null;
+        ? String(singlePost.year).slice(-2)
+        : null;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <div className="crumbs">
         <Link to="/projects">ARCHIVE</Link>
         {singlePost.categories &&
@@ -61,13 +70,14 @@ export default function SinglePost() {
       </div>
 
       <div className="product-detail">
-        <div className="product-detail__media-wrap" ref={mediaRef}>
+        <div className="product-detail__media-wrap fit-zone" ref={mediaRef}>
           <Window
             title={isAbout ? "me.bmp" : `${singlePost.title}.exe`}
             className="product-detail__media"
           >
             <MediaCarousel
               key={slug}
+              className="fit-target"
               ref={carouselRef}
               items={media}
               height={mediaHeight}
@@ -77,13 +87,19 @@ export default function SinglePost() {
 
             {media.length > 1 && (
               <div className="media-nav">
-                <button className="btn95" onClick={() => carouselRef.current.step(-1)}>
+                <button
+                  className="btn95"
+                  onClick={() => carouselRef.current.step(-1)}
+                >
                   ◀
                 </button>
                 <span className="media-nav__count">
                   {slide + 1} / {media.length}
                 </span>
-                <button className="btn95" onClick={() => carouselRef.current.step(1)}>
+                <button
+                  className="btn95"
+                  onClick={() => carouselRef.current.step(1)}
+                >
                   ▶
                 </button>
               </div>
@@ -93,7 +109,9 @@ export default function SinglePost() {
 
         <aside className="product-detail__info">
           <h1 className="page-title">{singlePost.title}</h1>
-          {singlePost.star_rating && <p className="stars">{singlePost.star_rating}</p>}
+          {singlePost.star_rating && (
+            <p className="stars">{singlePost.star_rating}</p>
+          )}
 
           {!isAbout && (
             <dl className="spec-list">
@@ -157,14 +175,20 @@ export default function SinglePost() {
           {!isAbout && (
             <div className="prev-next">
               {prevPost ? (
-                <Link to={"/projects/" + prevPost.slug.current} className="btn95">
+                <Link
+                  to={"/projects/" + prevPost.slug.current}
+                  className="btn95"
+                >
                   ◀ PREV
                 </Link>
               ) : (
                 <span />
               )}
               {nextPost && (
-                <Link to={"/projects/" + nextPost.slug.current} className="btn95">
+                <Link
+                  to={"/projects/" + nextPost.slug.current}
+                  className="btn95"
+                >
                   NEXT ▶
                 </Link>
               )}
@@ -174,7 +198,10 @@ export default function SinglePost() {
       </div>
 
       {singlePost.body && (
-        <Window title={isAbout ? "about_me.txt" : "readme.txt"} className="product-body">
+        <Window
+          title={isAbout ? "about_me.txt" : "readme.txt"}
+          className="product-body"
+        >
           <div className="blockContent">
             <BlockContent blocks={singlePost.body} />
           </div>

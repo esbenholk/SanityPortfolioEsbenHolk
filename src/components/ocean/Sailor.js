@@ -14,7 +14,13 @@ const BOUNDS = 110;
 // The visitor's boat: drag to look around, W/S (or ↑/↓) to sail, A/D (or ←/→) to turn,
 // the scroll wheel paddles forward and back. The camera rises and rolls with the waves.
 // `dragged` tells the cubes whether a click was really a drag; `obstacles` are cubes to sail around.
-export default function Sailor({ paused, dragged, obstacles, onMove, start = [0, 0, 34] }) {
+export default function Sailor({
+  paused,
+  dragged,
+  obstacles,
+  onMove,
+  start = [0, 0, 34],
+}) {
   const { camera, gl } = useThree();
   const state = useRef({
     yaw: 0,
@@ -34,7 +40,12 @@ export default function Sailor({ paused, dragged, obstacles, onMove, start = [0,
 
     const onKeyDown = (e) => {
       if (latest.current.paused || e.metaKey || e.ctrlKey) return;
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+      if (
+        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(
+          e.code,
+        )
+      )
+        e.preventDefault();
       s.keys.add(e.code);
       moved();
     };
@@ -59,7 +70,11 @@ export default function Sailor({ paused, dragged, obstacles, onMove, start = [0,
     const onWheel = (e) => {
       if (latest.current.paused) return;
       e.preventDefault();
-      s.speed = THREE.MathUtils.clamp(s.speed - e.deltaY * 0.012, -MAX_SPEED / 2, MAX_SPEED);
+      s.speed = THREE.MathUtils.clamp(
+        s.speed - e.deltaY * 0.012,
+        -MAX_SPEED / 2,
+        MAX_SPEED,
+      );
       moved();
     };
 
@@ -117,7 +132,7 @@ export default function Sailor({ paused, dragged, obstacles, onMove, start = [0,
     camera.position.set(
       s.position.x,
       EYE_HEIGHT + wave(s.position.x, s.position.y, t) * 0.3,
-      s.position.y
+      s.position.y,
     );
     camera.rotation.set(s.pitch + lean.z * 0.03, s.yaw, -lean.x * 0.035, "YXZ");
   });

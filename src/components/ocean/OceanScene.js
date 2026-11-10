@@ -1,6 +1,12 @@
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
 import * as THREE from "three";
 
 import urlFor from "../functions/urlFor";
@@ -52,11 +58,12 @@ function useCubeTextures(projects) {
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.anisotropy = 4;
           created.push(texture);
-          if (!cancelled) setTextures((all) => ({ ...all, [project.slug.current]: texture }));
+          if (!cancelled)
+            setTextures((all) => ({ ...all, [project.slug.current]: texture }));
           next();
         },
         undefined,
-        next
+        next,
       );
     };
     for (let i = 0; i < CONCURRENT_LOADS; i++) next();
@@ -78,7 +85,11 @@ function ProjectCube({ spot, texture, hovered, onHover, onExplore, dragged }) {
     const lean = slope(x, z, t);
     const cube = mesh.current;
     if (!cube) return;
-    cube.position.set(x, wave(x, z, t) * 0.35 + size * 0.3 + Math.sin(t * 0.7 + phase) * 0.06, z);
+    cube.position.set(
+      x,
+      wave(x, z, t) * 0.35 + size * 0.3 + Math.sin(t * 0.7 + phase) * 0.06,
+      z,
+    );
     cube.rotation.set(lean.z * 0.25, spin + t * 0.04, -lean.x * 0.25);
     const scale = THREE.MathUtils.lerp(cube.scale.x, hovered ? 1.08 : 1, 0.12);
     cube.scale.setScalar(scale);
@@ -108,22 +119,33 @@ function ProjectCube({ spot, texture, hovered, onHover, onExplore, dragged }) {
         emissive="#ffffff"
         emissiveIntensity={hovered ? 0.14 : 0}
       />
-      {hovered && (
-        <Html center position={[0, size * 0.95, 0]} className="ocean-tag" zIndexRange={[5, 0]}>
-          explore · {project.title}
-        </Html>
-      )}
     </mesh>
   );
 }
 
-// The ocean home page's 3D part: sky, water, a cube per project, and the visitor's boat
-export default function OceanScene({ projects, paused, onExplore, onMove, onReady }) {
+// The ocean home page's 3D part: sky, water, a cube per project, and the visitor's boat.
+// `onHoverStart` is told each time the pointer arrives on a cube (the page blows its title across the screen).
+export default function OceanScene({
+  projects,
+  paused,
+  onExplore,
+  onMove,
+  onReady,
+  onHoverStart,
+}) {
   const spots = useMemo(() => layout(projects), [projects]);
   const textures = useCubeTextures(projects);
   const [hovered, setHovered] = useState(null);
   const dragged = useRef(0);
   const loaded = Object.keys(textures).length;
+
+  const handleHover = useCallback(
+    (project) => {
+      setHovered(project);
+      if (project && onHoverStart) onHoverStart(project);
+    },
+    [onHoverStart],
+  );
 
   useEffect(() => {
     if (onReady) onReady(loaded, spots.length);
@@ -150,7 +172,11 @@ export default function OceanScene({ projects, paused, onExplore, onMove, onRead
         <Water />
       </Suspense>
       <hemisphereLight args={[PALETTE.horizon, PALETTE.deep, 1.3]} />
-      <directionalLight position={[sun.x, sun.y, sun.z]} intensity={2} color={PALETTE.sun} />
+      <directionalLight
+        position={[sun.x, sun.y, sun.z]}
+        intensity={2}
+        color={PALETTE.sun}
+      />
       <ambientLight intensity={0.35} />
       {spots.map((spot) => (
         <ProjectCube
@@ -158,12 +184,18 @@ export default function OceanScene({ projects, paused, onExplore, onMove, onRead
           spot={spot}
           texture={textures[spot.project.slug.current]}
           hovered={!paused && hovered === spot.project}
-          onHover={setHovered}
+          onHover={handleHover}
           onExplore={onExplore}
           dragged={dragged}
         />
       ))}
-      <Sailor paused={paused} dragged={dragged} obstacles={spots} onMove={onMove} start={[0, 0, 0]} />
+      <Sailor
+        paused={paused}
+        dragged={dragged}
+        obstacles={spots}
+        onMove={onMove}
+        start={[0, 0, 0]}
+      />
     </Canvas>
   );
 }

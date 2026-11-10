@@ -26,13 +26,17 @@ export default function ChaosWindow({ screenRef, height }) {
     >
       <Link
         to="/chaos"
-        className="chaos-window chaos-stage"
+        className="chaos-window chaos-stage fit-target"
         aria-label="Enter the chaos"
         innerRef={screenRef}
         style={height ? { height } : undefined}
       >
         <div className="mainbackground"></div>
-        <Suspense fallback={<span className="chaos-window__loading blink">LOADING CHAOS…</span>}>
+        <Suspense
+          fallback={
+            <span className="chaos-window__loading blink">LOADING CHAOS…</span>
+          }
+        >
           {projectList && (
             <Boids
               projects={projectList}

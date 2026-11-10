@@ -1,19 +1,39 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../globalState";
 
-// desktopOnly skins fall back to the storefront on phones and tablets
+// desktopOnly skins fall back to the storefront on phones and tablets.
+// `address`: visiting a matching URL switches to that skin (and then lands on the home page).
+// The number of repeated letters doesn't matter: /aaah and /aaaaaaaaaaaaah both work.
 export const THEMES = [
-  { id: "storefront", label: "STORE" },
-  { id: "tube", label: "TUBE" },
-  { id: "ocean", label: "OCEAN", desktopOnly: true },
-  { id: "minimal", label: "MINIMAL" },
+  {
+    id: "storefront",
+    label: "I MISS THE INTERNET",
+    address: /^\/a{3,}h+\/?$/i,
+  },
+  { id: "tube", label: "TUBE", address: /^\/u{3,}g*h+\/?$/i },
+  {
+    id: "ocean",
+    label: "OCEAN",
+    desktopOnly: true,
+    address: /^\/m{3,}\/?$/i,
+  },
+  {
+    id: "minimal",
+    label: "MINIMAL",
+    address: /^\/esbenholk-is-a-serious-artist\/?$/i,
+  },
+  { id: "texture", label: "TEXTURED" },
 ];
+
+// The skin whose secret address this is, if any
+export const themeForAddress = (pathname) =>
+  THEMES.find((option) => option.address && option.address.test(pathname));
 
 const DESKTOP_QUERY = "(min-width: 900px) and (pointer: fine)";
 
 export function useMediaQuery(query) {
   const [matches, setMatches] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(query).matches
+    () => typeof window !== "undefined" && window.matchMedia(query).matches,
   );
   useEffect(() => {
     const list = window.matchMedia(query);
@@ -46,7 +66,11 @@ const COPY = {
     mega: "EVERYTHING MUST GO",
   },
   tube: {
-    ads: ["HOT NEW UPLOADS DAILY", "MODELS IN YOUR AREA", "FREE CHAOS — NO SIGNUP"],
+    ads: [
+      "HOT NEW UPLOADS DAILY",
+      "MODELS IN YOUR AREA",
+      "FREE CHAOS — NO SIGNUP",
+    ],
     adSub: "100% FREE",
     equip: "CATEGORIES",
     feature: "NOW PLAYING",

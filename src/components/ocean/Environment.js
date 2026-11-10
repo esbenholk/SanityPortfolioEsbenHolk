@@ -11,7 +11,9 @@ export const SUN_DIRECTION = new THREE.Vector3(-0.5, 0.18, -1).normalize();
 // rippled by a scrolling "water normals" texture (from the three.js examples), tinted to the dawn palette
 // and faded into the horizon by the scene's fog.
 export function Water() {
-  const normals = useTexture(process.env.PUBLIC_URL + "/ocean/waternormals.jpg");
+  const normals = useTexture(
+    process.env.PUBLIC_URL + "/ocean/waternormals.jpg",
+  );
   const water = useMemo(() => {
     normals.wrapS = normals.wrapT = THREE.RepeatWrapping;
     const mirror = new ThreeWater(new THREE.PlaneGeometry(600, 600), {
@@ -34,7 +36,7 @@ export function Water() {
       water.geometry.dispose();
       water.material.dispose();
     },
-    [water]
+    [water],
   );
 
   useFrame((_, delta) => {
@@ -54,7 +56,7 @@ export function Sky() {
       uSun: { value: new THREE.Color(PALETTE.sun) },
       uSunDir: { value: SUN_DIRECTION },
     }),
-    []
+    [],
   );
 
   useFrame(({ camera }) => {

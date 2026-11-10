@@ -19,6 +19,15 @@ export default {
       },
     },
     {
+      name: "textureImages",
+      title: "Texture images",
+      description:
+        "For the TEXTURED skin: these images (or GIFs) cover every background on the site. Leave empty to use a random mix of project images.",
+      type: "array",
+      of: [{ type: "image" }],
+      options: { layout: "grid" },
+    },
+    {
       name: "greeting",
       title: "Site Greeting",
       type: "blockContent",

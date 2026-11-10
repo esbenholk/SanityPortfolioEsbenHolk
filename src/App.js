@@ -1,5 +1,11 @@
 /* eslint-disable no-lone-blocks */
-import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+} from "react-router-dom";
 import React, {
   Suspense,
   lazy,
@@ -23,8 +29,10 @@ import CursorTrail from "./components/retro/CursorTrail";
 import { scatterCommercials } from "./components/retro/Commercial";
 import { PageGlitch } from "./components/retro/Glitch";
 import PopupAds from "./components/retro/PopupAds";
+import useTextureImages from "./components/retro/texture";
 import {
   effectiveTheme,
+  themeForAddress,
   useIsDesktop,
   useMediaQuery,
 } from "./components/retro/theme";
@@ -47,6 +55,16 @@ const ABOUT_SLUG = "esben-holk-house-of-killing";
 function RouteGlitch() {
   const location = useLocation();
   return <PageGlitch trigger={location.pathname} />;
+}
+
+// The secret skin addresses (see THEMES in theme.js): switch skin, then go home
+function SkinAddress({ setTheme, children }) {
+  const { pathname } = useLocation();
+  const match = themeForAddress(pathname);
+  useEffect(() => {
+    if (match) setTheme(match.id);
+  }, [match, setTheme]);
+  return match ? <Redirect to="/" /> : children;
 }
 
 // The storefront and tube skins: header, every page type, footer.
@@ -133,6 +151,19 @@ function App() {
   const isDesktop = useIsDesktop();
   const shownTheme = effectiveTheme(theme, isDesktop);
 
+  // the "texture" skin covers everything in images
+  useTextureImages(shownTheme === "texture", siteSettings, sortedProjects);
+
+  // outlines the boxes sized to fit the window: always on your own computer, or add ?fit to the address
+  useEffect(() => {
+    if (
+      process.env.NODE_ENV === "development" ||
+      new URLSearchParams(window.location.search).has("fit")
+    ) {
+      document.documentElement.dataset.showFit = "";
+    }
+  }, []);
+
   useEffect(() => {
     document.documentElement.dataset.theme = shownTheme;
   }, [shownTheme]);
@@ -146,7 +177,7 @@ function App() {
   useEffect(() => {
     sanityClient
       .fetch(
-        '*[_type == "siteSettings"]{title, titleImage{asset->{_id,url}, hotspot, alt}, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt}, backgroundImage{asset->{_id,url}, hotspot, alt}, logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}',
+        '*[_type == "siteSettings"]{title, titleImage{asset->{_id,url}, hotspot, alt}, textureImages[]{asset->{_id, url, mimeType}}, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt}, backgroundImage{asset->{_id,url}, hotspot, alt}, logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}',
       )
       .then((data) => {
         setSiteSettings(data[0]);
@@ -235,19 +266,21 @@ function App() {
             {shownTheme !== "ocean" && shownTheme !== "minimal" && (
               <RouteGlitch />
             )}
-            {shownTheme === "ocean" ? (
-              siteSettings && projectList && <OceanLayout />
-            ) : shownTheme === "minimal" ? (
-              siteSettings && projectList && <MinimalLayout />
-            ) : (
-              <StoreLayout
-                theme={shownTheme}
-                siteSettings={siteSettings}
-                projectList={projectList}
-                sortedProjects={sortedProjects}
-                mainRef={mainRef}
-              />
-            )}
+            <SkinAddress setTheme={setTheme}>
+              {shownTheme === "ocean" ? (
+                siteSettings && projectList && <OceanLayout />
+              ) : shownTheme === "minimal" ? (
+                siteSettings && projectList && <MinimalLayout />
+              ) : (
+                <StoreLayout
+                  theme={shownTheme}
+                  siteSettings={siteSettings}
+                  projectList={projectList}
+                  sortedProjects={sortedProjects}
+                  mainRef={mainRef}
+                />
+              )}
+            </SkinAddress>
           </BrowserRouter>
         </AppContext.Provider>
       </Suspense>

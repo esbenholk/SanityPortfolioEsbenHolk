@@ -27,7 +27,9 @@ export default function SinglePost() {
     enabled: Boolean(singlePost),
   });
 
-  useEffect(() => setSlide(0), [slug]);
+  useEffect(() => {
+    setSlide(0);
+  }, [slug]);
 
   if (!singlePost) {
     return <p className="loading blink">LOADING… PLEASE WAIT (56k)</p>;

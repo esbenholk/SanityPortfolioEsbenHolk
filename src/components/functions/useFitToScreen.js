@@ -4,10 +4,12 @@ import { useLayoutEffect, useState } from "react";
 // exactly at the bottom of the screen when the page is scrolled to the top.
 // Whatever sits above the container (header, breadcrumbs…) is taken into account automatically.
 // Re-measures when the window or the container's other content (e.g. images loading) changes size.
+// The space left below the container is the container's own CSS margin-bottom,
+// so it's set in the CSS; pass `gap` (in px) to use a fixed number instead.
 export default function useFitToScreen(
   targetRef,
   containerRef,
-  { min = 100, gap = 40, enabled = true } = {},
+  { min = 100, gap, enabled = true } = {},
 ) {
   const [height, setHeight] = useState(null);
 
@@ -26,7 +28,11 @@ export default function useFitToScreen(
       frame = requestAnimationFrame(() => {
         const bottom =
           container.getBoundingClientRect().bottom + window.scrollY;
-        const overflow = bottom - (window.innerHeight - gap);
+        const space =
+          gap !== undefined
+            ? gap
+            : parseFloat(getComputedStyle(container).marginBottom) || 0;
+        const overflow = bottom - (window.innerHeight - space);
         const next = Math.max(
           min,
           Math.round(target.getBoundingClientRect().height - overflow),

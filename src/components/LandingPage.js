@@ -12,6 +12,7 @@ import Window from "./retro/Window";
 import FrameImage from "./retro/FrameImage";
 import GifWall from "./retro/GifWall";
 import ChaosWindow from "./retro/ChaosWindow";
+import ShooterWindow from "./retro/ShooterWindow";
 import AsciiBox from "./retro/AsciiBox";
 import InstaTicker from "./retro/InstaTicker";
 import { CommercialSlot, useCommercials } from "./retro/Commercial";
@@ -37,18 +38,28 @@ export default function LandingPage() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
   const projectList = myContext.projectList || NONE;
-  const categories = myContext.categories || NONE;
   const tags = myContext.tags || NONE;
   const { theme, copy } = useTheme();
   const centerCommercials = useCommercials("center");
 
-  // the chaos window grows/shrinks so header + window + ticker (+ commercials on desktop) fill the screen
+  // Fit to the window. Wide screens: the top band (.storefront--top) ends at the bottom of
+  // the window, minus its CSS margin-bottom; inside it the windows, the room and the
+  // commercials share the height (CSS: .storefront--fitted).
+  // Narrower: only the chaos window (+ ticker) is fitted, 40px above the window's bottom.
+  const topRef = useRef(null);
   const screenRef = useRef(null);
   const mainRef = useRef(null);
   const coreRef = useRef(null);
   const isPhone = useMediaQuery("(max-width: 760px)");
+  const threeColumns = useMediaQuery("(min-width: 1061px)");
+  const topHeight = useFitToScreen(topRef, topRef, {
+    min: 420,
+    enabled: threeColumns,
+  });
   const screenHeight = useFitToScreen(screenRef, isPhone ? coreRef : mainRef, {
     min: 180,
+    gap: 40,
+    enabled: !threeColumns,
   });
 
   const [activeTags, setActiveTags] = useState([]);
@@ -72,18 +83,6 @@ export default function LandingPage() {
     return [...picked, ...rest].slice(0, Math.max(6, picked.length));
   }, [myContext.hasFeaturedPosts, info, projectList]);
 
-  // One cover project per category for the "EQUIP" tiles
-  const categoryTiles = useMemo(
-    () =>
-      categories.slice(0, 2).map((category) => ({
-        category,
-        cover: projectList.find((post) =>
-          (post.categories || []).some((c) => c.title === category.title),
-        ),
-      })),
-    [categories, projectList],
-  );
-
   // Frames under the chaos window: site main images if set, otherwise projects after the featured ones
   const sideFrames = useMemo(() => {
     if (info.mainImages && info.mainImages.length > 0) {
@@ -105,72 +104,24 @@ export default function LandingPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="storefront">
-        {/* LEFT: equip */}
-        <aside className="col col--left">
+      {/* Everything you see on load: the top of the left column, the chaos window with
+          ticker and commercials, and the feature room. On wide screens this band gets its
+          height from the window; the space below it is its margin-bottom (.storefront--top in App.css). */}
+      <div
+        className={`storefront storefront--top ${threeColumns ? "storefront--fitted fit-zone" : ""}`}
+        ref={topRef}
+        style={topHeight ? { height: topHeight } : undefined}
+      >
+        <div className="col col--left">
           <h2 className="box-label box-label--red">{copy.equip}</h2>
-          {categoryTiles.map(({ category, cover }) => (
-            <Link
-              to={"/" + category.slug.current}
-              className="frame-tile"
-              key={category.slug.current}
-            >
-              {cover && (
-                <FrameImage
-                  image={cover.productImage || cover.mainImage}
-                  width={400}
-                />
-              )}
-              <span className="frame-tile__label">{category.title}</span>
-            </Link>
-          ))}
-
           <CommercialSlot slot="left" index={0} width={460} />
-
-          <div className="webring-grid">
-            {tags.slice(0, 10).map((tag, i) => (
-              <button
-                key={tag}
-                className={`badge badge--${BADGE_COLORS[i % BADGE_COLORS.length]} ${
-                  activeTags.includes(tag) ? "is-on" : ""
-                }`}
-                aria-pressed={activeTags.includes(tag)}
-                onClick={() => {
-                  toggleTag(tag);
-                  const catalog = document.getElementById("catalog");
-                  if (catalog) catalog.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                <span aria-hidden="true">
-                  {BADGE_ICONS[i % BADGE_ICONS.length]}
-                </span>
-                {tag}
-              </button>
-            ))}
-          </div>
-
-          <AsciiBox />
-
-          <HitCounter />
-
-          <CommercialSlot slot="left" index={1} width={460} />
-
-          {/* <div className="construction">
-            <span role="img" aria-label="construction">
-              🚧
-            </span>
-            <span>
-              UNDER
-              <br />
-              CONSTRUCTION
-            </span>
-          </div> */}
-        </aside>
+          <ShooterWindow />
+        </div>
 
         {/* CENTER: live window into /chaos */}
         <section className="col col--center">
           <div
-            className={`fit-main ${isPhone ? "" : "fit-zone"}`}
+            className={`fit-main ${!isPhone && !threeColumns ? "fit-zone" : ""}`}
             ref={mainRef}
           >
             <div
@@ -212,47 +163,41 @@ export default function LandingPage() {
         </section>
 
         {/* RIGHT: 3D showroom + enter */}
-        <aside className="col col--right">
+        <div className="col col--right">
           <h2 className="box-label box-label--black">{copy.feature}</h2>
           <Room3D projects={featured} />
-
           <Link to="/chaos" className="enter-btn">
             {copy.enter}
           </Link>
-
-          <CommercialSlot slot="right" index={0} width={580} />
-
-          <div className="promo promo--purple">
-            <strong>{projectList.length} WORKS</strong>
-            <span>IN STOCK NOW</span>
-          </div>
-          <Link to="/projects" className="promo promo--red">
-            ALL STOCK MUST GO
-          </Link>
-          <InstaTicker />
-
-          <CommercialSlot slot="right" index={1} width={580} />
-          <a href="#contact" className="promo promo--blue">
-            SIGN MY GUESTBOOK{" "}
-            <span role="img" aria-label="pen">
-              ✍
-            </span>
-          </a>
-        </aside>
+        </div>
       </div>
+      <GifWall projects={projectList} title={copy.wall} interval={100} />
+      <Marquee
+        className="marquee--ticker ad--checker ad--checker-grey"
+        items={projectList.map((post) => ({
+          label: post.title.toUpperCase(),
+          to: "/projects/" + post.slug.current,
+        }))}
+      />
+      <div className="flex">
+        {" "}
+        <InstaTicker />
+        <CommercialSlot slot="right" index={0} width={580} />
+      </div>
+      {/* the rest of the side columns, below the fold */}
+      <div className="storefront storefront--rest">
+        <aside className="col col--left">
+          {info.greeting && (
+            <Window title="welcome.txt" className="welcome">
+              <div className="headline">
+                <BlockContent blocks={info.greeting} />
+              </div>
+            </Window>
+          )}
+        </aside>
 
-      {theme !== "storefront" && (
-        <GifWall projects={projectList} title={copy.wall} interval={650} />
-      )}
-
-      {info.greeting && (
-        <Window title="welcome.txt" className="welcome">
-          <div className="headline">
-            <BlockContent blocks={info.greeting} />
-          </div>
-        </Window>
-      )}
-
+        <CommercialSlot slot="left" index={1} width={460} />
+      </div>
       <div id="catalog">
         <Catalog
           show_categories={true}
@@ -261,6 +206,8 @@ export default function LandingPage() {
           onToggleTag={toggleTag}
         />
       </div>
+      <CommercialSlot slot="right" index={1} width={580} />{" "}
+      <CommercialSlot slot="right" index={1} width={580} />
     </motion.div>
   );
 }

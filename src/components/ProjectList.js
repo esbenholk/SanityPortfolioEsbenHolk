@@ -1,17 +1,33 @@
-import React, { useState } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import urlFor, { hotspotStyle } from "./functions/urlFor";
 import Window from "./retro/Window";
 
+// the block breaker, with only the projects as targets
+const ShooterStage = lazy(() => import("./instagram/shooter/ShooterStage"));
+
 // The full archive as a "tech specs" table; hovering a row pops a preview window
 export default function ProjectList({ projectList }) {
   const [preview, setPreview] = useState(null);
+  const [playing, setPlaying] = useState(false);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Window title="C:\ARCHIVE\*.* — tech specs" className="archive">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Window
+        title="C:\ARCHIVE\*.* — tech specs"
+        className="archive"
+        actions={
+          <button className="win__action" onClick={() => setPlaying(true)}>
+            ◈ SHOOT THE ARCHIVE
+          </button>
+        }
+      >
         <table className="spec-table">
           <thead>
             <tr>
@@ -39,7 +55,9 @@ export default function ProjectList({ projectList }) {
                       project.categories.map((category, index) => (
                         <Link key={index} to={"/" + category.slug.current}>
                           {category.title}
-                          {index + 1 !== project.categories.length ? ", " : null}
+                          {index + 1 !== project.categories.length
+                            ? ", "
+                            : null}
                         </Link>
                       ))}
                   </td>
@@ -64,6 +82,12 @@ export default function ProjectList({ projectList }) {
             />
           </Window>
         </div>
+      )}
+
+      {playing && (
+        <Suspense fallback={null}>
+          <ShooterStage source="projects" onExit={() => setPlaying(false)} />
+        </Suspense>
       )}
     </motion.div>
   );

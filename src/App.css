@@ -1600,6 +1600,7 @@ button.win__action {
   padding: 4px 8px;
   font-size: 11px;
 }
+
 .shooter-picker {
   display: flex;
   flex-wrap: wrap;
@@ -1614,6 +1615,7 @@ button.win__action {
 .shooter-overlay--inspect {
   z-index: 3;
   background: rgba(5, 1, 13, 0.35);
+  cursor: pointer;
 }
 .shooter-inspect.win {
   width: min(440px, calc(100vw - 32px));
@@ -1671,7 +1673,12 @@ button.win__action {
 .shooter-inspect__actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+}
+.shooter-inspect__hint {
+  color: var(--win-dark);
+  font: 16px/1 var(--font-pixel);
 }
 
 /* ============ catalog ============ */
@@ -2388,8 +2395,10 @@ body > .chaos-stage {
 .product-detail__media {
   margin-bottom: 0;
 }
+/* the project page's fitted box: it ends this margin above the bottom of the window */
 .product-detail__media-wrap {
   min-width: 0;
+  margin-bottom: 40px;
 }
 
 /* phones: the project comes first, the header follows below it */
@@ -2512,7 +2521,7 @@ body .chaos-stage .chaos-exit {
   outline-offset: 2px;
 }
 [data-show-fit] .fit-zone::after {
-  content: "↕ FITS THE WINDOW (header + this box)";
+  content: "↕ FITS THE WINDOW (header + this box + its margin)";
   position: absolute;
   right: 0;
   bottom: 0;
@@ -2540,4 +2549,159 @@ body .chaos-stage .chaos-exit {
   color: #000;
   font: 11px/1.3 var(--font-block);
   pointer-events: none;
+}
+
+/* ============ shooter window (live look into the game) ============ */
+
+.shooter-window-frame {
+  margin-bottom: 0;
+}
+.shooter-window-frame .win__body {
+  padding: 0;
+}
+.shooter-window {
+  position: relative;
+  display: block;
+  height: 220px;
+  overflow: hidden;
+  background: #05010d;
+  cursor: crosshair;
+}
+.shooter-window canvas {
+  pointer-events: none;
+}
+.shooter-window__crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  background:
+    linear-gradient(var(--c-lime), var(--c-lime)) center / 2px 100% no-repeat,
+    linear-gradient(var(--c-lime), var(--c-lime)) center / 100% 2px no-repeat;
+  pointer-events: none;
+}
+.shooter-window__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  background: var(--ink);
+  border: 2px solid var(--c-lime);
+  color: var(--c-lime);
+  font: 16px/1 var(--font-pixel);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.shooter-window:hover .shooter-window__hint {
+  background: var(--c-lime);
+  color: var(--ink);
+}
+
+/* ============ landing: the top band fitted to the window ============ */
+/* .storefront--top holds what you see on load: the left column's label, commercial and
+   shooter window; the chaos window with ticker and commercials; the feature room and ENTER.
+   On wide screens LandingPage.js gives it a height so that it ends exactly
+   its margin-bottom above the bottom of the window — so change the margin here: */
+.storefront--top {
+  margin-bottom: 40px;
+}
+/* the rest of the side columns, below the band */
+.storefront--rest .col--left {
+  grid-column: 1;
+}
+.storefront--rest .col--right {
+  grid-column: 3;
+}
+
+@media (min-width: 1061px) {
+  .storefront--fitted {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .storefront--fitted > .col {
+    min-height: 0;
+    overflow: hidden;
+  }
+  /* labels, ticker and ENTER keep their size… */
+  .storefront--fitted > .col > *,
+  .storefront--fitted .fit-main > * {
+    flex-shrink: 0;
+  }
+
+  /* …the chaos window takes what the ticker and commercials leave */
+  .storefront--fitted .fit-main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .storefront--fitted .fit-main > .fit-core {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  /* windows stretch: frame → body → screen */
+  .storefront--fitted .chaos-window-frame,
+  .storefront--fitted .shooter-window-frame {
+    display: flex;
+    flex-direction: column;
+    flex: 2 1 0;
+    min-height: 0;
+  }
+  .storefront--fitted .chaos-window-frame > .win__body,
+  .storefront--fitted .shooter-window-frame > .win__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .storefront--fitted .chaos-window.chaos-stage,
+  .storefront--fitted .shooter-window {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  /* right: the feature room */
+  .storefront--fitted .room-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .storefront--fitted .room-wrap .room {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  /* left: the commercial fills its share, cropped */
+  .storefront--fitted > .col > .commercial {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .storefront--fitted > .col > .commercial img {
+    height: 100%;
+  }
+}
+
+/* narrower screens: the rest of the side columns sits in two columns, then one */
+@media (max-width: 1060px) {
+  .storefront--rest {
+    grid-template-areas: "left right";
+  }
+  .storefront--rest .col--left,
+  .storefront--rest .col--right {
+    grid-column: auto;
+  }
+}
+@media (max-width: 760px) {
+  .storefront--rest {
+    grid-template-areas:
+      "right"
+      "left";
+  }
 }

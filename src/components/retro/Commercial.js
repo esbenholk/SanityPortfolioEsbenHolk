@@ -16,24 +16,32 @@ const shuffle = (list) => {
   return copy;
 };
 
-// Scatter the commercials at random over the spots they're allowed in (new mix every page load)
+// Fill every spot with a random commercial (new mix every page load). Each spot prefers a
+// commercial that isn't on the page yet; when there aren't enough, commercials are reused.
+// A spot stays empty only if no commercial is allowed there ("Can appear in" in Sanity).
 export function scatterCommercials(commercials) {
+  const ads = (commercials || []).filter((ad) => ad.image && ad.image.asset);
+  const allowedIn = (ad, slot) =>
+    !ad.placements || !ad.placements.length || ad.placements.includes(slot);
   const slots = {};
   Object.keys(COMMERCIAL_SLOTS).forEach((slot) => (slots[slot] = []));
-  const allowedFor = (ad) =>
-    ad.placements && ad.placements.length
-      ? ad.placements
-      : Object.keys(COMMERCIAL_SLOTS);
-  shuffle((commercials || []).filter((ad) => ad.image && ad.image.asset))
-    // the pickiest ones choose first, so a header-only ad doesn't lose its spot to an "anywhere" one
-    .sort((a, b) => allowedFor(a).length - allowedFor(b).length)
-    .forEach((ad) => {
-      const open = allowedFor(ad).filter(
-        (slot) => slots[slot] && slots[slot].length < COMMERCIAL_SLOTS[slot],
-      );
-      if (open.length)
-        slots[open[Math.floor(Math.random() * open.length)]].push(ad);
-    });
+
+  // every single spot, in random order, so no part of the page gets first pick
+  const spots = shuffle(
+    Object.entries(COMMERCIAL_SLOTS).flatMap(([slot, count]) =>
+      Array(count).fill(slot),
+    ),
+  );
+  const used = new Set();
+  spots.forEach((slot) => {
+    const allowed = ads.filter((ad) => allowedIn(ad, slot));
+    if (!allowed.length) return;
+    const fresh = allowed.filter((ad) => !used.has(ad._id));
+    const pool = fresh.length ? fresh : allowed;
+    const ad = pool[Math.floor(Math.random() * pool.length)];
+    used.add(ad._id);
+    slots[slot].push(ad);
+  });
   return slots;
 }
 
@@ -104,7 +112,12 @@ export default function Commercial({ ad, width = 600, className = "" }) {
 export function CommercialSlot({ slot, index, width, className }) {
   const ads = useCommercials(slot);
   const shown = index === undefined ? ads : ads.slice(index, index + 1);
-  return shown.map((ad) => (
-    <Commercial ad={ad} width={width} className={className} key={ad._id} />
+  return shown.map((ad, i) => (
+    <Commercial
+      ad={ad}
+      width={width}
+      className={className}
+      key={`${ad._id}-${i}`}
+    />
   ));
 }

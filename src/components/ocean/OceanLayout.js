@@ -46,10 +46,21 @@ function Breeze({ breeze, onDone }) {
 }
 
 // What a cube unfolds into when it's explored
+// A click anywhere closes it and you sail on, except on "view the work".
 function ExplorePanel({ project, onClose }) {
   const image = project.mainImage || project.productImage;
+  // ignore the click that opened it
+  const openedAt = useRef(performance.now());
+  const close = () => {
+    if (performance.now() - openedAt.current > 400) onClose();
+  };
   return (
-    <div className="ocean-explore" role="dialog" aria-label={project.title}>
+    <div
+      className="ocean-explore"
+      role="dialog"
+      aria-label={project.title}
+      onClick={close}
+    >
       <div className="ocean-explore__card">
         {image && image.asset && (
           <img
@@ -73,12 +84,13 @@ function ExplorePanel({ project, onClose }) {
             <Link
               className="ocean-button ocean-button--solid"
               to={"/projects/" + project.slug.current}
+              onClick={(e) => e.stopPropagation()}
             >
               view the work
             </Link>
-            <button className="ocean-button" onClick={onClose}>
-              keep sailing
-            </button>
+            <span className="ocean-explore__hint">
+              click anywhere to keep sailing
+            </span>
           </div>
         </div>
       </div>
@@ -178,7 +190,9 @@ function OceanPost() {
   const { projectList = [] } = useContext(AppContext);
   const carouselRef = useRef(null);
 
-  useEffect(() => window.scrollTo(0, 0), [slug]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   if (project === undefined) return <p className="ocean-loading">surfacing…</p>;
   if (project === null)

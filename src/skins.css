@@ -18,6 +18,12 @@
   background: #fff;
   color: #111;
 }
+/* App.css hides sideways overflow on html/body, which stops position: sticky from working;
+   "clip" hides it just the same but keeps the menu stuck */
+[data-theme="minimal"],
+[data-theme="minimal"] body {
+  overflow-x: clip;
+}
 
 .minimal {
   --m-ink: #111;
@@ -44,13 +50,16 @@
   line-height: 1.55;
 }
 
-/* the menu scrolls together with the project, as one page */
+/* the menu stays put while the project scrolls (a long menu scrolls on its own) */
 .minimal-index {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  min-height: 100vh;
+  height: 100vh;
   padding: 32px 28px;
+  overflow-y: auto;
 }
 .minimal-footer {
   display: none;
@@ -219,6 +228,7 @@
   }
   .minimal-index.is-open {
     height: 100vh;
+    overflow-y: auto;
     gap: 24px;
   }
   .minimal-index.is-open .minimal-list,
@@ -230,7 +240,7 @@
     padding: 8px 20px 64px;
   }
   .minimal-index {
-    min-height: 0;
+    overflow-y: visible;
   }
   .minimal-footer {
     display: block;
@@ -637,4 +647,124 @@
 }
 .ocean-post__foot a:hover {
   opacity: 0.55;
+}
+
+/* ---- ocean fog: no hard edges anywhere ----
+   Panels, buttons and pictures fade out on all four sides, so everything seems to sit
+   in a soft, slightly opaque fog. --o-fog is how wide that fade is. */
+.ocean {
+  --o-fog: 34px;
+}
+.ocean-fog,
+.ocean-hint,
+.ocean-explore__card,
+.ocean .theme-switch,
+.ocean-button,
+.ocean-carousel .carousel__item {
+  border: 0 !important;
+  -webkit-mask-image:
+    linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--o-fog),
+      #000 calc(100% - var(--o-fog)),
+      transparent
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      #000 var(--o-fog),
+      #000 calc(100% - var(--o-fog)),
+      transparent
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--o-fog),
+      #000 calc(100% - var(--o-fog)),
+      transparent
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      #000 var(--o-fog),
+      #000 calc(100% - var(--o-fog)),
+      transparent
+    );
+  mask-composite: intersect;
+}
+/* small things get a narrower fade, or they'd vanish */
+.ocean .theme-switch,
+.ocean-button {
+  --o-fog: 9px;
+}
+.ocean .theme-switch {
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.4);
+}
+.ocean-hint {
+  --o-fog: 22px;
+  padding: 20px 26px;
+  background: rgba(255, 255, 255, 0.35);
+}
+/* the explore card: a cloud of glass, a little thicker in the middle */
+.ocean-explore {
+  background: none;
+}
+.ocean-explore__card {
+  --o-fog: 60px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.62),
+    rgba(255, 255, 255, 0.3) 75%
+  );
+  box-shadow: none;
+}
+.ocean-explore__card img {
+  -webkit-mask-image: linear-gradient(90deg, #000 60%, transparent);
+  mask-image: linear-gradient(90deg, #000 60%, transparent);
+}
+.ocean-explore__text {
+  padding: 60px 60px 50px 30px;
+}
+.ocean-explore__actions {
+  align-items: center;
+  gap: 14px;
+}
+.ocean-explore__hint {
+  color: var(--o-quiet);
+  font-size: 12px;
+}
+.ocean-explore,
+.ocean-explore__card {
+  cursor: pointer;
+}
+.ocean-explore__card a {
+  cursor: pointer;
+}
+.ocean-button {
+  padding: 12px 20px;
+  background: rgba(16, 32, 42, 0.82);
+  color: #fff !important;
+}
+.ocean-button:hover {
+  background: rgba(16, 32, 42, 0.65);
+}
+/* the work's pictures on its page */
+.ocean-carousel .carousel__item {
+  --o-fog: 26px;
+}
+/* lines become fading streaks */
+.ocean-post__foot {
+  border-top: 0;
+  background: linear-gradient(
+      90deg,
+      transparent,
+      var(--o-line) 20%,
+      var(--o-line) 80%,
+      transparent
+    )
+    top / 100% 1px no-repeat;
 }

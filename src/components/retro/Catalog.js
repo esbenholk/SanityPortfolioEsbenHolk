@@ -142,7 +142,8 @@ export default function Catalog({
       )}
 
       <p className="status-line">
-        {sortedPosts.length} item{sortedPosts.length === 1 ? "" : "s"} in stock
+        {sortedPosts.length} artwork{sortedPosts.length === 1 ? "" : "s"} on
+        view
         {hasFilters ? " matching your search" : ""}
       </p>
 

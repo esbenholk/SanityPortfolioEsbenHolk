@@ -28,7 +28,7 @@ export default function ProductCard({ post, index = 0 }) {
       className={`product-card product-card--${stripe}`}
       style={post.color ? { "--card-accent": post.color } : undefined}
     >
-      <div className="product-card__head">
+      <div className="product-card__head tube-meta">
         <span>
           {post.categories && post.categories[0]
             ? post.categories[0].title
@@ -58,7 +58,7 @@ export default function ProductCard({ post, index = 0 }) {
           {views} · <span>👍 {rating}</span>
         </p>
         {post.tags && post.tags.length > 0 && (
-          <p className="product-card__tags">
+          <p className="product-card__tags tube-meta">
             {post.tags.slice(0, 4).join(" / ")}
           </p>
         )}

@@ -2588,9 +2588,10 @@ body .chaos-stage .chaos-exit {
 }
 .shooter-window__hint {
   position: absolute;
-  left: 50%;
+  left: 10px;
+  right: 10px;
   bottom: 10px;
-  transform: translateX(-50%);
+
   padding: 3px 8px;
   background: var(--ink);
   border: 2px solid var(--c-lime);

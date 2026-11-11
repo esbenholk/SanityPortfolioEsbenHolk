@@ -207,6 +207,7 @@ export default function LandingPage() {
       </div>
       <CommercialSlot slot="right" index={1} width={580} />{" "}
       <CommercialSlot slot="right" index={1} width={580} />
+      <GifWall projects={projectList} title={copy.wall} interval={100} />
     </motion.div>
   );
 }

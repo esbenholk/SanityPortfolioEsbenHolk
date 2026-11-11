@@ -6,6 +6,21 @@ import { hashOf } from "./theme";
 
 const STRIPES = ["red", "blue", "magenta", "lime", "cyan", "orange"];
 
+// The card's shape in the store skin's mosaic, from its image's proportions:
+// wide images span two columns, tall ones two rows, and some square ones are big (2×2)
+function shapeOf(image, seed) {
+  const dims =
+    image &&
+    image.asset &&
+    image.asset.metadata &&
+    image.asset.metadata.dimensions;
+  if (!dims) return "square";
+  const ratio = dims.width / dims.height;
+  if (ratio >= 1.35) return "wide";
+  if (ratio <= 0.8) return "tall";
+  return seed % 4 === 0 ? "big" : "square";
+}
+
 // A project shown as a storefront product card
 export default function ProductCard({ post, index = 0 }) {
   // const price =
@@ -15,17 +30,19 @@ export default function ProductCard({ post, index = 0 }) {
   //       ? String(post.year).slice(-2)
   //       : "00";
   const stripe = STRIPES[index % STRIPES.length];
+  const image = post.productImage || post.mainImage;
 
   // Fake video stats for the tube skin (hidden in the other skins)
   const seed = hashOf(post.title);
   const duration = `${8 + (seed % 50)}:${String(seed % 60).padStart(2, "0")}`;
   const views = `${((seed % 9000) / 10 + 1).toFixed(1)}K views`;
   const rating = `${80 + (seed % 20)}%`;
+  const shape = shapeOf(image, seed);
 
   return (
     <Link
       to={"/projects/" + post.slug.current}
-      className={`product-card product-card--${stripe}`}
+      className={`product-card product-card--${stripe} product-card--${shape}`}
       style={post.color ? { "--card-accent": post.color } : undefined}
     >
       <div className="product-card__head tube-meta">
@@ -39,7 +56,7 @@ export default function ProductCard({ post, index = 0 }) {
 
       <div className="product-card__frame">
         <FrameImage
-          image={post.productImage || post.mainImage}
+          image={image}
           hoverImage={post.productImage ? post.mainImage : null}
           width={600}
         />

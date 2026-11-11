@@ -23,7 +23,24 @@ export const THEMES = [
     address: /^\/esbenholk-is-a-serious-artist\/?$/i,
   },
   { id: "texture", label: "TEXTURED" },
+  { id: "computer", label: "COMPUTER", desktopOnly: true },
 ];
+
+// A skin forced by ?skin=… in the address (not remembered), e.g. the page on the computer's screen
+export function skinFromAddress() {
+  if (typeof window === "undefined") return null;
+  const skin = new URLSearchParams(window.location.search).get("skin");
+  return THEMES.some((option) => option.id === skin) ? skin : null;
+}
+
+// true for the copy of the site shown inside the computer skin's screen
+export const isEmbedded = () => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+};
 
 // The skin whose secret address this is, if any
 export const themeForAddress = (pathname) =>

@@ -2302,7 +2302,8 @@ body > .chaos-stage {
   }
   .mega-strip {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 0;
   }
   .hide-sm {
     display: none;
@@ -2345,7 +2346,7 @@ body > .chaos-stage {
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  background: var(--ink);
+  /* background: var(--ink); */
   cursor: grab;
   outline-offset: -3px;
 }
@@ -2409,7 +2410,8 @@ body > .chaos-stage {
 @media (max-width: 760px) {
   .site-header + .site-footer,
   .mainContainer + .site-header {
-    border-top: 4px solid var(--ink);
+    border: 0px solid var(--ink);
+    padding-bottom: 14px;
   }
 }
 
@@ -2759,4 +2761,111 @@ body .chaos-stage .chaos-exit {
     flex-basis: 100%;
     order: -1;
   }
+}
+
+/* ============ store skin: catalog as a mosaic ============ */
+/* Cards take their size from their image (see shapeOf in ProductCard.js);
+   the picture fills the whole card, with the title and VIEW button on top of it. */
+
+[data-theme="storefront"] .catalog-grid {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-auto-rows: 190px;
+  grid-auto-flow: dense;
+  gap: 14px;
+}
+[data-theme="storefront"] .product-card--wide {
+  grid-column: span 2;
+}
+[data-theme="storefront"] .product-card--tall {
+  grid-row: span 2;
+}
+[data-theme="storefront"] .product-card--big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+[data-theme="storefront"] .product-card {
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="storefront"] .product-card__frame {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border: 0;
+}
+[data-theme="storefront"] .product-card__frame .frame-img img {
+  object-fit: cover;
+}
+[data-theme="storefront"] .product-card__new {
+  top: 6px;
+  right: 6px;
+}
+[data-theme="storefront"] .product-card__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex: none;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  padding: 36px 10px 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));
+}
+[data-theme="storefront"] .product-card__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--paper);
+  text-shadow:
+    2px 2px 0 var(--ink),
+    0 0 8px var(--ink);
+}
+[data-theme="storefront"] .product-card .stars {
+  display: none;
+}
+[data-theme="storefront"] .product-card__foot {
+  flex: none;
+  margin: 0;
+}
+[data-theme="storefront"] .product-card--big .product-card__title {
+  font-size: 26px;
+}
+@media (max-width: 760px) {
+  [data-theme="storefront"] .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 150px;
+  }
+}
+
+/* ============ tube: the fire strip ============ */
+.fire-strip {
+  position: relative;
+  height: 100px;
+  margin-bottom: 14px;
+  background: radial-gradient(ellipse at 50% 120%, #3a0d00, #000 70%);
+  cursor: pointer;
+}
+.fire-strip canvas {
+  position: absolute !important;
+  inset: 0;
+}
+.fire-strip__text {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  margin: 0;
+  color: #fff;
+  font: 900 26px/1 var(--font-block);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow:
+    0 0 8px #ff9000,
+    0 0 20px #ff2d00;
+  pointer-events: none;
 }

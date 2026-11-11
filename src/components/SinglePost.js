@@ -158,7 +158,7 @@ export default function SinglePost() {
             </div>
           )}
 
-          {price && !isAbout && (
+          {/* {price && !isAbout && (
             <div className="price-box">
               <span className="price">
                 {price}
@@ -166,7 +166,7 @@ export default function SinglePost() {
               </span>
               <span className="burst burst--small">SALE</span>
             </div>
-          )}
+          )} */}
 
           {singlePost.recap && (
             <div className="recap blockContent">

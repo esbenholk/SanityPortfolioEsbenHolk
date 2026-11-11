@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { SimplexNoise } from "three-stdlib";
 
 import { slope, wave } from "./waves";
 
@@ -10,6 +11,22 @@ const TURN_SPEED = 1.1;
 const DRAG = 1.6; // how quickly the boat slows down by itself
 const MAX_SPEED = 9;
 const BOUNDS = 110;
+
+// After pmndrs' camera-shake example: the view drifts towards the mouse (a little parallax)
+// and sways like a hand-held camera, driven by smooth noise like drei's <CameraShake>.
+const LOOK_YAW = 0.16; // how far the view follows the mouse sideways (radians)
+const LOOK_PITCH = 0.07;
+const SWAY = 0.7; // sideways drift of the camera with the mouse (world units)
+const SMOOTHING = 3.5; // higher = the camera catches up faster
+const SHAKE = {
+  yaw: 0.012,
+  pitch: 0.012,
+  roll: 0.01,
+  yawFrequency: 0.5,
+  pitchFrequency: 0.5,
+  rollFrequency: 0.4,
+};
+const noise = new SimplexNoise();
 
 // The visitor's boat: drag to look around, W/S (or ↑/↓) to sail, A/D (or ←/→) to turn,
 // the scroll wheel paddles forward and back. The camera rises and rolls with the waves.
@@ -25,6 +42,7 @@ export default function Sailor({
   const state = useRef({
     yaw: 0,
     pitch: -0.04,
+    view: null, // the smoothed camera: { yaw, pitch, sway }
     speed: 0,
     position: new THREE.Vector2(start[0], start[2]),
     keys: new Set(),
@@ -96,7 +114,7 @@ export default function Sailor({
     };
   }, [gl, dragged]);
 
-  useFrame(({ clock }, rawDelta) => {
+  useFrame(({ clock, pointer }, rawDelta) => {
     const s = state.current;
     const delta = Math.min(rawDelta, 0.05);
     const keys = latest.current.paused ? new Set() : s.keys;
@@ -129,12 +147,36 @@ export default function Sailor({
 
     const t = clock.elapsedTime;
     const lean = slope(s.position.x, s.position.y, t);
+
+    // where the camera wants to look: the boat's heading, nudged towards the mouse
+    const follow = latest.current.paused ? 0 : 1;
+    const target = {
+      yaw: s.yaw - pointer.x * LOOK_YAW * follow,
+      pitch: s.pitch + pointer.y * LOOK_PITCH * follow,
+      sway: pointer.x * SWAY * follow,
+    };
+    if (!s.view) s.view = { ...target };
+    const ease = 1 - Math.exp(-SMOOTHING * delta);
+    s.view.yaw += (target.yaw - s.view.yaw) * ease;
+    s.view.pitch += (target.pitch - s.view.pitch) * ease;
+    s.view.sway += (target.sway - s.view.sway) * ease;
+
+    // the camera drifts sideways with the mouse, rides the swell and sways
+    const sideX = Math.cos(s.view.yaw);
+    const sideZ = -Math.sin(s.view.yaw);
     camera.position.set(
-      s.position.x,
+      s.position.x + sideX * s.view.sway,
       EYE_HEIGHT + wave(s.position.x, s.position.y, t) * 0.3,
-      s.position.y,
+      s.position.y + sideZ * s.view.sway,
     );
-    camera.rotation.set(s.pitch + lean.z * 0.03, s.yaw, -lean.x * 0.035, "YXZ");
+    camera.rotation.set(
+      s.view.pitch +
+        lean.z * 0.03 +
+        SHAKE.pitch * noise.noise(t * SHAKE.pitchFrequency, 1),
+      s.view.yaw + SHAKE.yaw * noise.noise(t * SHAKE.yawFrequency, 2),
+      -lean.x * 0.035 + SHAKE.roll * noise.noise(t * SHAKE.rollFrequency, 3),
+      "YXZ",
+    );
   });
 
   return null;

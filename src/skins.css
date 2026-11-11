@@ -768,3 +768,84 @@
     )
     top / 100% 1px no-repeat;
 }
+
+/* ============ computer: the site on a floating laptop ============ */
+
+[data-theme="computer"] .site {
+  max-width: none;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+[data-theme="computer"] body {
+  background: radial-gradient(ellipse at 50% 40%, #00ff1a, #0000ff 60%);
+}
+.computer {
+  position: fixed;
+  inset: 0;
+}
+.computer-marquee-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* each background marquee gets its own random colours (set in ComputerLayout.js) */
+.computer-marquee .marquee {
+  background: var(--marquee-bg);
+  border-color: var(--marquee-border);
+  color: var(--marquee-text);
+}
+.computer-marquee .marquee__sep {
+  color: var(--marquee-border);
+}
+.computer canvas {
+  position: absolute !important;
+  inset: 0;
+}
+/* the laptop's screen (the example's size), and the site in it: a 1336 × 864 desktop
+   browser window, shrunk to a quarter so it fits */
+.computer-screen {
+  width: 1336px; /* was 334px */
+  height: 864px; /* was 216px */
+  overflow: hidden;
+  border-radius: 12px; /* was 3px: everything is 4× bigger now */
+  /* background: #000; */
+}
+.computer-screen__wrapper {
+  width: 100%; /* was 1336px */
+  height: 100%; /* was 864px */
+  /* delete the transform: scale(0.25) and transform-origin lines */
+}
+.computer-screen__wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+.computer-bar {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: none;
+}
+.computer-bar > * {
+  pointer-events: auto;
+}
+.computer-bar .theme-switch {
+  margin: 0;
+}

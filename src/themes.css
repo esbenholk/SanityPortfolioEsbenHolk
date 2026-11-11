@@ -681,3 +681,11 @@
   outline: 3px solid #fff;
   outline-offset: -3px;
 }
+
+@media (max-width: 700px) {
+  .gif-wall__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+}

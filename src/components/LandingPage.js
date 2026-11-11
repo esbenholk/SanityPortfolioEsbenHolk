@@ -1,4 +1,11 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -18,6 +25,8 @@ import InstaTicker from "./retro/InstaTicker";
 import { CommercialSlot, useCommercials } from "./retro/Commercial";
 import { useMediaQuery, useTheme } from "./retro/theme";
 import useFitToScreen from "./functions/useFitToScreen";
+
+const FireStrip = lazy(() => import("./retro/FireStrip"));
 
 const NONE = [];
 const BADGE_ICONS = [
@@ -171,6 +180,12 @@ export default function LandingPage() {
           </Link>
         </div>
       </div>
+      {/* tube only: a strip of fire that flares up under the mouse */}
+      {theme === "tube" && (
+        <Suspense fallback={null}>
+          <FireStrip />
+        </Suspense>
+      )}
       <GifWall projects={projectList} title={copy.wall} interval={100} />
       <Marquee
         reverse={true}

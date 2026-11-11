@@ -32,6 +32,7 @@ import PopupAds from "./components/retro/PopupAds";
 import useTextureImages from "./components/retro/texture";
 import {
   effectiveTheme,
+  skinFromAddress,
   themeForAddress,
   useIsDesktop,
   useMediaQuery,
@@ -47,6 +48,9 @@ const InstagramPage = lazy(
 );
 const OceanLayout = lazy(() => import("./components/ocean/OceanLayout"));
 const MinimalLayout = lazy(() => import("./components/minimal/MinimalLayout"));
+const ComputerLayout = lazy(
+  () => import("./components/computer/ComputerLayout"),
+);
 
 // The about page is a project with this slug; it's kept out of the project grids
 const ABOUT_SLUG = "esben-holk-house-of-killing";
@@ -138,8 +142,11 @@ function App() {
   const [commercials, setCommercials] = useState([]);
   const mainRef = createRef();
 
-  // Site skin: "storefront" | "tube" | "ocean" | "minimal", remembered per browser
+  // Site skin (see THEMES in theme.js), remembered per browser. ?skin=… in the address
+  // forces one without remembering it: the computer skin uses that for the page on its screen.
+  const [forcedSkin] = useState(() => skinFromAddress());
   const [theme, setTheme] = useState(() => {
+    if (forcedSkin) return forcedSkin;
     try {
       return localStorage.getItem("hok_theme") || "storefront";
     } catch (e) {
@@ -169,10 +176,11 @@ function App() {
   }, [shownTheme]);
 
   useEffect(() => {
+    if (forcedSkin) return;
     try {
       localStorage.setItem("hok_theme", theme);
     } catch (e) {}
-  }, [theme]);
+  }, [theme, forcedSkin]);
 
   useEffect(() => {
     sanityClient
@@ -189,7 +197,7 @@ function App() {
 
     sanityClient
       .fetch(
-        '*[_type == "project"]{id, title,mainImage{asset->{_id,url}, hotspot, alt}, productImage{asset->{_id,url}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, body, yearString, videos[]}',
+        '*[_type == "project"]{id, title,mainImage{asset->{_id,url,metadata{dimensions}}, hotspot, alt}, productImage{asset->{_id,url,metadata{dimensions}}, hotspot, alt}, year, abbreviated_year, star_rating ,slug, categories[]->{title, slug}, imagesGallery[], tags, color, recap, body, yearString, videos[]}',
       )
       .then((data) => {
         data.sort((a, b) => b.year - a.year);
@@ -267,7 +275,9 @@ function App() {
               <RouteGlitch />
             )}
             <SkinAddress setTheme={setTheme}>
-              {shownTheme === "ocean" ? (
+              {shownTheme === "computer" ? (
+                siteSettings && projectList && <ComputerLayout />
+              ) : shownTheme === "ocean" ? (
                 siteSettings && projectList && <OceanLayout />
               ) : shownTheme === "minimal" ? (
                 siteSettings && projectList && <MinimalLayout />

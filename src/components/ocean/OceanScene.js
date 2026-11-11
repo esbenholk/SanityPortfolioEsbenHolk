@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 
 import urlFor from "../functions/urlFor";
@@ -111,11 +112,15 @@ function ProjectCube({ spot, texture, hovered, onHover, onExplore, dragged }) {
       }}
     >
       <boxGeometry args={[size, size, size]} />
-      <meshStandardMaterial
+      {/* glossy and clear-coated, like the camera-shake example's model */}
+      <meshPhysicalMaterial
         key={texture ? "image" : "plain"}
         map={texture || null}
         color={texture ? "#ffffff" : "#efe7dc"}
-        roughness={0.6}
+        roughness={0.08}
+        clearcoat={1}
+        clearcoatRoughness={0}
+        envMapIntensity={0.9}
         emissive="#ffffff"
         emissiveIntensity={hovered ? 0.14 : 0}
       />
@@ -166,7 +171,43 @@ export default function OceanScene({
       dpr={[1, 1.5]}
       camera={{ fov: 62, near: 0.1, far: 1500, position: [0, 2.2, 0] }}
     >
-      <fog attach="fog" args={[PALETTE.horizon, 70, 230]} />
+      {/* a close, soft mist: the far cubes fade into the horizon colour */}
+      <fog attach="fog" args={[PALETTE.horizon, 28, 150]} />
+      {/* what the glossy cubes reflect: soft glowing panels in the dawn colours
+          (made on the spot, nothing to download) */}
+      <Environment resolution={256}>
+        <Lightformer
+          form="rect"
+          intensity={2}
+          color={PALETTE.sun}
+          position={[-10, 6, -20]}
+          scale={[30, 8, 1]}
+        />
+        <Lightformer
+          form="rect"
+          intensity={1.2}
+          color={PALETTE.horizon}
+          position={[20, 4, 10]}
+          rotation-y={-Math.PI / 2}
+          scale={[40, 10, 1]}
+        />
+        <Lightformer
+          form="rect"
+          intensity={0.8}
+          color={PALETTE.zenith}
+          position={[0, 20, 0]}
+          rotation-x={Math.PI / 2}
+          scale={[50, 50, 1]}
+        />
+        <Lightformer
+          form="ring"
+          intensity={1.5}
+          color={PALETTE.shallow}
+          position={[0, -6, 0]}
+          rotation-x={-Math.PI / 2}
+          scale={20}
+        />
+      </Environment>
       <Sky />
       <Suspense fallback={null}>
         <Water />

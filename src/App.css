@@ -2917,3 +2917,260 @@ body .chaos-stage .chaos-exit {
 .entropy-restore:active {
   box-shadow: var(--bevel-in);
 }
+
+/* ============ vibeCAPTCHA (retro/VibeCheck.js): first visit picks the skin ============ */
+
+.vibe {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  color: #222;
+}
+.vibe button {
+  font-family: inherit;
+}
+.vibe-box {
+  background: #fff;
+  border: 1px solid #d3d3d3;
+  border-radius: 3px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+  animation: vibe-in 0.25s ease both;
+}
+@keyframes vibe-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* step 1: the checkbox */
+.vibe-box--checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(304px, 100%);
+  padding: 14px 12px 14px 14px;
+  background: #f9f9f9;
+}
+.vibe-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #222;
+  font-size: 14px;
+  cursor: pointer;
+}
+.vibe-check__box {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #c1c1c1;
+  border-radius: 2px;
+  background: #fff;
+  color: #009e55;
+  font-size: 24px;
+  font-weight: 700;
+}
+.vibe-check:hover .vibe-check__box {
+  border-color: #b2b2b2;
+}
+.vibe-check.is-done {
+  cursor: default;
+}
+.vibe-check.is-done .vibe-check__box {
+  border-color: transparent;
+}
+.vibe-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #555;
+  font-size: 10px;
+}
+.vibe-logo__mark {
+  color: #4a90e2;
+  font-size: 26px;
+  line-height: 1;
+}
+.vibe-logo small {
+  font-size: 8px;
+  color: #999;
+}
+
+/* step 2: the images */
+.vibe-box--grid {
+  width: min(400px, 100%);
+  padding: 7px;
+}
+.vibe-head {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 20px;
+  background: #4a90e2;
+  color: #fff;
+  font-size: 14px;
+}
+.vibe-head strong {
+  font-size: 26px;
+  line-height: 1.2;
+}
+.vibe-head span:last-child {
+  margin-top: 6px;
+  font-size: 13px;
+}
+.vibe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 7px;
+}
+.vibe-tile {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #eee;
+  cursor: pointer;
+}
+.vibe-tile img,
+.vibe-stand-in {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.12s ease;
+}
+.vibe-tile.is-picked img,
+.vibe-tile.is-picked .vibe-stand-in {
+  transform: scale(0.8);
+}
+.vibe-tile.is-picked::after {
+  content: "✓";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4a90e2;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+.vibe-nudge {
+  margin: 8px 4px 0;
+  color: #d93025;
+  font-size: 13px;
+}
+.vibe-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 7px;
+  padding: 8px 2px 0;
+  border-top: 1px solid #dfdfdf;
+}
+.vibe-tools {
+  display: flex;
+  gap: 10px;
+}
+.vibe-tools button {
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: #6f6f6f;
+  font-size: 18px;
+  cursor: pointer;
+}
+.vibe-tools button:last-child {
+  font-size: 13px;
+  text-decoration: underline;
+}
+.vibe-verify {
+  padding: 11px 24px;
+  border: 0;
+  border-radius: 2px;
+  background: #4a90e2;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.vibe-verify:hover {
+  background: #357ae8;
+}
+
+/* drawn stand-ins for skins without vibe images in Sanity yet */
+.vibe-stand-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.vibe-stand-in__emoji {
+  font-size: 40px;
+}
+.vibe-stand-in__word {
+  font: 700 12px/1 var(--font-block);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.vibe-stand-in--computer {
+  background: radial-gradient(circle at 50% 40%, #00ff1a, #0000ff 75%);
+}
+.vibe-stand-in--ocean {
+  background: linear-gradient(180deg, #f6b8a2, #e8d8e4 45%, #9ec7d6 55%, #5e9fae);
+}
+.vibe-stand-in--ocean.vibe-stand-in--v1 {
+  background: linear-gradient(180deg, #8fb8cf, #f2e2d2 48%, #ed00f5 52%, #00ffaa);
+}
+.vibe-stand-in--texture {
+  background: repeating-conic-gradient(#ff2bd6 0 25%, #00e5ff 0 50%) 0 0 / 22px 22px;
+}
+.vibe-stand-in--texture.vibe-stand-in--v1 {
+  background: repeating-linear-gradient(45deg, #ffe600 0 10px, #7a1fff 10px 20px, #39ff14 20px 30px);
+}
+.vibe-stand-in--storefront {
+  background: #39ff14 repeating-conic-gradient(#c0c0c0 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+  color: #e8001c;
+  text-shadow: 1px 1px 0 #000;
+}
+.vibe-stand-in--storefront.vibe-stand-in--v1 {
+  background: #1530d6;
+  color: #ffe600;
+}
+.vibe-stand-in--tube {
+  background: radial-gradient(circle at 50% 60%, #ff2d75, #120008 70%);
+}
+.vibe-stand-in--tube.vibe-stand-in--v1 {
+  background: radial-gradient(circle at 50% 60%, #ff9000, #0b0b0b 70%);
+}
+.vibe-stand-in--minimal {
+  background: #fff;
+  color: #111;
+  text-shadow: none;
+}
+.vibe-stand-in--minimal .vibe-stand-in__word {
+  font: 400 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.vibe-stand-in--minimal.vibe-stand-in--v1 {
+  background: #f2f2f2;
+}

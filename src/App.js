@@ -30,8 +30,10 @@ import { scatterCommercials } from "./components/retro/Commercial";
 import { PageGlitch } from "./components/retro/Glitch";
 import PopupAds from "./components/retro/PopupAds";
 import TextureSkin from "./components/retro/texture";
+import VibeCheck from "./components/retro/VibeCheck";
 import {
   effectiveTheme,
+  isEmbedded,
   skinFromAddress,
   themeForAddress,
   useIsDesktop,
@@ -154,6 +156,37 @@ function App() {
     }
   });
 
+  // A first visit (no skin picked in this browser yet) starts with the vibeCAPTCHA, which
+  // picks the skin. Not inside the computer's screen, and not when arriving through a
+  // secret skin address.
+  const [vibeCheck, setVibeCheck] = useState(() => {
+    if (forcedSkin || isEmbedded()) return false;
+    if (themeForAddress(window.location.pathname)) return false;
+    try {
+      return (
+        !localStorage.getItem("hok_theme") &&
+        !localStorage.getItem("hok_vibe_checked")
+      );
+    } catch (e) {
+      return false;
+    }
+  });
+  // remember the skin (not before the vibeCAPTCHA is answered: it should still show on a reload)
+  useEffect(() => {
+    if (forcedSkin || vibeCheck) return;
+    try {
+      localStorage.setItem("hok_theme", theme);
+    } catch (e) {}
+  }, [theme, forcedSkin, vibeCheck]);
+
+  const finishVibeCheck = (skin) => {
+    setTheme(skin);
+    setVibeCheck(false);
+    try {
+      localStorage.setItem("hok_vibe_checked", "1");
+    } catch (e) {}
+  };
+
   // a desktop-only skin falls back to the storefront on phones
   const isDesktop = useIsDesktop();
   const shownTheme = effectiveTheme(theme, isDesktop);
@@ -171,13 +204,6 @@ function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = shownTheme;
   }, [shownTheme]);
-
-  useEffect(() => {
-    if (forcedSkin) return;
-    try {
-      localStorage.setItem("hok_theme", theme);
-    } catch (e) {}
-  }, [theme, forcedSkin]);
 
   // What the computer skin's screen shows: the store or the tube, whichever of the two
   // was picked last before going to the computer (remembered like the skin itself)
@@ -199,7 +225,7 @@ function App() {
   useEffect(() => {
     sanityClient
       .fetch(
-        '*[_type == "siteSettings"]{title, titleImage{asset->{_id,url}, hotspot, alt}, textureImages[]{asset->{_id, url, mimeType}}, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt}, backgroundImage{asset->{_id,url}, hotspot, alt}, logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}',
+        '*[_type == "siteSettings"]{title, titleImage{asset->{_id,url}, hotspot, alt}, textureImages[]{asset->{_id, url, mimeType}}, vibeImages[]{skin, image{asset->{_id, url, mimeType}}}, greeting, mainImage{asset->{_id,url}, hotspot, alt}, mainImages, authorImage{asset->{_id,url}, hotspot, alt}, backgroundImage{asset->{_id,url}, hotspot, alt}, logo{asset->{_id,url}}, footerlogo{asset->{_id,url}},featuredProjects, about, contact, socialMediaHandles[]{logo{asset->{_id,url}},url, URLName}, contactDetails, contactHours}',
       )
       .then((data) => {
         setSiteSettings(data[0]);
@@ -314,6 +340,13 @@ function App() {
               )}
             </SkinAddress>
           </BrowserRouter>
+          {vibeCheck && siteSettings && (
+            <VibeCheck
+              vibeImages={siteSettings.vibeImages}
+              isDesktop={isDesktop}
+              onDone={finishVibeCheck}
+            />
+          )}
         </AppContext.Provider>
       </Suspense>
     </main>

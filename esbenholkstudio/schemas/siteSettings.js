@@ -28,6 +28,40 @@ export default {
       options: { layout: "grid" },
     },
     {
+      name: "vibeImages",
+      title: "Vibe check images",
+      description:
+        "The 'select all images that match your vibe' test on a visitor's first visit picks their starting skin. Tag each image with the skin it stands for. Nine are shown: 1 computer, 1 textured, 1 ocean, 2 internet nostalgia, 2 minimal, 2 sexy (picked at random when you add more). Missing ones are drawn stand-ins.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "vibeImage",
+          fields: [
+            { name: "image", title: "Image or GIF", type: "image" },
+            {
+              name: "skin",
+              title: "Stands for",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Computer", value: "computer" },
+                  { title: "Ocean", value: "ocean" },
+                  { title: "Textured", value: "texture" },
+                  { title: "Internet nostalgia (I miss the internet)", value: "storefront" },
+                  { title: "Sexy (tube)", value: "tube" },
+                  { title: "Minimal", value: "minimal" },
+                ],
+              },
+            },
+          ],
+          preview: {
+            select: { title: "skin", media: "image" },
+          },
+        },
+      ],
+    },
+    {
       name: "greeting",
       title: "Site Greeting",
       type: "blockContent",

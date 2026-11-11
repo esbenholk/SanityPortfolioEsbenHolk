@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import AppContext from "../globalState";
@@ -15,6 +15,9 @@ const CHAOS_VARS = [
   "--c-lime",
   "--c-cyan",
 ];
+
+// skins where the ENTROPY button is in the footer
+const ENTROPY_SKINS = ["storefront", "tube", "texture"];
 
 const randomColor = () =>
   `#${Math.floor(Math.random() * 0xffffff)
@@ -33,6 +36,37 @@ export default function Footer({ info }) {
   const slogan3 = useMemo(() => randomSlogan(theme), [theme, pathname]);
   const slogan4 = useMemo(() => randomSlogan(theme), [theme, pathname]);
   const slogan5 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+
+  // ENTROPY: the whole page collapses under gravity (retro/entropy.js, loaded on demand)
+  const stopEntropy = useRef(null);
+  const [entropy, setEntropy] = useState(false);
+  const startEntropy = async () => {
+    if (stopEntropy.current) return;
+    const { default: start } = await import("./retro/entropy");
+    const site = document.querySelector(".site");
+    if (!site) return;
+    const stop = start(site);
+    stopEntropy.current = () => {
+      stop();
+      stopEntropy.current = null;
+      setEntropy(false);
+    };
+    // its own "restore order" button calls stop too
+    document
+      .querySelector(".entropy-restore")
+      .addEventListener(
+        "click",
+        () => stopEntropy.current && stopEntropy.current(),
+      );
+    setEntropy(true);
+  };
+  // leaving the page or changing skin puts everything back first
+  useEffect(
+    () => () => {
+      if (stopEntropy.current) stopEntropy.current();
+    },
+    [pathname, theme],
+  );
 
   // Chaos mode: every scroll repaints the palette
   useEffect(() => {
@@ -142,6 +176,16 @@ export default function Footer({ info }) {
               </NavLink>
             </div>
           </div>
+
+          {ENTROPY_SKINS.includes(theme) && (
+            <button
+              className={`chaos-btn entropy-btn ${entropy ? "is-on" : ""}`}
+              onClick={startEntropy}
+              disabled={entropy}
+            >
+              ☢ ENTROPY
+            </button>
+          )}
 
           {/* <button
             onClick={() => setChaos(!chaos)}

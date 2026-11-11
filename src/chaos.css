@@ -25,7 +25,6 @@
   font-family: inter;
   font-size: 13px;
   color: #fefefe;
-
 }
 .chaos-stage button,
 .chaos-stage a,
@@ -104,7 +103,8 @@
   font-size: 16px;
 }
 
-.chaos-stage, .chaos-stage *,
+.chaos-stage,
+.chaos-stage *,
 .chaos-stage,
 .chaos-stage,
 .chaos-stage {
@@ -131,7 +131,8 @@
 .chaos-stage {
   overscroll-behavior: none;
   font-family: "Inter var", sans-serif;
-  cursor: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4="),
+  cursor:
+    url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4="),
     auto;
 }
 .chaos-stage .mainbackground {
@@ -140,7 +141,8 @@
   left: 0;
   z-index: -999999999999999;
   background-color: #fff;
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       45deg,
       var(--normalColor) 25%,
       transparent 25%,
@@ -375,8 +377,14 @@
 
   height: auto;
   color: var(--detailColor);
-  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 10px white,
-    0 0 20px white, 0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 10px white,
+    0 0 20px white,
+    0 0 22px var(--detailColor),
+    0 0 25px var(--detailColor),
     0 0 33px var(--detailColor);
   padding: 5px 20px 5px 20px;
 
@@ -815,9 +823,14 @@
   height: 600px;
   max-width: 100%;
   background-color: var(--detailColor);
-  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
-    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
-    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  box-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 10px var(--detailColor),
+    0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor),
+    0 0 25px var(--detailColor),
     0 0 33px var(--detailColor);
 }
 .chaos-stage .loading_img img {
@@ -988,9 +1001,14 @@
   position: absolute;
   top: 99%;
   width: 100%;
-  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff,
-    0 0 10px var(--detailColor), 0 0 20px var(--detailColor),
-    0 0 22px var(--detailColor), 0 0 25px var(--detailColor),
+  box-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 10px var(--detailColor),
+    0 0 20px var(--detailColor),
+    0 0 22px var(--detailColor),
+    0 0 25px var(--detailColor),
     0 0 33px var(--detailColor);
 }
 
@@ -1065,6 +1083,7 @@
 .chaos-stage .projectList .standard-button {
   max-width: 500px;
   white-space: wrap;
+  text-align: left;
 }
 .chaos-stage .visitproject {
   pointer-events: all;

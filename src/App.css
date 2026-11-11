@@ -2342,6 +2342,8 @@ body > .chaos-stage {
 
 .carousel {
   height: 60vh;
+  /* lets the pictures measure themselves against the carousel (cqw / cqh below) */
+  container-type: size;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
@@ -2365,13 +2367,19 @@ body > .chaos-stage {
 }
 .carousel__item {
   flex: none;
+  display: flex;
+  align-items: center;
   height: 100%;
+  max-width: 100cqw;
 }
+/* every picture is as tall as the carousel, unless that would make it wider than the
+   carousel (a tall phone screen): then it's as wide as the carousel instead.
+   --ratio (width ÷ height) is set per picture in MediaCarousel.js */
 .carousel__item img {
   width: auto;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
+  height: min(100cqh, calc(100cqw / var(--ratio, 0.0001)));
+  max-width: 100cqw;
+  object-fit: contain;
   -webkit-user-drag: none;
 }
 .carousel__item--video iframe {
@@ -2380,8 +2388,12 @@ body > .chaos-stage {
   height: 100%;
   border: 0;
 }
-.carousel__item--video {
+/* videos too: 16:9, never wider than the carousel */
+.carousel__item.carousel__item--video {
   position: relative;
+  width: min(100cqw, calc(100cqh * var(--ratio)));
+  height: auto;
+  align-self: center;
 }
 /* covers a video so the carousel can still be dragged over it; a plain click removes it */
 .carousel__shield {
@@ -2521,12 +2533,12 @@ body .chaos-stage .chaos-exit {
 /* Shown while developing (npm start / netlify dev), or with ?fit in the address.
    Magenta dashes: the whole box that ends at the bottom of the window.
    Cyan: the one element inside it that grows or shrinks to make that happen. */
-[data-show-fit] .fit-zone {
+/* [data-show-fit] .fit-zone {
   position: relative;
   outline: 3px dashed #ff00ff;
   outline-offset: 2px;
-}
-[data-show-fit] .fit-zone::after {
+} */
+/* [data-show-fit] .fit-zone::after {
   content: "↕ FITS THE WINDOW (header + this box + its margin)";
   position: absolute;
   right: 0;
@@ -2537,11 +2549,11 @@ body .chaos-stage .chaos-exit {
   color: #fff;
   font: 11px/1.3 var(--font-block);
   pointer-events: none;
-}
-[data-show-fit] .fit-target {
+} */
+/* [data-show-fit] .fit-target {
   outline: 3px solid #00e5ff;
   outline-offset: 0;
-}
+} */
 /* drawn above the 3D scene so it can't hide behind it */
 [data-show-fit] .chaos-window.fit-target::after {
   content: "↕ THIS STRETCHES";
@@ -2763,44 +2775,47 @@ body .chaos-stage .chaos-exit {
   }
 }
 
-/* ============ store skin: catalog as a mosaic ============ */
+/* ============ store and textured skins: catalog as a mosaic ============ */
 /* Cards take their size from their image (see shapeOf in ProductCard.js);
    the picture fills the whole card, with the title and VIEW button on top of it. */
 
-[data-theme="storefront"] .catalog-grid {
+:is([data-theme="storefront"], [data-theme="texture"]) .catalog-grid {
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   grid-auto-rows: 190px;
   grid-auto-flow: dense;
   gap: 14px;
 }
-[data-theme="storefront"] .product-card--wide {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card--wide {
   grid-column: span 2;
 }
-[data-theme="storefront"] .product-card--tall {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card--tall {
   grid-row: span 2;
 }
-[data-theme="storefront"] .product-card--big {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card--big {
   grid-column: span 2;
   grid-row: span 2;
 }
-[data-theme="storefront"] .product-card {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card {
   position: relative;
   overflow: hidden;
 }
-[data-theme="storefront"] .product-card__frame {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card__frame {
   position: absolute;
   inset: 0;
   aspect-ratio: auto;
   border: 0;
 }
-[data-theme="storefront"] .product-card__frame .frame-img img {
+:is([data-theme="storefront"], [data-theme="texture"])
+  .product-card__frame
+  .frame-img
+  img {
   object-fit: cover;
 }
-[data-theme="storefront"] .product-card__new {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card__new {
   top: 6px;
   right: 6px;
 }
-[data-theme="storefront"] .product-card__body {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card__body {
   position: absolute;
   left: 0;
   right: 0;
@@ -2814,7 +2829,7 @@ body .chaos-stage .chaos-exit {
   padding: 36px 10px 10px;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));
 }
-[data-theme="storefront"] .product-card__title {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card__title {
   flex: 1 1 auto;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -2824,18 +2839,20 @@ body .chaos-stage .chaos-exit {
     2px 2px 0 var(--ink),
     0 0 8px var(--ink);
 }
-[data-theme="storefront"] .product-card .stars {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card .stars {
   display: none;
 }
-[data-theme="storefront"] .product-card__foot {
+:is([data-theme="storefront"], [data-theme="texture"]) .product-card__foot {
   flex: none;
   margin: 0;
 }
-[data-theme="storefront"] .product-card--big .product-card__title {
+:is([data-theme="storefront"], [data-theme="texture"])
+  .product-card--big
+  .product-card__title {
   font-size: 26px;
 }
 @media (max-width: 760px) {
-  [data-theme="storefront"] .catalog-grid {
+  :is([data-theme="storefront"], [data-theme="texture"]) .catalog-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 150px;
   }
@@ -2868,4 +2885,35 @@ body .chaos-stage .chaos-exit {
     0 0 8px #ff9000,
     0 0 20px #ff2d00;
   pointer-events: none;
+}
+
+/* ============ entropy (retro/entropy.js) ============ */
+/* boxes whose contents fell out turn see-through, so nothing hangs in the air */
+.entropy-shell {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline-color: transparent !important;
+}
+.entropy-on {
+  cursor: grab;
+}
+.entropy-on:active {
+  cursor: grabbing;
+}
+.entropy-restore {
+  position: fixed;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 10000;
+  padding: 10px 16px;
+  border: 0;
+  background: var(--win);
+  box-shadow: var(--bevel-out), var(--hard-shadow);
+  color: var(--ink);
+  font: 18px/1 var(--font-block);
+}
+.entropy-restore:active {
+  box-shadow: var(--bevel-in);
 }

@@ -849,3 +849,7 @@
 .computer-bar .theme-switch {
   margin: 0;
 }
+/* the tube on the computer's screen: a dark room with a warm glow */
+.computer--tube {
+  background: radial-gradient(ellipse at 50% 40%, #3a1600, #000 65%);
+}

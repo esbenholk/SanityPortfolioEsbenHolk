@@ -1,4 +1,10 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, {
+  Suspense,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -13,6 +19,7 @@ import * as THREE from "three";
 
 import Marquee from "../retro/Marquee";
 
+import AppContext from "../../globalState";
 import ThemeSwitcher from "../retro/ThemeSwitcher";
 
 // The laptop and how it's built, from pmndrs' "mixing-html-and-webgl-w-occlusion" example
@@ -63,13 +70,45 @@ const shuffle = (list) => {
   return copy;
 };
 
+// For the tube on the screen: its own slogans and its black/orange/pink colours
+const TUBE_SLOGANS = [
+  "ADDICTED TO CONTENT",
+  "HOT WORKS IN YOUR AREA",
+  "CONTENT FETISHISM",
+  "100% FREE — NO SIGNUP",
+  "HOT HOT HOT",
+  "WATCH UNTIL THE END",
+  "THE ALGORITHM LOVES YOU",
+  "SKIP AD IN 5",
+  "FUCK MY MEMES",
+  "R U STILL WATCHING?",
+  "I LOVE U",
+  "LIKE AND SUBSCRIBE TO THE VOID",
+];
+const TUBE_COLORS = [
+  "#000",
+  "#121212",
+  "#ff9000",
+  "#ff2d2d",
+  "#ffd000",
+  "#fff",
+  "#9a9a9a",
+];
+
+// What surrounds the laptop, depending on which site is on its screen
+// (the store or the tube: whichever was picked last before coming to the computer)
+const SCREENS = {
+  storefront: { slogans: SLOGANS, colors: MARQUEE_COLORS, fog: "#33ff00" },
+  tube: { slogans: TUBE_SLOGANS, colors: TUBE_COLORS, fog: "#0b0b0b" },
+};
+
 // A random set of marquees: each gets its own mix of slogans and three different colours,
 // alternating direction
-const randomMarquees = () =>
+const randomMarquees = (screen) =>
   Array.from({ length: MARQUEE_COUNT }, (_, i) => {
-    const [text, border, background] = shuffle(MARQUEE_COLORS);
+    const [text, border, background] = shuffle(screen.colors);
     return {
-      items: shuffle(SLOGANS).slice(0, SLOGANS_PER_MARQUEE),
+      items: shuffle(screen.slogans).slice(0, SLOGANS_PER_MARQUEE),
       reverse: i % 2 === 0,
       colors: {
         "--marquee-text": text,
@@ -210,8 +249,11 @@ export default function ComputerLayout() {
   const { pathname } = useLocation();
   const [zoomed, setZoomed] = useState(false);
   // picked once per visit, so the marquees don't reshuffle when you zoom in and out
-  const [marquees] = useState(randomMarquees);
-  const src = `${pathname}?skin=storefront`;
+  const { computerScreen } = useContext(AppContext);
+  const screenSkin = SCREENS[computerScreen] ? computerScreen : "storefront";
+  const screen = SCREENS[screenSkin];
+  const [marquees] = useState(() => randomMarquees(screen));
+  const src = `${pathname}?skin=${screenSkin}`;
 
   useEffect(() => {
     const onKey = (e) => {
@@ -222,7 +264,7 @@ export default function ComputerLayout() {
   }, []);
 
   return (
-    <div className="computer">
+    <div className={`computer computer--${screenSkin}`}>
       <div className="computer-marquee-background">
         {marquees.map((marquee, i) => (
           <div className="computer-marquee" style={marquee.colors} key={i}>
@@ -235,7 +277,7 @@ export default function ComputerLayout() {
         ))}
       </div>
       <Canvas camera={{ position: VIEWS.out.position.toArray(), fov: 55 }}>
-        <fog attach="fog" args={["#33ff00", 18, 40]} />
+        <fog attach="fog" args={[screen.fog, 18, 40]} />
         <pointLight
           position={[10, 10, 10]}
           intensity={1.5 * Math.PI}

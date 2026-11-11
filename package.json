@@ -31,6 +31,7 @@
     "install": "^0.13.0",
     "jquery": "^3.6.0",
     "latest": "^0.2.0",
+    "matter-js": "0.20.0",
     "nice-color-palettes": "^3.0.0",
     "npm": "^9.4.0",
     "postprocessing": "^6.21.3",

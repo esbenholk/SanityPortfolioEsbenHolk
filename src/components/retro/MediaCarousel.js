@@ -1,4 +1,11 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import getYouTubeId from "get-youtube-id";
 
 import urlFor, { hotspotStyle } from "../functions/urlFor";
@@ -23,7 +30,7 @@ function embedUrl(url) {
 // The ref exposes goTo(index) for thumbnails and arrows.
 const MediaCarousel = forwardRef(function MediaCarousel(
   { items, height, viewportRef, onIndexChange, className = "" },
-  ref
+  ref,
 ) {
   const ownRef = useRef(null);
   const viewport = viewportRef || ownRef;
@@ -34,7 +41,8 @@ const MediaCarousel = forwardRef(function MediaCarousel(
   const requested = useRef(null); // the item asked for by goTo, until the scroll gets there
   const [playingVideo, setPlayingVideo] = useState(null);
 
-  const slides = () => (viewport.current ? Array.from(viewport.current.children[0].children) : []);
+  const slides = () =>
+    viewport.current ? Array.from(viewport.current.children[0].children) : [];
 
   const scrollToIndex = useCallback(
     (index) => {
@@ -43,13 +51,16 @@ const MediaCarousel = forwardRef(function MediaCarousel(
       const wrapped = (index + list.length) % list.length;
       requested.current = wrapped;
       const target = list[wrapped];
-      viewport.current.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
+      viewport.current.scrollTo({
+        left: target.offsetLeft,
+        behavior: "smooth",
+      });
       // near the end the row may not move at all, so update the count right away
       indexRef.current = wrapped;
       if (onIndexChange) onIndexChange(wrapped);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onIndexChange]
+    [onIndexChange],
   );
 
   const stop = useCallback(() => setAutoplay(false), []);
@@ -72,12 +83,17 @@ const MediaCarousel = forwardRef(function MediaCarousel(
     const left = viewport.current.scrollLeft;
     let nearest = 0;
     list.forEach((slide, i) => {
-      if (Math.abs(slide.offsetLeft - left) < Math.abs(list[nearest].offsetLeft - left)) nearest = i;
+      if (
+        Math.abs(slide.offsetLeft - left) <
+        Math.abs(list[nearest].offsetLeft - left)
+      )
+        nearest = i;
     });
     // at the very end the last item is current, even if it can't reach the left edge
     const el = viewport.current;
     if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 2) {
-      nearest = requested.current !== null ? requested.current : list.length - 1;
+      nearest =
+        requested.current !== null ? requested.current : list.length - 1;
     }
     if (nearest !== indexRef.current) {
       indexRef.current = nearest;
@@ -102,7 +118,11 @@ const MediaCarousel = forwardRef(function MediaCarousel(
     stop();
     if (e.pointerType !== "mouse" || e.button !== 0) return;
     requested.current = null;
-    drag.current = { x: e.clientX, left: viewport.current.scrollLeft, moved: false };
+    drag.current = {
+      x: e.clientX,
+      left: viewport.current.scrollLeft,
+      moved: false,
+    };
   };
   const onPointerMove = (e) => {
     if (!drag.current) return;
@@ -111,7 +131,8 @@ const MediaCarousel = forwardRef(function MediaCarousel(
       drag.current.moved = true;
       setDragging(true);
     }
-    if (drag.current.moved) viewport.current.scrollLeft = drag.current.left - dx;
+    if (drag.current.moved)
+      viewport.current.scrollLeft = drag.current.left - dx;
   };
   const endDrag = () => {
     if (!drag.current) return;
@@ -125,7 +146,10 @@ const MediaCarousel = forwardRef(function MediaCarousel(
         e.preventDefault();
       };
       window.addEventListener("click", swallow, { capture: true, once: true });
-      setTimeout(() => window.removeEventListener("click", swallow, { capture: true }), 0);
+      setTimeout(
+        () => window.removeEventListener("click", swallow, { capture: true }),
+        0,
+      );
     }
   };
 
@@ -154,7 +178,11 @@ const MediaCarousel = forwardRef(function MediaCarousel(
             const src = embedUrl(item.youtube.url);
             return (
               src && (
-                <div className="carousel__item carousel__item--video" key={index} style={{ aspectRatio: VIDEO_ASPECT }}>
+                <div
+                  className="carousel__item carousel__item--video"
+                  key={index}
+                  style={{ aspectRatio: VIDEO_ASPECT, "--ratio": VIDEO_ASPECT }}
+                >
                   <iframe
                     src={src}
                     title={`Video ${index + 1}`}
@@ -183,7 +211,13 @@ const MediaCarousel = forwardRef(function MediaCarousel(
                 src={urlFor(image.asset).height(1200).url()}
                 alt={image.alt || ""}
                 draggable={false}
-                style={{ ...hotspotStyle(image), aspectRatio: dims ? `${dims.width} / ${dims.height}` : undefined }}
+                style={{
+                  ...hotspotStyle(image),
+                  aspectRatio: dims
+                    ? `${dims.width} / ${dims.height}`
+                    : undefined,
+                  "--ratio": dims ? dims.width / dims.height : undefined,
+                }}
                 loading={index < 3 ? "eager" : "lazy"}
               />
             </div>

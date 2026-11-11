@@ -29,7 +29,7 @@ import CursorTrail from "./components/retro/CursorTrail";
 import { scatterCommercials } from "./components/retro/Commercial";
 import { PageGlitch } from "./components/retro/Glitch";
 import PopupAds from "./components/retro/PopupAds";
-import useTextureImages from "./components/retro/texture";
+import TextureSkin from "./components/retro/texture";
 import {
   effectiveTheme,
   skinFromAddress,
@@ -158,9 +158,6 @@ function App() {
   const isDesktop = useIsDesktop();
   const shownTheme = effectiveTheme(theme, isDesktop);
 
-  // the "texture" skin covers everything in images
-  useTextureImages(shownTheme === "texture", siteSettings, sortedProjects);
-
   // outlines the boxes sized to fit the window: always on your own computer, or add ?fit to the address
   useEffect(() => {
     if (
@@ -179,6 +176,23 @@ function App() {
     if (forcedSkin) return;
     try {
       localStorage.setItem("hok_theme", theme);
+    } catch (e) {}
+  }, [theme, forcedSkin]);
+
+  // What the computer skin's screen shows: the store or the tube, whichever of the two
+  // was picked last before going to the computer (remembered like the skin itself)
+  const [computerScreen, setComputerScreen] = useState(() => {
+    try {
+      return localStorage.getItem("hok_computer_screen") || "storefront";
+    } catch (e) {
+      return "storefront";
+    }
+  });
+  useEffect(() => {
+    if (forcedSkin || (theme !== "storefront" && theme !== "tube")) return;
+    setComputerScreen(theme);
+    try {
+      localStorage.setItem("hok_computer_screen", theme);
     } catch (e) {}
   }, [theme, forcedSkin]);
 
@@ -257,6 +271,7 @@ function App() {
     commercialSlots,
     mainRef: mainRef,
     theme: shownTheme,
+    computerScreen,
     isDesktop,
     setTheme,
     setSiteSettings,
@@ -271,6 +286,13 @@ function App() {
       <Suspense fallback={null}>
         <AppContext.Provider value={globalContext}>
           <BrowserRouter>
+            {/* the "texture" skin covers everything in images (project images on project pages) */}
+            <TextureSkin
+              active={shownTheme === "texture"}
+              siteSettings={siteSettings}
+              projects={sortedProjects}
+              allProjects={projectList}
+            />
             {shownTheme !== "ocean" && shownTheme !== "minimal" && (
               <RouteGlitch />
             )}

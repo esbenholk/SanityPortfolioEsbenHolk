@@ -41,6 +41,7 @@
 
 .gif-wall {
   margin-bottom: 14px;
+  margin-top: 14px;
 }
 .gif-wall__grid {
   display: grid;
@@ -688,4 +689,16 @@
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px;
   }
+}
+/* the header and footer keep the random mix, also on a project's page (texture.js) */
+[data-theme="texture"] .site-header,
+[data-theme="texture"] .site-footer {
+  --tex-1: var(--gtex-1);
+  --tex-2: var(--gtex-2);
+  --tex-3: var(--gtex-3);
+  --tex-4: var(--gtex-4);
+  --tex-5: var(--gtex-5);
+  --tex-6: var(--gtex-6);
+  --tex-7: var(--gtex-7);
+  --tex-8: var(--gtex-8);
 }

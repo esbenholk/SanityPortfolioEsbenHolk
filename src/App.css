@@ -431,13 +431,13 @@ body.page-glitch::after {
   padding: 10px 10px 0;
 }
 
-.promo-row {
+.topchip-row {
   display: grid;
   grid-template-columns: 1.1fr 1fr 1.1fr;
   gap: 8px;
 }
 
-.promo {
+.topchip {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -453,10 +453,10 @@ body.page-glitch::after {
   text-decoration: none;
   text-transform: uppercase;
 }
-.promo:visited {
+.topchip:visited {
   color: inherit;
 }
-.promo--red {
+.topchip--red {
   background: var(--paper);
   color: var(--c-red) !important;
   border-color: var(--c-red);
@@ -464,20 +464,20 @@ body.page-glitch::after {
     inset 0 0 0 3px var(--paper),
     inset 0 0 0 5px var(--c-red);
 }
-.promo--blue {
+.topchip--blue {
   background: var(--c-blue);
   color: var(--c-yellow) !important;
   border-color: var(--c-yellow);
   outline: 3px solid var(--c-blue);
 }
-.promo--blue small {
+.topchip--blue small {
   margin-top: 5px;
   padding: 2px 6px;
   background: var(--c-red);
   color: var(--paper);
   font-size: 11px;
 }
-.promo--checker {
+.topchip--checker {
   flex-direction: row;
   gap: 10px;
   color: var(--c-lime) !important;
@@ -492,14 +492,14 @@ body.page-glitch::after {
   background-size: 18px 18px;
 }
 
-.promo--checker-grey {
+.topchip--checker-grey {
   background-color: var(--win);
   background-image: repeating-conic-gradient(
     var(--win-dark) 0 25%,
     var(--win) 0 50%
   );
 }
-.promo__icon {
+.topchip__icon {
   display: grid;
   place-items: center;
   width: 44px;
@@ -1136,7 +1136,7 @@ a.showcase:hover {
 .center-frames:has(.showcase) {
   align-items: start;
 }
-.promo-row--showcase {
+.topchip-row--showcase {
   grid-template-columns: 1.1fr 1fr 1.1fr 1fr;
 }
 .showcase--header {
@@ -2222,20 +2222,20 @@ body > .chaos-stage {
     outline: 0;
     max-width: 100%;
   }
-  .promo-row {
+  .topchip-row {
     grid-template-columns: 1fr 1fr;
   }
-  .promo--blue {
+  .topchip--blue {
     display: none;
   }
-  .promo {
+  .topchip {
     font-size: 15px;
     min-height: 56px;
   }
-  .promo--checker {
+  .topchip--checker {
     font-size: 18px;
   }
-  .promo__icon {
+  .topchip__icon {
     display: none;
   }
   .flames {

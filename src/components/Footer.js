@@ -118,7 +118,7 @@ export default function Footer({ info }) {
       <Marquee
         speed={60}
         reverse={true}
-        className="marquee--ticker headline--ticker promo--checker promo--checker-grey"
+        className="marquee--ticker headline--ticker topchip--checker topchip--checker-grey"
         items={[slogan5, slogan5, slogan5]}
       />
       <Marquee

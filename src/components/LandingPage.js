@@ -14,13 +14,11 @@ import Catalog from "./retro/Catalog";
 import BlockContent from "./blocks/BlockContent";
 import Room3D from "./retro/Room3D";
 import Marquee from "./retro/Marquee";
-import HitCounter from "./retro/HitCounter";
 import Window from "./retro/Window";
 import FrameImage from "./retro/FrameImage";
 import GifWall from "./retro/GifWall";
 import ChaosWindow from "./retro/ChaosWindow";
 import ShooterWindow from "./retro/ShooterWindow";
-import AsciiBox from "./retro/AsciiBox";
 import InstaTicker from "./retro/InstaTicker";
 import { CommercialSlot, useCommercials } from "./retro/Commercial";
 import { useMediaQuery, useTheme } from "./retro/theme";
@@ -29,25 +27,11 @@ import useFitToScreen from "./functions/useFitToScreen";
 const FireStrip = lazy(() => import("./retro/FireStrip"));
 
 const NONE = [];
-const BADGE_ICONS = [
-  "💿",
-  "🌐",
-  "👾",
-  "⚡",
-  "💾",
-  "📼",
-  "🛸",
-  "🧿",
-  "☎️",
-  "🔮",
-];
-const BADGE_COLORS = ["lime", "pink", "cyan", "red", "blue", "yellow"];
 
 export default function LandingPage() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
   const projectList = myContext.projectList || NONE;
-  const tags = myContext.tags || NONE;
   const { theme, copy } = useTheme();
   const centerCommercials = useCommercials("center");
 

@@ -9,13 +9,8 @@ import { useTheme } from "./retro/theme";
 export default function Header() {
   const myContext = useContext(AppContext);
   const info = myContext.siteSettings;
-  const categories = myContext.categories || [];
   const { copy } = useTheme();
   const hasCommercial = useCommercials("header").length > 0;
-  const firstHandle =
-    info.socialMediaHandles && info.socialMediaHandles.length > 0
-      ? info.socialMediaHandles[0]
-      : null;
 
   return (
     <header className="site-header">

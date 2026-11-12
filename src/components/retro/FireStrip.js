@@ -1,9 +1,8 @@
-import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 import FireMaterial from "./FireMaterial";
-import { randomSlogan } from "./theme";
 
 const FLAMES = 15;
 const FIRE_TEXTURE = process.env.PUBLIC_URL + "/fire/fire.png";
@@ -73,7 +72,6 @@ function Flames({ stoke }) {
 // The tube skin's fire: a strip of flames that flare up where the mouse is. Click to stoke it.
 export default function FireStrip() {
   const stoke = useRef(-10);
-  const [slogan] = useState(() => randomSlogan("tube"));
   return (
     <div className="fire-strip" aria-hidden="true">
       <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 6], fov: 40 }}>

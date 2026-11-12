@@ -45,7 +45,6 @@ import React, {
 
   export default function Cube(props) {
     const mesh = useRef();
-    const time = useRef(0);
     const material = useRef();
 
     const history = useHistory();

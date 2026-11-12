@@ -45,13 +45,6 @@ export default function SinglePost() {
       ? projectList[position + 1]
       : null;
 
-  const price =
-    singlePost.abbreviated_year != null
-      ? String(singlePost.abbreviated_year).padStart(2, "0")
-      : singlePost.year
-        ? String(singlePost.year).slice(-2)
-        : null;
-
   return (
     <motion.div
       initial={{ opacity: 0 }}

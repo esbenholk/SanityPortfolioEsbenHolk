@@ -1,5 +1,4 @@
-// Get a pre-configured url-builder from your sanity client
-const builder = imageUrlBuilder(sanityClient);
+import urlFor from "../functions/urlFor";
 
 
 
@@ -60,7 +59,7 @@ export default function getImageProps({
     typeof userMaxWidth === "number" ? userMaxWidth : LARGEST_VIEWPORT;
 
   // For all image variations, we'll use an auto format and prevent scaling it over its max dimensions
-  const builder = builder.image(image).fit("max").auto("format");
+  const builder = urlFor(image).fit("max").auto("format");
 
   const imageDimensions = getImageDimensions(image);
 

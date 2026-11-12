@@ -25,7 +25,7 @@ const CanvasElementTypes = {
 const Canvas = forwardRef((props, ref) => {
   const containerRef = useRef(null);
   const [elements, setElements] = useState([]);
-  const [connections, setConnections] = useState([]);
+  const [, setConnections] = useState([]);
   const elementRefs = useRef({});
 
   const [{ x, y, scale }, api] = useSpring(() => ({
@@ -38,12 +38,8 @@ const Canvas = forwardRef((props, ref) => {
   const zoomRef = useRef(1);
   const positionRef = useRef({ x: 0, y: 0 });
 
-  const updateLines = () => {
-    // force re-render
-    setConnections((prev) => [...prev]);
-  };
-
-  const bind = useGesture(
+  // attaches its own drag/pinch/wheel handlers to containerRef (see `target` below)
+  useGesture(
     {
       onDrag: ({ offset: [dx, dy] }) => {
         positionRef.current = { x: dx, y: dy };

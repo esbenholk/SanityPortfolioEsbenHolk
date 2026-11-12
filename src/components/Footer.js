@@ -27,15 +27,16 @@ const randomColor = () =>
 export default function Footer({ info }) {
   const myContext = useContext(AppContext);
   const projectList = myContext.projectList || [];
-  const [chaos, setChaos] = useState(false);
+  // chaos mode is off (its button is commented out below)
+  const [chaos] = useState(false);
   const { theme } = useTheme();
   const { pathname } = useLocation();
-  // a new slogan on every page
-  const slogan1 = useMemo(() => randomSlogan(theme), [theme, pathname]);
-  const slogan2 = useMemo(() => randomSlogan(theme), [theme, pathname]);
-  const slogan3 = useMemo(() => randomSlogan(theme), [theme, pathname]);
-  const slogan4 = useMemo(() => randomSlogan(theme), [theme, pathname]);
-  const slogan5 = useMemo(() => randomSlogan(theme), [theme, pathname]);
+  // five new slogans on every page (pathname is listed so they change when the page does)
+  const [slogan1, slogan2, slogan3, slogan4, slogan5] = useMemo(
+    () => Array.from({ length: 5 }, () => randomSlogan(theme)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [theme, pathname],
+  );
 
   // ENTROPY: the whole page collapses under gravity (retro/entropy.js, loaded on demand)
   const stopEntropy = useRef(null);

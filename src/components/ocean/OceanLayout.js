@@ -28,23 +28,6 @@ const categoriesOf = (project) =>
 const MAX_BREEZES = 4;
 let breezeId = 0;
 
-// A work's title blown across the screen once, right to left, at a random height
-function Breeze({ breeze, onDone }) {
-  return (
-    <p
-      className="ocean-breeze"
-      style={{
-        top: `${breeze.top}%`,
-        animationDuration: `${breeze.duration}s`,
-      }}
-      onAnimationEnd={() => onDone(breeze.id)}
-      aria-hidden="true"
-    >
-      {breeze.title}
-    </p>
-  );
-}
-
 // What a cube unfolds into when it's explored
 // A click anywhere closes it and you sail on, except on "view the work".
 function ExplorePanel({ project, onClose }) {
@@ -157,14 +140,10 @@ function OceanHome() {
           onMove={onMove}
           onReady={onReady}
           onHoverStart={explored ? undefined : onHoverStart}
+          breezes={breezes}
+          onBreezeDone={removeBreeze}
         />
       </Suspense>
-
-      <div className="ocean-breezes">
-        {breezes.map((breeze) => (
-          <Breeze breeze={breeze} onDone={removeBreeze} key={breeze.id} />
-        ))}
-      </div>
 
       <p className={`ocean-hint ${sailing ? "is-hidden" : ""}`}>
         <span className="ocean-hint__slogan">{slogan}</span>W A S D or arrows to
@@ -255,6 +234,34 @@ export default function OceanLayout() {
   const { siteSettings } = useContext(AppContext);
   return (
     <div className="ocean">
+      {/* the glass panels' refraction: noise that bends whatever is seen through them
+          (used by backdrop-filter in skins.css) */}
+      <svg className="ocean-filters" aria-hidden="true" width="0" height="0">
+        <filter
+          id="ocean-refraction"
+          x="-5%"
+          y="-5%"
+          width="110%"
+          height="110%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.008 0.014"
+            numOctaves="2"
+            seed="7"
+            result="lens"
+          />
+          <feGaussianBlur in="lens" stdDeviation="2" result="smoothLens" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="smoothLens"
+            scale="42"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
       <header className="ocean-bar">
         <Link to="/" className="ocean-name">
           {siteSettings.title || "Esben Holk"}

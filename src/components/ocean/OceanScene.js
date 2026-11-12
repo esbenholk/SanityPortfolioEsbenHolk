@@ -14,6 +14,7 @@ import urlFor from "../functions/urlFor";
 import { hashOf } from "../retro/theme";
 import { Sky, SUN_DIRECTION, Water } from "./Environment";
 import Sailor from "./Sailor";
+import { Breezes, FogBanks, Motes, SeaPlants } from "./Atmosphere";
 import { PALETTE, slope, wave } from "./waves";
 
 const CONCURRENT_LOADS = 4;
@@ -137,6 +138,8 @@ export default function OceanScene({
   onMove,
   onReady,
   onHoverStart,
+  breezes = [],
+  onBreezeDone,
 }) {
   const spots = useMemo(() => layout(projects), [projects]);
   const textures = useCubeTextures(projects);
@@ -230,6 +233,12 @@ export default function OceanScene({
           dragged={dragged}
         />
       ))}
+      {/* atmosphere: motes in the air, banks of mist, reeds swaying in the current */}
+      <Motes />
+      <FogBanks />
+      <SeaPlants spots={spots} />
+      {/* titles of hovered works blowing past, far out over the water */}
+      <Breezes breezes={breezes} onDone={onBreezeDone} />
       <Sailor
         paused={paused}
         dragged={dragged}

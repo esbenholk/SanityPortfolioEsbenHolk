@@ -2895,6 +2895,10 @@ body .chaos-stage .chaos-exit {
   box-shadow: none !important;
   outline-color: transparent !important;
 }
+/* oversized decorations (like the chaos window's rotated background) step aside */
+.entropy-hidden {
+  visibility: hidden !important;
+}
 .entropy-on {
   cursor: grab;
 }
@@ -3049,7 +3053,18 @@ body .chaos-stage .chaos-exit {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    opacity 0.3s ease;
+}
+/* the picture sits on top of its stand-in and fades in once it has loaded */
+.vibe-tile img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.vibe-tile img.is-loaded {
+  opacity: 1;
 }
 .vibe-tile.is-picked img,
 .vibe-tile.is-picked .vibe-stand-in {

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import urlFor from "../functions/urlFor";
 import { THEMES } from "./theme";
@@ -36,7 +36,16 @@ const imageUrl = (image) => {
   const { asset } = image;
   const isGif =
     asset.mimeType === "image/gif" || /\.gif$/i.test(asset.url || "");
-  return isGif ? asset.url : urlFor(asset).width(300).height(300).url();
+  // tiles are ~130px: 260px covers sharp screens; small, compressed, WebP where possible
+  return isGif
+    ? asset.url
+    : urlFor(asset)
+        .width(260)
+        .height(260)
+        .fit("crop")
+        .quality(70)
+        .auto("format")
+        .url();
 };
 
 // The nine tiles: for each skin, its number of Sanity vibe images (random ones if there
@@ -51,9 +60,13 @@ function pickTiles(vibeImages) {
     );
     for (let i = 0; i < count; i++) {
       tiles.push(
-        own[i]
-          ? { skin, src: imageUrl(own[i].image) }
-          : { skin, standIn: STAND_INS[skin], variant: i },
+        // every tile has a drawn stand-in, shown until (or instead of) its picture
+        {
+          skin,
+          standIn: STAND_INS[skin],
+          variant: i,
+          src: own[i] ? imageUrl(own[i].image) : null,
+        },
       );
     }
   });
@@ -80,6 +93,18 @@ function skinFor(tiles, picked, allowed) {
 export default function VibeCheck({ vibeImages, isDesktop, onDone }) {
   const [step, setStep] = useState("checkbox"); // checkbox → grid → verified
   const [tiles, setTiles] = useState(() => pickTiles(vibeImages));
+  const [loaded, setLoaded] = useState(() => new Set());
+  const markLoaded = (src) => setLoaded((current) => new Set(current).add(src));
+
+  // start loading the pictures right away, while the "I'm not a robot" box is showing
+  useEffect(() => {
+    tiles.forEach((tile) => {
+      if (!tile.src) return;
+      const image = new Image();
+      image.onload = () => markLoaded(tile.src);
+      image.src = tile.src;
+    });
+  }, [tiles]);
   const [picked, setPicked] = useState(() => new Set());
   const [nudge, setNudge] = useState(false);
   const [result, setResult] = useState(null);
@@ -154,19 +179,24 @@ export default function VibeCheck({ vibeImages, isDesktop, onDone }) {
                 aria-pressed={picked.has(tile.id)}
                 onClick={() => toggle(tile.id)}
               >
-                {tile.src ? (
-                  <img src={tile.src} alt="" draggable={false} />
-                ) : (
-                  <span
-                    className={`vibe-stand-in vibe-stand-in--${tile.skin} vibe-stand-in--v${tile.variant}`}
-                  >
-                    <span className="vibe-stand-in__emoji">
-                      {tile.standIn.emoji}
-                    </span>
-                    <span className="vibe-stand-in__word">
-                      {tile.standIn.word}
-                    </span>
+                <span
+                  className={`vibe-stand-in vibe-stand-in--${tile.skin} vibe-stand-in--v${tile.variant}`}
+                >
+                  <span className="vibe-stand-in__emoji">
+                    {tile.standIn.emoji}
                   </span>
+                  <span className="vibe-stand-in__word">
+                    {tile.standIn.word}
+                  </span>
+                </span>
+                {tile.src && (
+                  <img
+                    src={tile.src}
+                    alt=""
+                    draggable={false}
+                    className={loaded.has(tile.src) ? "is-loaded" : ""}
+                    onLoad={() => markLoaded(tile.src)}
+                  />
                 )}
               </button>
             ))}

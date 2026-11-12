@@ -21,9 +21,9 @@ export function slope(x, z, t) {
 
 // Colours of the scene: a pale dawn over calm water
 export const PALETTE = {
-  zenith: "#6f7fb0",
-  horizon: "#f6b8a2",
-  sun: "#ffd9a8",
-  deep: "#ed00f5",
+  zenith: "#4000ff",
+  horizon: "#ff009d",
+  sun: "#ff0000",
+  deep: "#14004d",
   shallow: "#00ffaa",
 };

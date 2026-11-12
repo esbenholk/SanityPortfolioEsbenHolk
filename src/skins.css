@@ -259,11 +259,11 @@
    and wobble very slightly, as if floating. */
 
 [data-theme="ocean"] {
-  background: #cfe0e6;
+  background: #3700ff;
 }
 [data-theme="ocean"] body {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f6b8a2 0%, #e8d8e4 45%, #c9dde4 100%)
+  background: linear-gradient(180deg, #2200ff 0%, #ff00bf 45%, #7700ff 100%)
     fixed;
   color: #10202a;
 }
@@ -391,6 +391,7 @@
   inset: 0;
   touch-action: none;
   animation: ocean-fade 2.4s ease both;
+  background-color: #0000ff;
 }
 .ocean-hint {
   position: absolute;
@@ -426,65 +427,6 @@
   color: var(--o-quiet);
   font: 400 12px/1 var(--o-sans) !important;
   animation: ocean-fade 1s ease both;
-}
-
-/* a hovered work's title blows across the screen once, right to left */
-.ocean-breezes {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 12%,
-    #000 88%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 12%,
-    #000 88%,
-    transparent
-  );
-}
-.ocean-breeze {
-  position: absolute;
-  left: 0;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  font: 300 clamp(48px, 9vw, 150px) / 1 var(--o-sans) !important;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.35);
-  animation: ocean-breeze linear 1 forwards;
-  will-change: transform, opacity;
-}
-@keyframes ocean-breeze {
-  0% {
-    transform: translate(100vw, 0) skewX(-8deg);
-    opacity: 0;
-    filter: blur(6px);
-  }
-  12% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  40% {
-    transform: translate(45vw, -14px) skewX(-3deg);
-  }
-  70% {
-    transform: translate(-5vw, 10px) skewX(2deg);
-  }
-  88% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-100%, -6px) skewX(6deg);
-    opacity: 0;
-    filter: blur(4px);
-  }
 }
 
 /* what an explored cube unfolds into */
@@ -649,85 +591,70 @@
   opacity: 0.55;
 }
 
-/* ---- ocean fog: no hard edges anywhere ----
-   Panels, buttons and pictures fade out on all four sides, so everything seems to sit
-   in a soft, slightly opaque fog. --o-fog is how wide that fade is. */
-.ocean {
-  --o-fog: 34px;
-}
-.ocean-fog,
+/* ---- ocean glass ----
+   The panels are glass, not see-through: the scene behind them is refracted (bent and
+   magnified through an SVG filter, #ocean-refraction in OceanLayout.js), frosted and
+   saturated, with a bright edge and an inner glow like thick glass.
+   Chrome and Edge show the refraction; Safari and Firefox show frosted glass without it. */
+.ocean-glass,
 .ocean-hint,
 .ocean-explore__card,
 .ocean .theme-switch,
-.ocean-button,
-.ocean-carousel .carousel__item {
-  border: 0 !important;
-  -webkit-mask-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      #000 var(--o-fog),
-      #000 calc(100% - var(--o-fog)),
-      transparent
-    ),
-    linear-gradient(
-      180deg,
-      transparent,
-      #000 var(--o-fog),
-      #000 calc(100% - var(--o-fog)),
-      transparent
-    );
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      #000 var(--o-fog),
-      #000 calc(100% - var(--o-fog)),
-      transparent
-    ),
-    linear-gradient(
-      180deg,
-      transparent,
-      #000 var(--o-fog),
-      #000 calc(100% - var(--o-fog)),
-      transparent
-    );
-  mask-composite: intersect;
-}
-/* small things get a narrower fade, or they'd vanish */
-.ocean .theme-switch,
 .ocean-button {
-  --o-fog: 9px;
-}
-.ocean .theme-switch {
-  padding: 3px 8px;
-  background: rgba(255, 255, 255, 0.4);
+  border: 0 !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.04) 60%,
+    rgba(255, 255, 255, 0.1)
+  );
+  -webkit-backdrop-filter: blur(10px) saturate(1.7) brightness(1.06);
+  backdrop-filter: blur(10px) saturate(1.7) brightness(1.06);
+  backdrop-filter: url(#ocean-refraction) blur(3px) saturate(1.7)
+    brightness(1.06);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 0 32px rgba(255, 255, 255, 0.16),
+    0 18px 40px -12px rgba(16, 32, 42, 0.35);
 }
 .ocean-hint {
-  --o-fog: 22px;
-  padding: 20px 26px;
-  background: rgba(255, 255, 255, 0.35);
+  padding: 16px 20px;
+  border-radius: 14px;
 }
-/* the explore card: a cloud of glass, a little thicker in the middle */
+.ocean .theme-switch {
+  padding: 4px;
+  border-radius: 999px;
+}
+.ocean .theme-switch__btn {
+  border-radius: 999px;
+}
+.ocean .theme-switch__btn.is-on {
+  background: rgba(16, 32, 42, 0.86);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+/* the explore card: a slab of glass with the picture set into it */
 .ocean-explore {
   background: none;
 }
 .ocean-explore__card {
-  --o-fog: 60px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.62),
-    rgba(255, 255, 255, 0.3) 75%
-  );
-  box-shadow: none;
+  border-radius: 22px;
+  gap: 0;
 }
 .ocean-explore__card img {
-  -webkit-mask-image: linear-gradient(90deg, #000 60%, transparent);
-  mask-image: linear-gradient(90deg, #000 60%, transparent);
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  margin: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(16, 32, 42, 0.25);
 }
 .ocean-explore__text {
-  padding: 60px 60px 50px 30px;
+  padding: 34px 34px 30px 20px;
 }
 .ocean-explore__actions {
   align-items: center;
@@ -746,15 +673,35 @@
 }
 .ocean-button {
   padding: 12px 20px;
-  background: rgba(16, 32, 42, 0.82);
-  color: #fff !important;
+  border-radius: 999px;
+  color: var(--o-ink) !important;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.ocean-button--solid,
+.ocean-button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.15)
+  );
+  color: var(--o-ink) !important;
 }
 .ocean-button:hover {
-  background: rgba(16, 32, 42, 0.65);
+  transform: translateY(-1px) scale(1.03);
 }
-/* the work's pictures on its page */
-.ocean-carousel .carousel__item {
-  --o-fog: 26px;
+/* the work's pictures on its page: glass-edged, nothing fades */
+.ocean-carousel {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+.ocean-carousel .carousel__item img,
+.ocean-carousel .carousel__item--video {
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 12px 30px -10px rgba(16, 32, 42, 0.35);
 }
 /* lines become fading streaks */
 .ocean-post__foot {
@@ -852,4 +799,10 @@
 /* the tube on the computer's screen: a dark room with a warm glow */
 .computer--tube {
   background: radial-gradient(ellipse at 50% 40%, #3a1600, #000 65%);
+}
+.ocean-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }

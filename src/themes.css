@@ -97,7 +97,7 @@
 }
 
 /* header */
-[data-theme="tube"] .ad {
+[data-theme="tube"] .promo {
   border: 1px solid #333;
   outline: 0;
   box-shadow: none;
@@ -107,21 +107,21 @@
   border-radius: 4px;
   font-size: 18px;
 }
-[data-theme="tube"] .ad--blue {
+[data-theme="tube"] .promo--blue {
   background: linear-gradient(90deg, #ff2d75, #ff9000);
   color: #000 !important;
 }
-[data-theme="tube"] .ad--blue small {
+[data-theme="tube"] .promo--blue small {
   background: #000;
   color: #ff9000;
 }
-[data-theme="tube"] .ad--checker {
+[data-theme="tube"] .promo--checker {
   background-image: none;
   font-family: var(--font-block);
   -webkit-text-stroke: 0;
   color: #fff !important;
 }
-[data-theme="tube"] .ad__icon {
+[data-theme="tube"] .promo__icon {
   display: none;
 }
 [data-theme="tube"] .logo-bar {
@@ -624,7 +624,7 @@
 }
 
 /* each kind of box gets one of the images, filling it */
-[data-theme="texture"] .ad,
+[data-theme="texture"] .promo,
 [data-theme="texture"] .promo:nth-of-type(odd),
 [data-theme="texture"] .product-card:nth-child(4n + 1),
 [data-theme="texture"] .crumbs {

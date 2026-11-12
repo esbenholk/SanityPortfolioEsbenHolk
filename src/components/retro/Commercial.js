@@ -88,10 +88,10 @@ export default function Commercial({ ad, width = 600, className = "" }) {
         }}
         loading="lazy"
       />
-      <span className="commercial__label">look at me</span>
+      <span className="showcase__label">look at me</span>
     </>
   );
-  const classes = `commercial ${className}`;
+  const classes = `showcase ${className}`;
 
   if (ad.projectSlug) {
     return (

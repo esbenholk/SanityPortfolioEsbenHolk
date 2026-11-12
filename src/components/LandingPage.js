@@ -123,7 +123,7 @@ export default function LandingPage() {
             >
               <ChaosWindow screenRef={screenRef} height={screenHeight} />
               <Marquee
-                className="marquee--ticker ad--checker ad--checker-grey"
+                className="marquee--ticker promo--checker promo--checker-grey"
                 items={projectList.map((post) => ({
                   label: post.title.toUpperCase(),
                   to: "/projects/" + post.slug.current,
@@ -173,7 +173,7 @@ export default function LandingPage() {
       <GifWall projects={projectList} title={copy.wall} interval={100} />
       <Marquee
         reverse={true}
-        className="marquee--ticker ad--checker ad--checker-grey"
+        className="marquee--ticker promo--checker promo--checker-grey"
         items={projectList.map((post) => ({
           label: post.title.toUpperCase(),
           to: "/projects/" + post.slug.current,

@@ -431,13 +431,13 @@ body.page-glitch::after {
   padding: 10px 10px 0;
 }
 
-.ad-row {
+.promo-row {
   display: grid;
   grid-template-columns: 1.1fr 1fr 1.1fr;
   gap: 8px;
 }
 
-.ad {
+.promo {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -453,10 +453,10 @@ body.page-glitch::after {
   text-decoration: none;
   text-transform: uppercase;
 }
-.ad:visited {
+.promo:visited {
   color: inherit;
 }
-.ad--red {
+.promo--red {
   background: var(--paper);
   color: var(--c-red) !important;
   border-color: var(--c-red);
@@ -464,20 +464,20 @@ body.page-glitch::after {
     inset 0 0 0 3px var(--paper),
     inset 0 0 0 5px var(--c-red);
 }
-.ad--blue {
+.promo--blue {
   background: var(--c-blue);
   color: var(--c-yellow) !important;
   border-color: var(--c-yellow);
   outline: 3px solid var(--c-blue);
 }
-.ad--blue small {
+.promo--blue small {
   margin-top: 5px;
   padding: 2px 6px;
   background: var(--c-red);
   color: var(--paper);
   font-size: 11px;
 }
-.ad--checker {
+.promo--checker {
   flex-direction: row;
   gap: 10px;
   color: var(--c-lime) !important;
@@ -492,14 +492,14 @@ body.page-glitch::after {
   background-size: 18px 18px;
 }
 
-.ad--checker-grey {
+.promo--checker-grey {
   background-color: var(--win);
   background-image: repeating-conic-gradient(
     var(--win-dark) 0 25%,
     var(--win) 0 50%
   );
 }
-.ad__icon {
+.promo__icon {
   display: grid;
   place-items: center;
   width: 44px;
@@ -1104,20 +1104,20 @@ body.page-glitch::after {
 } */
 
 /* commercials from Sanity, scattered over the header and columns */
-.commercial {
+.showcase {
   position: relative;
   display: block;
   border: 3px solid var(--ink);
   background: var(--ink);
   text-decoration: none;
 }
-.commercial img {
+.showcase img {
   display: block;
   width: 100%;
   height: auto;
   object-fit: cover;
 }
-.commercial__label {
+.showcase__label {
   position: absolute;
   top: 0;
   right: 0;
@@ -1127,23 +1127,23 @@ body.page-glitch::after {
   font: 9px/1.2 var(--font-block);
   letter-spacing: 0.08em;
 }
-a.commercial:hover {
+a.showcase:hover {
   outline: 3px solid var(--c-lime);
 }
-.center-frames .commercial:only-child {
+.center-frames .showcase:only-child {
   grid-column: 1 / -1;
 }
-.center-frames:has(.commercial) {
+.center-frames:has(.showcase) {
   align-items: start;
 }
-.ad-row--commercial {
+.promo-row--showcase {
   grid-template-columns: 1.1fr 1fr 1.1fr 1fr;
 }
-.commercial--header {
+.showcase--header {
   overflow: hidden;
   padding: 0;
 }
-.commercial--header img {
+.showcase--header img {
   position: absolute;
   inset: 0;
   height: 100%;
@@ -2222,20 +2222,20 @@ body > .chaos-stage {
     outline: 0;
     max-width: 100%;
   }
-  .ad-row {
+  .promo-row {
     grid-template-columns: 1fr 1fr;
   }
-  .ad--blue {
+  .promo--blue {
     display: none;
   }
-  .ad {
+  .promo {
     font-size: 15px;
     min-height: 56px;
   }
-  .ad--checker {
+  .promo--checker {
     font-size: 18px;
   }
-  .ad__icon {
+  .promo__icon {
     display: none;
   }
   .flames {
@@ -2331,7 +2331,7 @@ body > .chaos-stage {
   flex-direction: column;
   gap: 10px;
 }
-.fit-main .center-frames .commercial img {
+.fit-main .center-frames .showcase img {
   max-height: 16vh;
 }
 .fit-main .frame-tile--wide .frame-img {
@@ -2698,11 +2698,11 @@ body .chaos-stage .chaos-exit {
   }
 
   /* left: the commercial fills its share, cropped */
-  .storefront--fitted > .col > .commercial {
+  .storefront--fitted > .col > .showcase {
     flex: 1 1 0;
     min-height: 0;
   }
-  .storefront--fitted > .col > .commercial img {
+  .storefront--fitted > .col > .showcase img {
     height: 100%;
   }
 }
@@ -2751,13 +2751,13 @@ body .chaos-stage .chaos-exit {
 .greeting-row {
   min-height: 220px;
 }
-.greeting-row > .commercial {
+.greeting-row > .showcase {
   position: relative;
   flex: 1 1 0;
   min-width: 0;
   min-height: 160px;
 }
-.greeting-row > .commercial img {
+.greeting-row > .showcase img {
   position: absolute;
   inset: 0;
   width: 100%;

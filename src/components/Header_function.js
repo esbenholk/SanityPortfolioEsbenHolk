@@ -14,9 +14,11 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <div className={`ad-row ${hasCommercial ? "ad-row--commercial" : ""}`}>
+      <div
+        className={`promo-row ${hasCommercial ? "promo-row--showcase" : ""}`}
+      >
         {" "}
-        <NavLink to="/" className="ad ad--checker ad--checker-grey">
+        <NavLink to="/" className="promo promo--checker promo--checker-grey">
           {info.logo && (
             <img className="logo-bar__sign" src={info.logo.asset.url} alt="" />
           )}
@@ -36,16 +38,16 @@ export default function Header() {
             <img className="logo-bar__sign" src={info.logo.asset.url} alt="" />
           )}
         </NavLink>
-        <Link to="/projects" className="ad ad--red">
+        <Link to="/projects" className="promo promo--red">
           {copy.ads[0]}
         </Link>
-        <Link to="/chaos" className="ad ad--checker blink">
+        <Link to="/chaos" className="promo promo--checker blink">
           <span>{copy.ads[2]}</span>
         </Link>
         <CommercialSlot
           slot="header"
           width={500}
-          className="ad commercial--header"
+          className="promo showcase--header"
         />
       </div>
 

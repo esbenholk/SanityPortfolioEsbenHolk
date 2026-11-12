@@ -118,18 +118,17 @@ const COPY = {
 // Slogans for the footer strip and tickers; one is picked at random per page
 export const SLOGANS = {
   storefront: [
-    "EVERYTHING MUST GO",
-    "ALL STOCK MUST GO",
-    "FREE SHIPPING TO THE VOID",
-    "NO REFUNDS NO REGRETS",
-    "LIMITED EDITION FOREVER",
+    "I LOVE CONTENT",
+    "U R SO BRIGHT AND I AM SO SHINY",
+    "STAY VIRTUAL",
+    "FEED ME",
     "BUY 1 GET CHAOS FREE",
-    "CLOSING DOWN SINCE 2004",
-    "PRICES SLASHED TO ZERO",
+    "R U ALSO STUCK?",
+    "R U ALSO LOST?",
     "NOW WITH 100% MORE INTERNET",
-    "YOUR CART MISSES YOU",
+    "DIDNT I TELL U I WAS CONTENT REDISTRIBUTION",
     "ONE CLICK FROM PARADISE",
-    "WHILE SUPPLIES LAST",
+    "CLICK CLICK LICK IT",
   ],
   tube: [
     "NEW UPLOADS EVERY DAY",

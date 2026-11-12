@@ -85,10 +85,12 @@ function collectPieces(root) {
   return { pieces, shells, hidden };
 }
 
-// how long the page takes to zoom out before it falls
-const ZOOM_MS = 1000;
+// The page falls at full size the moment entropy starts; after a beat the view zooms
+// out (like a camera pulling back) until the whole page and its pile fit the screen.
+const ZOOM_DELAY = 500;
+const ZOOM_MS = 1400;
 const MARGIN = 24;
-const MIN_SCALE = 0.2;
+const MIN_SCALE = 0.6;
 const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
 export default function start(root) {
@@ -102,15 +104,21 @@ export default function start(root) {
   const saved = pieces.map(({ el }) => el.getAttribute("style"));
   const previousOverflow = document.body.style.overflow;
 
-  // The whole page, shrunk to fit the screen (but not smaller than MIN_SCALE: a very long
-  // page keeps its bottom on screen and its top falls in from above)
+  // Where the camera ends up: the whole page shrunk to fit the screen (but not smaller
+  // than MIN_SCALE: a very long page keeps its bottom on screen)
   const scale = Math.max(
     MIN_SCALE,
     Math.min(1, (vh - MARGIN * 2) / pageHeight),
   );
-  const offsetX = (vw - vw * scale) / 2;
-  const offsetY = Math.min(MARGIN, vh - MARGIN - pageHeight * scale);
+  const camFrom = { x: 0, y: -startScroll, zoom: 1 };
+  const camTo = {
+    x: (vw - vw * scale) / 2,
+    y: Math.min(MARGIN, vh - MARGIN - pageHeight * scale),
+    zoom: scale,
+  };
+  const cam = { ...camFrom };
 
+  // the physics world uses page coordinates at full size; the camera only changes the view
   const items = pieces.map(({ el, rect }) => {
     const w = rect.width;
     const h = rect.height;
@@ -131,20 +139,18 @@ export default function start(root) {
       el,
       w,
       h,
-      // where it is on screen now, and where it sits in the shrunken page
-      from: { x: rect.left + w / 2, y: rect.top + h / 2 },
-      to: {
-        x: offsetX + (rect.left + w / 2) * scale,
-        y: offsetY + (rect.top + startScroll + h / 2) * scale,
-      },
+      x: rect.left + w / 2,
+      y: rect.top + startScroll + h / 2,
     };
   });
-  const draw = (item, x, y, angle, size) => {
-    item.el.style.transform = `translate(${x - item.w / 2}px, ${
-      y - item.h / 2
-    }px) rotate(${angle}rad) scale(${size})`;
+  const draw = (item, x, y, angle) => {
+    const sx = cam.x + x * cam.zoom;
+    const sy = cam.y + y * cam.zoom;
+    item.el.style.transform = `translate(${sx - item.w / 2}px, ${
+      sy - item.h / 2
+    }px) rotate(${angle}rad) scale(${cam.zoom})`;
   };
-  items.forEach((item) => draw(item, item.from.x, item.from.y, 0, 1));
+  items.forEach((item) => draw(item, item.x, item.y, 0));
 
   shells.forEach((el) => el.classList.add("entropy-shell"));
   hidden.forEach((el) => el.classList.add("entropy-hidden"));
@@ -154,76 +160,69 @@ export default function start(root) {
 
   const engine = Matter.Engine.create();
   engine.gravity.y = 1.1;
-  let bodies = [];
-  let mouse = null;
+
+  const bodies = items.map((item) => {
+    const body = Matter.Bodies.rectangle(
+      item.x,
+      item.y,
+      Math.max(item.w, 2),
+      Math.max(item.h, 2),
+      { restitution: 0.25, friction: 0.4, frictionAir: 0.012 },
+    );
+    Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.03);
+    return { item, body };
+  });
+  // the floor is the bottom of the page; walls on both sides, as tall as the page
+  const walls = [
+    Matter.Bodies.rectangle(vw / 2, pageHeight + WALL / 2, vw * 3, WALL, {
+      isStatic: true,
+    }),
+    Matter.Bodies.rectangle(-WALL / 2, pageHeight / 2, WALL, pageHeight * 3, {
+      isStatic: true,
+    }),
+    Matter.Bodies.rectangle(
+      vw + WALL / 2,
+      pageHeight / 2,
+      WALL,
+      pageHeight * 3,
+      { isStatic: true },
+    ),
+  ];
+  Matter.Composite.add(engine.world, [...bodies.map((b) => b.body), ...walls]);
+
+  // grab and throw (the mouse is mapped through the camera)
+  const mouse = Matter.Mouse.create(document.body);
+  const grab = Matter.MouseConstraint.create(engine, {
+    mouse,
+    constraint: { stiffness: 0.2, render: { visible: false } },
+  });
+  Matter.Composite.add(engine.world, grab);
+
+  const began = performance.now();
+  let last = began;
   let frame;
-
-  // 2) the shrunken page falls apart
-  const collapse = () => {
-    bodies = items.map((item) => {
-      const body = Matter.Bodies.rectangle(
-        item.to.x,
-        item.to.y,
-        Math.max(item.w * scale, 2),
-        Math.max(item.h * scale, 2),
-        { restitution: 0.25, friction: 0.4, frictionAir: 0.012 },
-      );
-      Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.03);
-      return { item, body };
+  const tick = (now) => {
+    // the camera pulls back once things are already falling
+    const k = ease(
+      Math.min(1, Math.max(0, (now - began - ZOOM_DELAY) / ZOOM_MS)),
+    );
+    cam.x = camFrom.x + (camTo.x - camFrom.x) * k;
+    cam.y = camFrom.y + (camTo.y - camFrom.y) * k;
+    cam.zoom = camFrom.zoom + (camTo.zoom - camFrom.zoom) * k;
+    Matter.Mouse.setScale(mouse, { x: 1 / cam.zoom, y: 1 / cam.zoom });
+    Matter.Mouse.setOffset(mouse, {
+      x: -cam.x / cam.zoom,
+      y: -cam.y / cam.zoom,
     });
-    // floor and walls around the screen (tall, so pieces falling in from above stay inside)
-    const walls = [
-      Matter.Bodies.rectangle(vw / 2, vh + WALL / 2, vw * 3, WALL, {
-        isStatic: true,
-      }),
-      Matter.Bodies.rectangle(-WALL / 2, 0, WALL, vh * 8, { isStatic: true }),
-      Matter.Bodies.rectangle(vw + WALL / 2, 0, WALL, vh * 8, {
-        isStatic: true,
-      }),
-    ];
-    Matter.Composite.add(engine.world, [
-      ...bodies.map((b) => b.body),
-      ...walls,
-    ]);
 
-    // grab and throw
-    mouse = Matter.Mouse.create(document.body);
-    const grab = Matter.MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.2, render: { visible: false } },
-    });
-    Matter.Composite.add(engine.world, grab);
-
-    let last = performance.now();
-    const tick = (now) => {
-      Matter.Engine.update(engine, Math.min(now - last, 32));
-      last = now;
-      bodies.forEach(({ item, body }) =>
-        draw(item, body.position.x, body.position.y, body.angle, scale),
-      );
-      frame = requestAnimationFrame(tick);
-    };
+    Matter.Engine.update(engine, Math.min(now - last, 32));
+    last = now;
+    bodies.forEach(({ item, body }) =>
+      draw(item, body.position.x, body.position.y, body.angle),
+    );
     frame = requestAnimationFrame(tick);
   };
-
-  // 1) the page zooms out until all of it fits the screen
-  const began = performance.now();
-  const zoom = (now) => {
-    const t = Math.min(1, (now - began) / ZOOM_MS);
-    const k = ease(t);
-    items.forEach((item) =>
-      draw(
-        item,
-        item.from.x + (item.to.x - item.from.x) * k,
-        item.from.y + (item.to.y - item.from.y) * k,
-        0,
-        1 + (scale - 1) * k,
-      ),
-    );
-    if (t < 1) frame = requestAnimationFrame(zoom);
-    else collapse();
-  };
-  frame = requestAnimationFrame(zoom);
+  frame = requestAnimationFrame(tick);
 
   // the way back
   const restore = document.createElement("button");
@@ -235,20 +234,18 @@ export default function start(root) {
     if (stopped) return;
     stopped = true;
     cancelAnimationFrame(frame);
-    if (mouse) {
-      [
-        "mousemove",
-        "mousedown",
-        "mouseup",
-        "wheel",
-        "touchmove",
-        "touchstart",
-        "touchend",
-      ].forEach((type) => {
-        const handler = mouse[type === "wheel" ? "mousewheel" : type];
-        if (handler) mouse.element.removeEventListener(type, handler);
-      });
-    }
+    [
+      "mousemove",
+      "mousedown",
+      "mouseup",
+      "wheel",
+      "touchmove",
+      "touchstart",
+      "touchend",
+    ].forEach((type) => {
+      const handler = mouse[type === "wheel" ? "mousewheel" : type];
+      if (handler) mouse.element.removeEventListener(type, handler);
+    });
     Matter.Composite.clear(engine.world, false);
     Matter.Engine.clear(engine);
     items.forEach(({ el }, i) => {
